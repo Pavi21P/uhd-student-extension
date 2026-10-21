@@ -24,6 +24,10 @@ This repository is the UHD Student Extension. Follow the user-confirmed requirem
 - The existing course planner is a separate project. Link to it first; changing its code requires a separately scoped task.
 - Do not spawn subagents unless the user explicitly requests them. Two human owners do not imply AI-agent delegation.
 
+## Required design references
+
+For UI design, implementation, or review, read docs/DESIGN_GUIDANCE.md and docs/UI_SPEC.md. The user explicitly requires Taste Skill and Impeccable as design references. Use Taste's app-screen route and Impeccable's task-focused guidance. Read the relevant upstream instructions before executing their workflows; do not treat marketing-page rules as app requirements. Preserve the specified card layout, accessibility, truthful data states, and select-and-submit enrollment flow. Record the chosen visual direction once and reuse it. Keep toolkit execution and rendered visual verification claims evidence-based.
+
 ## End each session
 
 Update docs/STATUS.md with task ID, files changed, validation and outcome, remaining blockers, and one next ready task. Keep it short; put longer evidence in the relevant issue or docs/evidence/ file. Preserve the other owner's status entry.

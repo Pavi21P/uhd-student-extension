@@ -27,6 +27,7 @@ Updated: 2026-10-20 (America/Chicago)
 - Link to the existing planner; do not fork its catalog/degree logic into this extension.
 - Manual, initially blank timetable cards are a required feature. Progress pie is optional.
 - RMP live data, portal compatibility, and enrollment timing remain unverified gates.
+- User requires Taste Skill and Impeccable for design. Read DESIGN_GUIDANCE.md before UI tasks; reviewed upstream revisions are pinned there. Toolkits are not installed and visual checks have not run.
 
 ## Blocking questions and dependencies
 
@@ -41,8 +42,8 @@ Updated: 2026-10-20 (America/Chicago)
 
 ## Latest handoff
 
-- Task / owner: 01A / A (Pavitra lane).
-- Changed: docs/UI_SPEC.md, README.md, docs/STATUS.md.
+- Task / owner: user-requested design-reference follow-up / A (Pavitra lane).
+- Changed: docs/DESIGN_GUIDANCE.md, AGENTS.md, docs/UI_SPEC.md, docs/REFERENCES.md, README.md, docs/STATUS.md.
 - Local branch: docs/01a-ui-spec. This task has not been pushed to GitHub.
 - Next: 02A for A; 01B remains ready for B. Portal selectors and live RMP access remain unresolved.
 

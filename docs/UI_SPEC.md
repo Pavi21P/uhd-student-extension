@@ -119,6 +119,8 @@ Mixed outcomes show a per-section list, not a blanket success message. Cancel af
 
 ## Visual and accessibility rules
 
+Required design references: **Taste Skill and Impeccable**, as requested by the user. Follow [DESIGN_GUIDANCE.md](DESIGN_GUIDANCE.md) for the reviewed revisions, app-specific interpretation, and visual QA workflow. The rules below remain behavioral and accessibility constraints; select the final visual direction during the first UI implementation.
+
 Use the planner's restrained cards, neutral surfaces, readable text and one accent color. Preserve the specific card positions above rather than reusing the graph-based planner component directly. Exact CSS tokens belong to implementation, not this scope task.
 
 All actions have visible labels and keyboard access. Dragging has a day/start/end form equivalent. Focus returns to the originating action when an editor/dialog closes; Escape cancels dialogs without submitting. Errors are adjacent to fields; status changes are announced without stealing focus. Never communicate conflict, rating, or enrollment outcome by color alone.

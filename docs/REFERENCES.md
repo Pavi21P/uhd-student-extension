@@ -47,3 +47,7 @@ Create short records under `docs/evidence/` during the corresponding tasks:
 - `release-check.md`: build/check evidence, permission review, installation smoke test, known limits, release decision.
 
 Do not add raw authenticated HTML, real enrollment records, or the local video to these records.
+
+## User-requested design references
+
+The user added [Taste Skill](https://github.com/Leonxlnx/taste-skill) and [Impeccable](https://github.com/pbakaus/impeccable) on 2026-10-20. Repository metadata and relevant skill documentation were inspected. [DESIGN_GUIDANCE.md](DESIGN_GUIDANCE.md) records exact revisions, roles, project-specific application, and future verification steps. Neither toolkit is locally installed; no design script or visual check has run. No third-party source files were copied into this project.
