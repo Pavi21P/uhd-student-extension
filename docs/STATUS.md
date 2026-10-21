@@ -5,7 +5,8 @@ Updated: 2026-10-20 (America/Chicago)
 ## Current state
 
 - Task **01A complete**: [UI specification](UI_SPEC.md) defines screen layouts, ownership, card behavior, professor states, planner navigation, and immediate/scheduled enrollment review. Teammate review has not yet occurred.
-- No runtime implementation, dependencies, application tests, or live enrollment actions exist yet.
+- Task **02A complete**: [shared contracts](CONTRACTS.md), dependency-free TypeScript records/messages, and synthetic examples. Strict type-check and example consistency checks passed.
+- No loadable extension, runtime validation, persistence, project dependencies, or live enrollment actions exist yet. Toolchain/build setup is next in 03A.
 - Public GitHub repository created with user approval: https://github.com/Pavi21P/uhd-student-extension. Owner: `Pavi21P`; project branch: `main`. The initial upload contains the nine planning and collaboration files.
 - User confirmed **myUHD** as the target.
 - User confirmed **pressing the extension enrollment button selects boxes and submits enrollment**. The plan supports immediate execution and explicit arming for a selected future time.
@@ -16,7 +17,7 @@ Updated: 2026-10-20 (America/Chicago)
 
 | Owner | Task | State | Next action |
 | --- | --- | --- | --- |
-| A / Pavitra | 02A | Ready | Define data/message contracts from UI_SPEC.md; 01A deliverable is complete. |
+| A / Pavitra | 03A | Ready | Create the MV3 build, manifest, dashboard/launcher and pinned toolchain; use the completed contracts and design guidance. |
 | B / teammate | 01B | Ready | Inspect the real myUHD flow and build an anonymized portal map. |
 
 ## Decisions to retain
@@ -38,14 +39,14 @@ Updated: 2026-10-20 (America/Chicago)
 
 ## Latest validation
 
-01A validation passed: local Markdown links resolve, code fences balance, required UI sections are present, and Git diff checks pass. Scope was reviewed against the approved plan, including blank cards and select-and-submit enrollment. No runtime or live-portal verification was performed. See REFERENCES.md for research limits.
+02A passed strict TypeScript checking with noEmit, exactOptionalPropertyTypes and noUncheckedIndexedAccess (TypeScript 6.0.3, Node 24.21.0). The compiler was reused read-only from the existing planner installation; this extension still has no installed dependencies or pinned toolchain. Synthetic checks confirmed blank-card shape, recurrence references/times, exact selected/deselected sections, and timetable-only JSON round trip. Local Markdown links, code fences and Git diff checks passed. No runtime validators, browser or portal behavior were tested.
 
 ## Latest handoff
 
-- Task / owner: user-requested design-reference follow-up / A (Pavitra lane).
-- Changed: docs/DESIGN_GUIDANCE.md, AGENTS.md, docs/UI_SPEC.md, docs/REFERENCES.md, README.md, docs/STATUS.md.
-- Local branch: docs/01a-ui-spec. This task has not been pushed to GitHub.
-- Next: 02A for A; 01B remains ready for B. Portal selectors and live RMP access remain unresolved.
+- Task / owner: 02A / A (Pavitra lane).
+- Changed: src/shared/domain.ts, src/shared/messages.ts, tests/fixtures/contracts.examples.ts, docs/CONTRACTS.md, docs/UI_SPEC.md, README.md, docs/STATUS.md.
+- Local branch: feat/02a-shared-contracts, based on the unpushed UI/design-reference work. No changes from these task branches have been pushed to GitHub.
+- Next: 03A for A; 01B remains ready for B. 03B implements runtime validation/storage/message handling; 14B implements the enrollment state machine. Shared contracts still need teammate review before integration.
 
 ## Session handoff format
 

@@ -136,4 +136,4 @@ At narrower desktop widths, move the tray above the grid and allow a labeled hor
 - [x] Missing ratings, timing limits, partial/unknown results and keyboard alternatives are specified.
 - [x] No portal selectors, verified API access, teammate approval or working screens are claimed.
 
-Next A task: **02A**, define records, validation and message contracts from this spec. B task **01B** remains ready and independent: inspect the real myUHD flow and record only observed, anonymized facts. If those observations require a UI change, update this spec in that task instead of silently diverging.
+Task **02A** now defines the [shared records, validation rules and message contracts](CONTRACTS.md). See [STATUS.md](STATUS.md) for the current next task. B task **01B** remains ready and independent: inspect the real myUHD flow and record only observed, anonymized facts. If those observations require a UI change, update this spec in that task instead of silently diverging.

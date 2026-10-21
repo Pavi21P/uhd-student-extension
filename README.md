@@ -2,13 +2,14 @@
 
 A planned Chrome/Edge extension for UHD students: professor ratings, a link to the existing course planner, a weekly timetable, and user-armed enrollment assistance for myUHD.
 
-**Status: planning only. No extension has been implemented or tested yet.**
+**Status: UI specification and shared TypeScript contracts. No loadable extension or live integration exists yet.**
 
 ## Start here
 
 - [Detailed build plan and daily tasks](docs/BUILD_PLAN.md)
 - [Screen layouts and interaction specification (01A)](docs/UI_SPEC.md)
 - [Required design references: Taste Skill and Impeccable](docs/DESIGN_GUIDANCE.md)
+- [Shared records, validation rules, and messages (02A)](docs/CONTRACTS.md)
 - [Current checkpoint and next task](docs/STATUS.md)
 - [Two-person GitHub workflow](CONTRIBUTING.md)
 - [Instructions for focused AI work sessions](AGENTS.md)
