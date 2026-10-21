@@ -45,7 +45,7 @@ Updated: 2026-10-20 (America/Chicago)
 
 - Task / owner: 02A / A (Pavitra lane).
 - Changed: src/shared/domain.ts, src/shared/messages.ts, tests/fixtures/contracts.examples.ts, docs/CONTRACTS.md, docs/UI_SPEC.md, README.md, docs/STATUS.md.
-- Local branch: feat/02a-shared-contracts, based on the unpushed UI/design-reference work. No changes from these task branches have been pushed to GitHub.
+- GitHub submission requested for the completed UI specification, Taste Skill/Impeccable guidance, and shared contracts. Task commits: a66b9aa, 0b57e65, and 91c4892; their history is preserved when integrating into main.
 - Next: 03A for A; 01B remains ready for B. 03B implements runtime validation/storage/message handling; 14B implements the enrollment state machine. Shared contracts still need teammate review before integration.
 
 ## Session handoff format
