@@ -1,0 +1,33 @@
+# Dependencies and generated output
+node_modules/
+dist/
+coverage/
+playwright-report/
+test-results/
+*.tsbuildinfo
+*.log
+
+# Local credentials and student data
+.env
+.env.*
+!.env.example
+.local/
+.private/
+private-fixtures/
+auth-state*.json
+*.har
+*.pem
+*.key
+
+# Reference media and local browser profiles
+reference-media/
+browser-profile/
+*.mp4
+*.crx
+*.zip
+
+# Machine-specific files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
