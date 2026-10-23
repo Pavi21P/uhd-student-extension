@@ -9,13 +9,13 @@ Updated: 2026-10-22 (America/Chicago)
 - **03A complete**: loadable MV3 extension, working popup launcher, static dashboard preview, pinned toolchain and reproducible build. [Verification and screenshots](evidence/03a-foundation.md).
 - **03B complete**: schedule/settings runtime validation, serialized revision-protected local storage, authenticated worker messages and typed client. [Verification](evidence/03b-storage-messaging.md). The dashboard is still a static preview; no editor or UI storage subscription is connected yet.
 - No working destination tabs, live ratings or enrollment actions yet. Reserved feature commands return FEATURE_UNAVAILABLE without execution.
-- Public repo: https://github.com/Pavi21P/uhd-student-extension. Previously published planning/contracts checkpoint: `439d5d4` on `main`. 03A is local commit `cffda38`. Current 03B work is local on `feat/03b-storage-messaging`, based on that commit; neither task branch has been pushed.
+- Public repo: https://github.com/Pavi21P/uhd-student-extension. Foundation tasks 03A (`cffda38`) and 03B (`b4ea551`) are included in the 2026-10-22 main-branch publication, retaining their original author dates and history.
 
 ## Active work
 
 | Owner | Task | State | Next action |
 | --- | --- | --- | --- |
-| A / Pavitra | 03B | Complete locally | Next ready task: 04A, dashboard tabs and working Planner action. |
+| A / Pavitra | 03B | Complete | Next ready task: 04A, dashboard tabs and working Planner action. |
 | B / teammate | 01B | Ready | Inspect the real myUHD flow and build an anonymized portal map. |
 
 ## Decisions to retain
