@@ -24,7 +24,7 @@ These revisions are the shared review baseline, not an automatic update channel.
 - Main working surface: a weekly timetable with a tray of unscheduled, manually editable course cards.
 - Supporting tasks: check professor information, open the existing planner, and review or schedule enrollment.
 - Registration is time-sensitive. The exact reviewed sections, activation status, and portal outcome must be legible without interpretation.
-- There is no working UI or rendered visual baseline yet. UI_SPEC.md is a behavior specification; the existing course planner provides a related visual reference, not a finished extension theme.
+- Task 03A established the launcher/dashboard preview and rendered baseline. Reuse [DESIGN.md](../DESIGN.md) and [PRODUCT.md](../PRODUCT.md); inspect [03A evidence](evidence/03a-foundation.md) for screenshots and verification limits. UI_SPEC.md remains the behavior specification.
 
 ## Application to this extension
 
@@ -42,7 +42,7 @@ These are project decisions derived from the approved requirements; they are not
 ## Focused implementation loop
 
 1. Read STATUS.md, the active task, UI_SPEC.md, and this guide. Reuse settled product context; do not repeat the discovery interview.
-2. Before the first UI implementation (03A), choose and record one coherent visual direction and a small token set. Use Taste's app-screen route and Impeccable's relevant task guidance. Typography, palette, spacing and density remain implementation decisions until recorded and inspected.
+2. Reuse the visual direction and token set recorded in DESIGN.md during 03A. Use Taste's app-screen route and Impeccable's relevant task guidance for subsequent screens; change the baseline only for a concrete usability need.
 3. Read only the upstream files needed for that task. If a toolkit is installed later, inspect its scripts and dependencies before execution, use its supported setup, and record the actual revision. Do not silently download/run a binary merely to claim a tool was used.
 4. Build the current task's screens and real states. Use clearly labeled synthetic fixtures for development, never fabricated live ratings or enrollment success.
 5. Inspect the rendered dashboard at 1440px and 1024px, then at 768px for constrained desktop behavior. Inspect the popup at its actual extension width. Check browser zoom, long content, keyboard focus and reduced motion where affected. If an upstream checker requires other widths, include them without implying mobile-browser support.

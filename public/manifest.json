@@ -1,0 +1,25 @@
+{
+  "manifest_version": 3,
+  "name": "UHD Student Extension",
+  "version": "0.1.0",
+  "description": "Preview the UHD student workspace. Timetable editing, professor ratings, and enrollment tools are still in development.",
+  "minimum_chrome_version": "120",
+  "action": {
+    "default_title": "Open UHD Student Extension",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "options_page": "dashboard.html",
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'none'; base-uri 'none'; connect-src 'none'; frame-src 'none'"
+  }
+}

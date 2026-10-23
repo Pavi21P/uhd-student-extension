@@ -37,9 +37,9 @@ Prefer ordinary merge commits when preserving both contributors' individual comm
 
 ## Merge and release checks
 
-Once implemented, the foundation must provide `npm ci`, `npm run typecheck`, `npm run lint`, `npm test`, and `npm run build`. Add `npm run test:e2e` in 09B. These are planned commands, not commands currently available in this folder.
+The foundation now provides `npm ci`, `npm run typecheck`, `npm run lint`, `npm test`, and `npm run build`. Run `npm run check` for the combined integration checks; see README.md for pinned toolchain and unpacked installation. Add `npm run test:e2e` in 09B; CI remains task 04B.
 
-- Source changes: relevant tests plus typecheck, lint, and production build; CI enforces the agreed checks.
+- Source changes: relevant tests plus typecheck, lint, and production build; CI will enforce the agreed checks once task 04B is complete.
 - User-facing changes: manually verify the changed flow in a loaded extension and record browser/version.
 - Enrollment changes: synthetic portal tests first; no unattended real enrollment tests.
 - Documentation-only changes: check accuracy, links, and diff; no unnecessary application tests.

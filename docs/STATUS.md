@@ -1,59 +1,45 @@
 # Project checkpoint
 
-Updated: 2026-10-20 (America/Chicago)
+Updated: 2026-10-22 (America/Chicago)
 
 ## Current state
 
-- Task **01A complete**: [UI specification](UI_SPEC.md) defines screen layouts, ownership, card behavior, professor states, planner navigation, and immediate/scheduled enrollment review. Teammate review has not yet occurred.
-- Task **02A complete**: [shared contracts](CONTRACTS.md), dependency-free TypeScript records/messages, and synthetic examples. Strict type-check and example consistency checks passed.
-- No loadable extension, runtime validation, persistence, project dependencies, or live enrollment actions exist yet. Toolchain/build setup is next in 03A.
-- Public GitHub repository created with user approval: https://github.com/Pavi21P/uhd-student-extension. Owner: `Pavi21P`; project branch: `main`. The initial upload contains the nine planning and collaboration files.
-- User confirmed **myUHD** as the target.
-- User confirmed **pressing the extension enrollment button selects boxes and submits enrollment**. The plan supports immediate execution and explicit arming for a selected future time.
-- Existing planner source was inspected; its README lists https://uhd-course-planner.pages.dev. Live reachability was not verified by the web tool.
-- Matching inspiration post was read. Local MP4 playback was unavailable; no claim of video review.
+- **01A complete**: [UI specification](UI_SPEC.md); teammate review pending.
+- **02A complete**: [shared contracts](CONTRACTS.md), TypeScript records/messages and synthetic examples. Runtime validation remains 03B.
+- **03A complete**: loadable MV3 extension, working popup launcher, static dashboard preview, pinned toolchain and reproducible build. [Verification and screenshots](evidence/03a-foundation.md).
+- No course editing/storage, working destination tabs, live ratings or enrollment actions yet. Disabled preview controls say so.
+- Public repo: https://github.com/Pavi21P/uhd-student-extension. Previously published planning/contracts checkpoint: `439d5d4` on `main`. Current foundation work is local on `feat/03a-extension-foundation`; not pushed.
 
 ## Active work
 
 | Owner | Task | State | Next action |
 | --- | --- | --- | --- |
-| A / Pavitra | 03A | Ready | Create the MV3 build, manifest, dashboard/launcher and pinned toolchain; use the completed contracts and design guidance. |
+| A / Pavitra | 03A | Complete locally | Review foundation handoff; next proposed task is 03B (shared foundation, claim ownership before editing). |
 | B / teammate | 01B | Ready | Inspect the real myUHD flow and build an anonymized portal map. |
 
 ## Decisions to retain
 
-- Chrome/Edge desktop first; Manifest V3 + React + TypeScript + Vite proposed.
-- Full extension dashboard for timetable; small launcher popup.
-- Local storage first; no accounts, backend, analytics, or paid service required by baseline scope.
-- Link to the existing planner; do not fork its catalog/degree logic into this extension.
-- Manual, initially blank timetable cards are a required feature. Progress pie is optional.
-- RMP live data, portal compatibility, and enrollment timing remain unverified gates.
-- User requires Taste Skill and Impeccable for design. Read DESIGN_GUIDANCE.md before UI tasks; reviewed upstream revisions are pinned there. Toolkits are not installed and visual checks have not run.
+- Chrome/Edge desktop; Manifest V3 + React + TypeScript + Vite + plain CSS. TypeScript retained to reuse existing contracts and browser APIs.
+- Full dashboard for timetable; small launcher popup. Local data first; no backend/accounts/analytics required.
+- User confirmed myUHD; pressing the extension enrollment button must select reviewed boxes AND submit. Support immediate execution and explicitly armed future execution.
+- Link to https://uhd-course-planner.pages.dev; keep that project separate. Live planner reachability remains for 04A.
+- Manual initially blank course cards are required: professor top left, title center, room bottom left. Progress pie optional.
+- Reuse [DESIGN.md](../DESIGN.md) and [design references](DESIGN_GUIDANCE.md): Taste app-screen and Impeccable Operate guidance applied. Browser screenshots inspected; vendor toolkits were not executed.
+- Prior research read the inspiration post; local MP4 playback remains unverified.
 
 ## Blocking questions and dependencies
 
-1. RMP: permitted working source for live ratings; fallback links are useful but not full completion.
-2. Portal: exact supported page/frame, checkbox semantics, submission/confirmation sequence, and result signals.
-3. Timing: real measured behavior under supported browser conditions; no exact-second guarantee.
-4. Collaboration: obtain the teammate's GitHub username before inviting them; choose a license together before distributing implementation code.
-
-## Latest validation
-
-02A passed strict TypeScript checking with noEmit, exactOptionalPropertyTypes and noUncheckedIndexedAccess (TypeScript 6.0.3, Node 24.21.0). The compiler was reused read-only from the existing planner installation; this extension still has no installed dependencies or pinned toolchain. Synthetic checks confirmed blank-card shape, recurrence references/times, exact selected/deselected sections, and timetable-only JSON round trip. Local Markdown links, code fences and Git diff checks passed. No runtime validators, browser or portal behavior were tested.
+1. RMP: permitted working source for live ratings. Links/mocks do not complete it.
+2. Portal: supported page/frame, checkbox semantics, confirmation sequence and result signals.
+3. Timing: measured supported-browser behavior; no exact-second guarantee.
+4. Collaboration: teammate GitHub username needed before an invitation; project license still undecided. Shared contracts and foundation need teammate review.
 
 ## Latest handoff
 
-- Task / owner: 02A / A (Pavitra lane).
-- Changed: src/shared/domain.ts, src/shared/messages.ts, tests/fixtures/contracts.examples.ts, docs/CONTRACTS.md, docs/UI_SPEC.md, README.md, docs/STATUS.md.
-- GitHub submission requested for the completed UI specification, Taste Skill/Impeccable guidance, and shared contracts. Task commits: a66b9aa, 0b57e65, and 91c4892; their history is preserved when integrating into main.
-- Next: 03A for A; 01B remains ready for B. 03B implements runtime validation/storage/message handling; 14B implements the enrollment state machine. Shared contracts still need teammate review before integration.
+- Task / owner: 03A / A (Pavitra lane), complete.
+- Changed: build/toolchain and lockfile; public manifest/icons/notices; dashboard, popup and shared UI; launcher tests; PRODUCT.md, DESIGN.md, README.md, CONTRIBUTING.md, design guidance and evidence.
+- Passed: clean `npm ci`; lint; 4 tests; strict typecheck; production build/artifact checks; unpacked Chrome/Edge popup-to-dashboard flow; responsive visual inspection; keyboard/reduced-motion/error-state checks. No page-access permissions requested.
+- Limits: headless extension-page checks, not manual toolbar interaction; CSS 200% scale, not browser-toolbar zoom; no screen-reader audit, live portal work or teammate sign-off.
+- Next ready task: **03B**, runtime validation/storage/typed message handling; coordinate the shared-file editor first. 04A is also dependency-ready, and B's 01B assignment is unchanged. Stop after one claimed task.
 
-## Session handoff format
-
-Task / owner:
-Outcome and files:
-Checks and result:
-Unverified or blocked:
-Next ready task:
-
-Keep this file concise. Replace stale handoff detail instead of appending full transcripts.
+Read the linked evidence for detailed versions and limits; do not replay the full history.
