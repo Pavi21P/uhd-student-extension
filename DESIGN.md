@@ -6,7 +6,7 @@ Established during task 03A. Implemented styles live in [styles.css](src/ui/styl
 
 A light, framed workspace for students working in a browser alongside course information. The white working sheet, soft green-gray outer surface, and restrained teal details relate to the existing planner. Public Sans carries all text. A small mark made from three course blocks identifies this extension; it is an original project mark, not UHD's official logo.
 
-The timetable is the main working area. A narrow Unscheduled tray establishes the requested card anatomy. In this foundation, the empty weekly area is a static layout preview, not an editable grid or a saved schedule.
+The timetable is the main working area. A narrow Unscheduled tray establishes the requested card anatomy. Task 05A adds persisted cards and a details editor in the main column above the weekly preview. At 800px and below the editor uses a native modal dialog. The grid remains a static preview until placement is implemented. Color is a small identity marker; neutral card text retains contrast.
 
 Taste's app-screen guidance informed hierarchy, flat surfaces and disciplined density. Impeccable's Operate guidance informed familiar controls, consistent states and purposeful feedback. The implementation uses these as reviewed design references: no randomized draw, vendor inspector, vendor binary or separate reviewer agent was run. The user's bounded-work and no-subagent instructions remain in force.
 
@@ -35,7 +35,7 @@ No resting shadows, gradients, decorative metrics or simulated live ratings. Cou
 
 - Desktop: common header/content edges; 250px tray, 32px gap, remaining width for the week.
 - At 1024px: 220px tray and 24px gap.
-- At 768px: tray above the week, with the preview card alongside its explanation.
+- At 768px: saved cards flow in a responsive tray above the week. The open editor is a narrow modal dialog.
 - At narrow widths: stacked content and horizontally scrollable destination strip. This is responsive resilience, not a mobile-browser support claim.
 - Popup: 360px wide, one working Open timetable action, opening state, and a recoverable failure state.
 - All five destinations now use native hash links in the underline navigation strip, with aria-current, visible focus, Tab/Enter access, browser history and a route-specific page title. Focus moves to the new main content; the skip link preserves the selected destination.
@@ -46,3 +46,5 @@ No resting shadows, gradients, decorative metrics or simulated live ratings. Cou
 ## Visual review
 
 Use the screenshot and browser evidence in [03A foundation verification](docs/evidence/03a-foundation.md). That report distinguishes actual browser checks from unrun third-party checks. [04A verification](docs/evidence/04a-navigation-planner.md) adds the destination views and live planner link. Later tasks should extend this system rather than choose another theme.
+
+Task 05A reuses Taste app-screen form guidance and Impeccable Operate: labeled optional fields, explicit save/cancel, destructive action separated last, readable recovery state, preserved drafts, and native narrow-screen focus management. [Editor evidence](docs/evidence/05a-course-editor.md) includes desktop, narrow and conflict views. Vendor toolkits were not executed.

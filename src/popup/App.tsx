@@ -34,8 +34,8 @@ export function App() {
         {error && <p className="error-message" role="alert">The workspace could not open. Try again, or open Extension options from your browser.</p>}
       </div>
       <footer className="popup-footer">
-        <strong>Workspace preview</strong>
-        <p>Editing, ratings, and enrollment are not available yet.</p>
+        <strong>Course cards, saved locally</strong>
+        <p>Add and edit course cards. Grid placement, ratings, and enrollment are still to come.</p>
       </footer>
     </main>
   );

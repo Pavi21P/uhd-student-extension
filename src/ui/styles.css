@@ -181,3 +181,46 @@ p { line-height: 1.6; }
   .planner-destination .button { width: 100%; justify-content: space-between; }
   .feature-notice { padding: 20px 16px; }
 }
+
+/* Task 05A: cards retain their fixed professor/title/room positions. */
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+.button-secondary { background: var(--surface); border-color: var(--line); color: var(--ink); }
+.button-secondary:hover:not(:disabled) { background: var(--surface-soft); }
+.button-danger { background: var(--surface); color: var(--error); border-color: var(--line); }
+button:disabled { cursor: not-allowed; }
+.button-secondary:disabled, .button-danger:disabled { color: var(--muted); }
+.live-tray { display: block; min-width: 0; }
+.course-list { display: grid; gap: 12px; margin-top: 20px; }
+.course-card { position: relative; display: grid; grid-template-rows: auto 1fr auto; width: 100%; min-width: 0; min-height: 166px; padding: 16px; text-align: left; background: var(--accent-soft); border: 1px solid #c7d9d0; border-radius: var(--radius); color: var(--ink); }
+.course-card:hover:not(:disabled) { border-color: var(--accent); }
+.course-card > .card-professor, .course-card > .card-room, .course-card > .card-course-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.course-card > .card-professor { padding-right: 20px; }
+.course-color { position: absolute; width: 10px; height: 10px; border-radius: 50%; top: 18px; right: 16px; }
+.scheduled-courses { margin-top: 28px; }
+.scheduled-courses h2 { font-size: 14px; }
+.timetable-detail { min-width: 0; display: grid; gap: 24px; }
+.save-feedback { font-size: 13px; color: var(--muted); margin-bottom: 24px; }
+.save-feedback .button { margin-top: 12px; }
+.error-message { color: var(--error); margin-top: 8px; overflow-wrap: anywhere; }
+.course-editor { position: static; width: 100%; max-width: none; margin: 0; padding: 24px; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
+.course-editor h2 { font-size: 20px; font-weight: 600; letter-spacing: -.025em; }
+.editor-help { font-size: 13px; color: var(--muted); margin: 8px 0 16px; }
+.editor-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; padding: 0; border: 0; }
+.editor-fields label { display: grid; gap: 6px; font-size: 14px; font-weight: 500; min-width: 0; }
+.editor-fields input, .editor-fields select { width: 100%; min-width: 0; min-height: 40px; padding: 8px 10px; font: inherit; font-weight: 400; color: var(--ink); background: var(--surface); border: 1px solid #a4b2ac; border-radius: 8px; }
+.editor-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+.delete-course { margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 13px; }
+.delete-course .editor-actions { margin-top: 12px; }
+.review-panel { padding: 16px; background: var(--surface-soft); border: 1px solid var(--line); border-radius: 8px; margin-bottom: 20px; font-size: 13px; }
+.review-panel h3 { font-size: 14px; }
+.review-panel p { margin: 8px 0; }
+.review-panel dl { margin: 12px 0; }
+.review-panel dl > div { margin-top: 8px; }
+.review-panel dt { font-weight: 600; }
+.review-panel dd { margin: 0; overflow-wrap: anywhere; }
+@media (max-width: 800px) {
+  .live-tray .course-list { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+  .course-editor { position: fixed; inset: 0; width: calc(100% - 32px); max-width: 520px; max-height: calc(100dvh - 32px); margin: auto; padding: 24px; overflow-y: auto; overscroll-behavior: contain; }
+  .course-editor::backdrop { background: rgb(24 38 33 / 40%); }
+  .editor-fields { grid-template-columns: 1fr; }
+}

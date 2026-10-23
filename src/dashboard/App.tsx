@@ -3,7 +3,8 @@ import { Brand } from '../ui/Brand';
 import { Icon } from '../ui/Icon';
 import { sectionFromHash, sections, type SectionId } from './navigation';
 import { Planner } from './Planner';
-import { TimetablePreview } from './TimetablePreview';
+import { useCourseWorkspace } from './use-course-workspace';
+import { Timetable } from './Timetable';
 import { UnavailableSection } from './UnavailableSection';
 
 function subscribe(onChange: () => void) {
@@ -13,6 +14,7 @@ function subscribe(onChange: () => void) {
 const snapshot = () => sectionFromHash(window.location.hash);
 
 export function App() {
+  const courses = useCourseWorkspace();
   const section = useSyncExternalStore<SectionId>(subscribe, snapshot, () => 'timetable');
   const main = useRef<HTMLElement>(null);
   const previousSection = useRef(section);
@@ -42,7 +44,7 @@ export function App() {
           ))}
         </nav>
         <main ref={main} id="main" tabIndex={-1} className="main-content" aria-labelledby="page-title">
-          {section === 'timetable' ? <TimetablePreview /> : section === 'planner' ? <Planner /> : <UnavailableSection section={section} />}
+          {section === 'timetable' ? <Timetable model={courses} /> : section === 'planner' ? <Planner /> : <UnavailableSection section={section} />}
         </main>
         <footer className="app-footer"><span>Built for UHD students.</span><span>Independent project · Not affiliated with UHD</span></footer>
       </div>
