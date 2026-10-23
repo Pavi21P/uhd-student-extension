@@ -10,13 +10,13 @@ Updated: 2026-10-23 (America/Chicago)
 - **03B complete**: schedule/settings runtime validation, serialized revision-protected local storage, authenticated worker messages and typed client. [Verification](evidence/03b-storage-messaging.md). 05A now connects the editor; continuous UI storage subscriptions remain 06B.
 - **04A complete**: dashboard destination navigation, keyboard/focus/history behavior, and the live planner link. [Verification and screenshots](evidence/04a-navigation-planner.md). The weekly grid remains a preview; Professors, Enrollment and Settings explain their unavailable features. Reserved commands still return FEATURE_UNAVAILABLE without execution.
 - **05A complete**: blank course cards, optional-field editor, delete/cancel and revision-aware local persistence. [Verification and screenshots](evidence/05a-course-editor.md).
-- Public repo: https://github.com/Pavi21P/uhd-student-extension. Foundation tasks 03A (`cffda38`) and 03B (`b4ea551`) are included in the 2026-10-22 main-branch publication, retaining their original author dates and history. 04A (`871beb4`) and current 05A are local on `feat/05a-course-editor`, based on published `a29eea5`; not pushed.
+- Public repo: https://github.com/Pavi21P/uhd-student-extension. Foundation tasks 03A (`cffda38`) and 03B (`b4ea551`) are included in the 2026-10-22 main-branch publication, retaining their original author dates and history. Publication checkpoint: branch `feat/05a-course-editor` includes 04A (`871beb4`) and 05A (`823f33f`). The requested push publishes this feature branch for review; `main` remains at `a29eea5`.
 
 ## Active work
 
 | Owner | Task | State | Next action |
 | --- | --- | --- | --- |
-| A / Pavitra | 05A | Complete locally | Ready for review; next ready task is 05B meeting/time validation. |
+| A / Pavitra | 05A | Complete; publication checkpoint | Feature branch ready for review; next ready task is 05B meeting/time validation. |
 | B / teammate | 01B | Ready | Inspect the real myUHD flow and build an anonymized portal map. |
 
 ## Decisions to retain
@@ -38,7 +38,7 @@ Updated: 2026-10-23 (America/Chicago)
 
 ## Latest handoff
 
-- Task / owner: **05A / A**, complete locally on `feat/05a-course-editor`; not pushed. B's 01B assignment is unchanged.
+- Task / owner: **05A / A**, complete on `feat/05a-course-editor`; publication requested and checkpoint prepared for the branch push. No merge to `main` is included. B's 01B assignment is unchanged.
 - Changed: course transaction model, persistent editor state, Timetable view, responsive CourseEditor, popup copy/styles, five unit tests, documentation and screenshot evidence. No new dependencies, permissions, shared schema/RPC or background changes.
 - Passed: **95 unit tests**, lint, strict typecheck, production build/artifact checks; Chrome 156.0.8078.47 and Edge 155.0.4283.62 synthetic browser flows for blank/edit/cancel/delete, restart persistence, two-window conflicts/deletion, failed or uncertain saves, focus and responsive layout.
 - Visual inspection: desktop editor, narrow modal/cards, conflict review and popup. Taste/Impeccable reference guidance applied; vendor scripts, manual toolbar zoom, screen-reader and live portal tests not run.
