@@ -38,9 +38,11 @@ No resting shadows, gradients, decorative metrics or simulated live ratings. Cou
 - At 768px: tray above the week, with the preview card alongside its explanation.
 - At narrow widths: stacked content and horizontally scrollable destination strip. This is responsive resilience, not a mobile-browser support claim.
 - Popup: 360px wide, one working Open timetable action, opening state, and a recoverable failure state.
-- Add course and future destinations are genuinely disabled until implemented. Details disclosure explains what currently works.
+- All five destinations now use native hash links in the underline navigation strip, with aria-current, visible focus, Tab/Enter access, browser history and a route-specific page title. Focus moves to the new main content; the skip link preserves the selected destination.
+- Planner uses one destination panel and an adjacent separate-save explanation, stacked at 768px and below. Its native external link clearly announces a new browser tab.
+- Add course remains disabled. Professors, Enrollment and Settings each explain what is unavailable; they contain no simulated records or enabled feature controls. Details disclosure explains what currently works in Timetable.
 - Body text, placeholders, labels and state descriptions must remain readable at browser zoom. No animation delays content or enrollment actions.
 
 ## Visual review
 
-Use the screenshot and browser evidence in [03A foundation verification](docs/evidence/03a-foundation.md). That report distinguishes actual browser checks from unrun third-party checks. Later tasks should extend this system rather than choose another theme.
+Use the screenshot and browser evidence in [03A foundation verification](docs/evidence/03a-foundation.md). That report distinguishes actual browser checks from unrun third-party checks. [04A verification](docs/evidence/04a-navigation-planner.md) adds the destination views and live planner link. Later tasks should extend this system rather than choose another theme.

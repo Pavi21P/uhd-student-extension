@@ -2,7 +2,7 @@
 
 A Chrome/Edge extension for UHD students: professor ratings, a link to the existing course planner, a weekly timetable, and user-armed enrollment assistance for myUHD.
 
-**Current build: Manifest V3 foundation with validated storage and messaging (03A/03B).** The popup opens a responsive dashboard preview. A background API can save/reload schedules and display settings with revision protection. The visible dashboard remains a preview: course editing, working destination tabs, ratings, and enrollment are not implemented yet.
+**Current build: working dashboard navigation and planner link (04A), backed by validated storage/messaging (03B).** The popup opens Timetable; all five destination tabs work. Planner opens the existing live course planner in a separate browser tab. The timetable is still a preview; Professors, Enrollment and Settings explain their unavailable features. A background API can save/reload schedules and display settings, but no editor is connected yet.
 
 ## Run locally
 
@@ -18,7 +18,8 @@ npm run check
 1. Open `chrome://extensions` or `edge://extensions`.
 2. Enable **Developer mode**, choose **Load unpacked**, and select this repository's `dist` folder.
 3. Open the extension's toolbar popup and select **Open timetable**. Extension options opens the same dashboard.
-4. After source changes, run `npm run build` and reload the extension on the extensions page.
+4. Select **Planner**, then **Open course planner**. It opens https://uhd-course-planner.pages.dev in a new tab; planner data saves separately.
+5. After source changes, run `npm run build` and reload the extension on the extensions page.
 
 For UI development, run `npm run dev` and open the printed local URL with `/dashboard.html` or `/popup.html`. This previews ordinary web pages; it does not load an extension. `npm run build:watch` rebuilds the unpacked files, but browser extension reloads remain manual. Run `npm run check` before submitting changes.
 
@@ -30,6 +31,7 @@ The foundation requests only `storage`; it has no host permissions or connection
 - [Current checkpoint and next task](docs/STATUS.md)
 - [Foundation verification and screenshots](docs/evidence/03a-foundation.md)
 - [Storage and messaging verification (03B)](docs/evidence/03b-storage-messaging.md)
+- [Navigation and planner verification (04A)](docs/evidence/04a-navigation-planner.md)
 - [Screen layouts and interaction specification](docs/UI_SPEC.md)
 - [Design references: Taste Skill and Impeccable](docs/DESIGN_GUIDANCE.md)
 - [Recorded visual direction and tokens](DESIGN.md)
