@@ -2,7 +2,7 @@
 
 A Chrome/Edge extension for UHD students: professor ratings, a link to the existing course planner, a weekly timetable, and user-armed enrollment assistance for myUHD.
 
-**Current build: loadable Manifest V3 foundation (03A).** The popup opens a responsive dashboard preview. Course editing, saved schedules, working destination tabs, ratings, and enrollment are not implemented yet.
+**Current build: Manifest V3 foundation with validated storage and messaging (03A/03B).** The popup opens a responsive dashboard preview. A background API can save/reload schedules and display settings with revision protection. The visible dashboard remains a preview: course editing, working destination tabs, ratings, and enrollment are not implemented yet.
 
 ## Run locally
 
@@ -13,7 +13,7 @@ npm ci
 npm run check
 ```
 
-`check` runs lint, four launcher tests, strict TypeScript checking, and the production build. The build verifies the MV3 entrypoints and bundled assets. Output goes to `dist/`, which is intentionally ignored by Git.
+`check` runs lint, 90 unit tests, strict TypeScript checking, and the production build. The build verifies the MV3 entrypoints and bundled assets. Output goes to `dist/`, which is intentionally ignored by Git.
 
 1. Open `chrome://extensions` or `edge://extensions`.
 2. Enable **Developer mode**, choose **Load unpacked**, and select this repository's `dist` folder.
@@ -22,13 +22,14 @@ npm run check
 
 For UI development, run `npm run dev` and open the printed local URL with `/dashboard.html` or `/popup.html`. This previews ordinary web pages; it does not load an extension. `npm run build:watch` rebuilds the unpacked files, but browser extension reloads remain manual. Run `npm run check` before submitting changes.
 
-The foundation requests no browser permissions or host access. Fonts and scripts are bundled locally. There is no background worker or connection to myUHD in this build.
+The foundation requests only `storage`; it has no host permissions or connection to myUHD. A module background worker owns schedule/settings writes and accepts commands only from this extension's dashboard. Fonts and scripts are bundled locally. Unsupported import, ratings, and enrollment commands return `FEATURE_UNAVAILABLE`.
 
 ## Start here
 
 - [Detailed build plan and daily tasks](docs/BUILD_PLAN.md)
 - [Current checkpoint and next task](docs/STATUS.md)
 - [Foundation verification and screenshots](docs/evidence/03a-foundation.md)
+- [Storage and messaging verification (03B)](docs/evidence/03b-storage-messaging.md)
 - [Screen layouts and interaction specification](docs/UI_SPEC.md)
 - [Design references: Taste Skill and Impeccable](docs/DESIGN_GUIDANCE.md)
 - [Recorded visual direction and tokens](DESIGN.md)

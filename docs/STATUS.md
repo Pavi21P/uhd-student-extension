@@ -5,16 +5,17 @@ Updated: 2026-10-22 (America/Chicago)
 ## Current state
 
 - **01A complete**: [UI specification](UI_SPEC.md); teammate review pending.
-- **02A complete**: [shared contracts](CONTRACTS.md), TypeScript records/messages and synthetic examples. Runtime validation remains 03B.
+- **02A complete**: [shared contracts](CONTRACTS.md), TypeScript records/messages and synthetic examples.
 - **03A complete**: loadable MV3 extension, working popup launcher, static dashboard preview, pinned toolchain and reproducible build. [Verification and screenshots](evidence/03a-foundation.md).
-- No course editing/storage, working destination tabs, live ratings or enrollment actions yet. Disabled preview controls say so.
-- Public repo: https://github.com/Pavi21P/uhd-student-extension. Previously published planning/contracts checkpoint: `439d5d4` on `main`. Current foundation work is local on `feat/03a-extension-foundation`; not pushed.
+- **03B complete**: schedule/settings runtime validation, serialized revision-protected local storage, authenticated worker messages and typed client. [Verification](evidence/03b-storage-messaging.md). The dashboard is still a static preview; no editor or UI storage subscription is connected yet.
+- No working destination tabs, live ratings or enrollment actions yet. Reserved feature commands return FEATURE_UNAVAILABLE without execution.
+- Public repo: https://github.com/Pavi21P/uhd-student-extension. Previously published planning/contracts checkpoint: `439d5d4` on `main`. 03A is local commit `cffda38`. Current 03B work is local on `feat/03b-storage-messaging`, based on that commit; neither task branch has been pushed.
 
 ## Active work
 
 | Owner | Task | State | Next action |
 | --- | --- | --- | --- |
-| A / Pavitra | 03A | Complete locally | Review foundation handoff; next proposed task is 03B (shared foundation, claim ownership before editing). |
+| A / Pavitra | 03B | Complete locally | Next ready task: 04A, dashboard tabs and working Planner action. |
 | B / teammate | 01B | Ready | Inspect the real myUHD flow and build an anonymized portal map. |
 
 ## Decisions to retain
@@ -36,10 +37,11 @@ Updated: 2026-10-22 (America/Chicago)
 
 ## Latest handoff
 
-- Task / owner: 03A / A (Pavitra lane), complete.
-- Changed: build/toolchain and lockfile; public manifest/icons/notices; dashboard, popup and shared UI; launcher tests; PRODUCT.md, DESIGN.md, README.md, CONTRIBUTING.md, design guidance and evidence.
-- Passed: clean `npm ci`; lint; 4 tests; strict typecheck; production build/artifact checks; unpacked Chrome/Edge popup-to-dashboard flow; responsive visual inspection; keyboard/reduced-motion/error-state checks. No page-access permissions requested.
-- Limits: headless extension-page checks, not manual toolbar interaction; CSS 200% scale, not browser-toolbar zoom; no screen-reader audit, live portal work or teammate sign-off.
-- Next ready task: **03B**, runtime validation/storage/typed message handling; coordinate the shared-file editor first. 04A is also dependency-ready, and B's 01B assignment is unchanged. Stop after one claimed task.
+- Task / owner: 03B / A (Pavitra lane), complete. The shared-file claim was recorded before implementation; B's portal research is unchanged.
+- Changed: shared validators/RPC/client; background worker/handler; storage repository; three unit-test files; manifest/build guards; current contract/setup/product/reference docs and 03B evidence. No UI changes or new dependencies.
+- Passed: 90 unit tests; lint without warnings; strict typecheck; production build/artifact checks. Chrome 156.0.8078.47 and Edge 155.0.4283.62 passed actual worker/storage save, dashboard reload, concurrent-view conflict, malformed/unavailable command rejection, corrupt/future record preservation, settings save and whole-browser restart restoration.
+- Permissions: only storage; no host access. Storage access restricted to trusted extension contexts before any operation. Client timeout is 10 seconds, with no automatic retry; saved revisions remain authoritative.
+- Limits: UI remains preview-only. No migrations/recovery UI, import/export, live provider/portal actions, enrollment deduplication/executor or crash-during-write test. Provider/portal/job validators are deferred with those disabled feature commands. No teammate sign-off yet.
+- Next ready task: **04A**, dashboard navigation and the existing planner link. Read its UI/design requirements before editing; stop after that task.
 
 Read the linked evidence for detailed versions and limits; do not replay the full history.

@@ -50,4 +50,8 @@ Do not add raw authenticated HTML, real enrollment records, or the local video t
 
 ## User-requested design references
 
-The user added [Taste Skill](https://github.com/Leonxlnx/taste-skill) and [Impeccable](https://github.com/pbakaus/impeccable) on 2026-10-20. Repository metadata and relevant skill documentation were inspected. [DESIGN_GUIDANCE.md](DESIGN_GUIDANCE.md) records exact revisions, roles, project-specific application, and future verification steps. Neither toolkit is locally installed; no design script or visual check has run. No third-party source files were copied into this project.
+The user added [Taste Skill](https://github.com/Leonxlnx/taste-skill) and [Impeccable](https://github.com/pbakaus/impeccable) on 2026-10-20. Repository metadata and relevant skill documentation were inspected. [DESIGN_GUIDANCE.md](DESIGN_GUIDANCE.md) records exact revisions, roles, project-specific application, and future verification steps. Neither toolkit is locally installed and no vendor design script ran. Task 03A applied the references and inspected browser screenshots; see its evidence record. No third-party source files from those toolkits were copied into the project.
+
+## Foundation API refresh (03B)
+
+On 2026-10-22, storage access levels, asynchronous message replies, and module service-worker registration were rechecked in official Chrome documentation. [03B evidence](evidence/03b-storage-messaging.md) records the sources and tested browser versions. Storage permission is now implemented; portal permissions remain absent.

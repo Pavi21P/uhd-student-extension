@@ -13,7 +13,7 @@ A desktop Chrome/Edge extension for UHD students planning a term and preparing t
 
 ## Current scope
 
-Task 03A creates a loadable MV3 package, popup launcher and dashboard shell. The visible course card and weekly area are explicitly labeled previews. Timetable editing/storage, working dashboard tabs, planner navigation, ratings and enrollment remain later tasks.
+Task 03A created the MV3 package, popup launcher and dashboard shell. Task 03B adds validated schedule/settings storage and typed messages behind the preview. The visible course card and weekly area remain previews, with no editor connected to storage yet. Working dashboard tabs, planner navigation, timetable editing, ratings and enrollment remain later tasks.
 
 ## Design commitments
 

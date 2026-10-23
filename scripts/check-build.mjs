@@ -5,9 +5,11 @@ import path from 'node:path';
 const dist = path.resolve('dist');
 const manifest = JSON.parse(await readFile(path.join(dist, 'manifest.json'), 'utf8'));
 assert.equal(manifest.manifest_version, 3, 'Expected a Manifest V3 build');
-assert.ok(!manifest.permissions?.length && !manifest.host_permissions?.length, 'Foundation must not request site or data access');
+assert.deepEqual(manifest.permissions, ['storage'], 'Only local storage permission is expected');
+assert.ok(!manifest.host_permissions?.length && !manifest.optional_host_permissions?.length, 'Foundation must not request site access');
+assert.deepEqual(manifest.background, { service_worker: 'background.js', type: 'module' });
 assert.ok(!manifest.content_scripts?.length, 'Foundation must not inject into pages');
-const entrypoints = [manifest.action.default_popup, manifest.options_page, ...Object.values(manifest.icons)];
+const entrypoints = [manifest.action.default_popup, manifest.options_page, manifest.background.service_worker, ...Object.values(manifest.icons)];
 for (const relative of entrypoints) await checkFile(relative);
 for (const entry of [manifest.action.default_popup, manifest.options_page]) {
   const html = await readFile(path.join(dist, entry), 'utf8');

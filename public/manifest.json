@@ -21,5 +21,12 @@
   "options_page": "dashboard.html",
   "content_security_policy": {
     "extension_pages": "script-src 'self'; object-src 'none'; base-uri 'none'; connect-src 'none'; frame-src 'none'"
+  },
+  "permissions": [
+    "storage"
+  ],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
   }
 }

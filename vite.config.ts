@@ -7,7 +7,8 @@ export default defineConfig({
   build: {
     target: 'chrome120',
     rolldownOptions: {
-      input: { dashboard: 'dashboard.html', popup: 'popup.html' },
+      input: { dashboard: 'dashboard.html', popup: 'popup.html', background: 'src/background/main.ts' },
+      output: { entryFileNames: chunk => chunk.name === 'background' ? 'background.js' : 'assets/[name]-[hash].js' },
     },
   },
 });

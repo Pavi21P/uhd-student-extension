@@ -144,7 +144,7 @@ export interface EnrollmentJob extends EnrollmentJobView {
 export type ContractErrorCode = 'INVALID_INPUT' | 'UNSUPPORTED_VERSION' | 'REVISION_CONFLICT'
   | 'UNAUTHORIZED_SENDER' | 'PORTAL_UNSUPPORTED' | 'STALE_REVIEW' | 'SELECTION_CHANGED'
   | 'INVALID_TIME' | 'JOB_ALREADY_ACTIVE' | 'TOO_LATE_TO_CANCEL' | 'STORAGE_ERROR'
-  | 'PROVIDER_UNAVAILABLE' | 'NOT_FOUND' | 'REQUEST_ID_REUSED';
+  | 'PROVIDER_UNAVAILABLE' | 'NOT_FOUND' | 'REQUEST_ID_REUSED' | 'FEATURE_UNAVAILABLE' | 'TRANSPORT_ERROR';
 export interface ContractError {
   code: ContractErrorCode;
   message: string;

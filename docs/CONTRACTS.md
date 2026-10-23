@@ -1,14 +1,28 @@
-# Shared contracts: task 02A
+# Shared contracts: tasks 02A / 03B
 
-Contract version 1. [domain.ts](../src/shared/domain.ts) owns records; [messages.ts](../src/shared/messages.ts) owns message shapes. [Synthetic examples](../tests/fixtures/contracts.examples.ts) cover an unnamed card, recurring meetings, a precise enrollment review, an activation request and a revision conflict. TypeScript is compile-time checking only: runtime validators, persistence, messaging and execution are not implemented in this task.
+Contract version 1. [domain.ts](../src/shared/domain.ts) owns records; [messages.ts](../src/shared/messages.ts) owns message shapes. [Synthetic examples](../tests/fixtures/contracts.examples.ts) cover an unnamed card, recurring meetings, a precise enrollment review, an activation request and a revision conflict. Task 02A established these compile-time shapes. Task 03B implements the schedule/settings runtime subset below; provider, portal, import and enrollment execution remain later tasks.
 
 ## Ownership and compatibility
 
-A owns timetable/editor consumers; B owns portal/provider adapters. Changes to shared records/messages need the other owner's review before integration. 03B implements validation and the single background writer against this contract. Browser setup and the pinned toolchain remain 03A. No portal selector, real school ID or provider endpoint is assumed here.
+A owns timetable/editor consumers; B owns portal/provider adapters. Changes to shared records/messages need the other owner's review before integration. 03B implements schedule/settings validation and a single background writer against this contract. Browser setup and the pinned toolchain were completed in 03A. No portal selector, real school ID or provider endpoint is assumed here.
 
 Persisted records use schemaVersion; transport uses protocolVersion. Both start at 1. Reject unknown versions with UNSUPPORTED_VERSION and leave saved data intact. A migration must explicitly read an old version and produce a validated new one; never reset a schedule because parsing failed. Unknown input enters validators as unknown, never through a type assertion.
 
-## Validation rules for 03B
+## Implemented runtime subset (03B)
+
+- `src/shared/validation.ts` parses CourseCard, Meeting, Schedule and DisplaySettings from unknown values into fresh records. IDs are bounded to 128 characters; controls and lone surrogates are rejected. Extra fields, accessors, prototype keys, invalid references/versions, duplicate IDs/occurrences and product limits are enforced. Other overlapping meetings are retained; conflict warnings/interval utilities remain 05B.
+- `src/shared/foundation-rpc.ts` validates only `schedule.read`, `schedule.save`, `settings.read` and `settings.save`, including response schema and correlation. Reserved import/provider/enrollment commands return `FEATURE_UNAVAILABLE` without parsing or executing those features. Unknown commands return `INVALID_INPUT`. Their domain-specific validators must be added with their owning feature tasks before enabling those commands.
+- `src/background/handler.ts` verifies browser-supplied extension ID and the exact dashboard document URL (hash navigation allowed, queries denied), top-level frame and active lifecycle when supplied. Payload fields cannot self-authorize a sender. Popup, external-page and unsupported-document senders cannot read or write through this API.
+- Invalid envelopes return `RpcRejection`: `protocolVersion: 1`, `ok: false`, a typed error and nullable `requestId`/`type`. These fields are null only when a valid envelope identity could not be parsed. A valid envelope, including an unsupported protocol version, retains its identity in the rejection.
+- `src/storage/repository.ts` owns serialized reads and writes in one background instance. Keys are `uhd.schedule.<encoded ID>` and `uhd.settings`; versions are inside records so unknown versions cannot be accidentally hidden by switching keys. Missing schedules return NOT_FOUND. Missing settings return fresh defaults at revision 0 without writing; the first settings save expects 0 and persists revision 1. Course/schedule IDs are supplied by future editor creation via UUIDs; imported/client revisions never dictate the stored revision.
+- Every saved read is revalidated. Invalid/future records stay intact. Failed or uncertain writes do not trigger retries or resets. Revision checks, create-only semantics and successful-write events follow the rules below. Recovery/migrations, export/import and UI subscriptions remain their own tasks (06B/07B and consumers).
+- The worker restricts storage.local to TRUSTED_CONTEXTS before handling data. Only `storage` permission is requested. This excludes content scripts from direct storage access; trusted extension pages still technically have storage API access and must use the single-writer client by project convention.
+- `src/shared/client.ts` supplies a typed dashboard client with runtime response validation, fresh request IDs and a 10-second reply deadline. It never retries automatically. `TRANSPORT_ERROR` means the outcome is unconfirmed; retain the draft and read authoritative state. An expired client timer does not cancel a worker operation.
+- StateEvent notifications are best-effort metadata-only runtime messages emitted after persistence; a missing listener does not fail an already committed save. There is no UI subscription yet. Later consumers must refetch on startup/reconnect and honor revisions; events are not durable delivery or a replay protocol.
+
+Enrollment activation deduplication and durable executor ownership still belong to 14B. This storage queue does not establish those guarantees and enables no enrollment action.
+
+## Validation rules by feature
 
 | Record | Rules |
 | --- | --- |
@@ -66,7 +80,7 @@ All other mutating operations use revision checks or defined idempotent associat
 
 Runtime state transitions, durable execution ownership and late-job detection belong to 14B-18B. This task does not claim to have implemented or proved them.
 
-## Validation and handoff
+## Task 02A validation history
 
 Compile the three TypeScript files with strict checks and no output. The examples' satisfies checks verify required shapes; they are not runtime validators. In 03B, promote invalidExamples into runtime rejection tests and add sender-spoofing, revision-conflict and save/reload checks. Keep separate domain tests for recurrence/collisions in 05B and enrollment state transitions in 14B.
 
