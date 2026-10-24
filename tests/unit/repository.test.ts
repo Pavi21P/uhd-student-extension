@@ -113,3 +113,30 @@ describe('single-writer schedule repository', () => {
     expect(storage.writes).toBe(1);
   });
 });
+
+describe('06B non-destructive recovery', () => {
+  it('recovers after a transient read failure without an automatic write', async () => {
+    const storage = new MemoryStorage(); const repo = new FoundationRepository(storage);
+    const saved = await repo.saveSchedule(recurringSchedule, null); storage.failRead = true;
+    await expect(repo.readSchedule(saved.id)).rejects.toEqual(code('STORAGE_ERROR'));
+    storage.failRead = false;
+    expect(await repo.readSchedule(saved.id)).toEqual(saved); expect(storage.writes).toBe(1);
+  });
+  it('leaves corrupt settings intact and allows reading a separately restored valid version', async () => {
+    const storage = new MemoryStorage(); const repo = new FoundationRepository(storage);
+    const saved = await repo.saveSettings(defaultSettings(), 0);
+    const corrupt = { ...saved, visibleDays: [] }; storage.values.set('uhd.settings', corrupt);
+    await expect(repo.readSettings()).rejects.toEqual(code('STORAGE_ERROR'));
+    await expect(repo.saveSettings(saved, saved.revision)).rejects.toEqual(code('STORAGE_ERROR'));
+    expect(storage.values.get('uhd.settings')).toEqual(corrupt); expect(storage.writes).toBe(1);
+    storage.values.set('uhd.settings', saved);
+    expect(await repo.readSettings()).toEqual(saved); expect(storage.writes).toBe(1);
+  });
+  it('does not resurrect a removed schedule from a stale view', async () => {
+    const storage = new MemoryStorage(); const repo = new FoundationRepository(storage);
+    const saved = await repo.saveSchedule(recurringSchedule, null); storage.values.delete(scheduleKey(saved.id));
+    await expect(repo.saveSchedule(saved, saved.revision)).rejects.toEqual(code('REVISION_CONFLICT'));
+    await expect(repo.readSchedule(saved.id)).rejects.toEqual(code('NOT_FOUND'));
+    expect(storage.writes).toBe(1);
+  });
+});
