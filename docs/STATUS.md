@@ -19,7 +19,7 @@ Updated: 2026-10-24 (America/Chicago)
 
 | Owner | Task | State | Next action |
 | --- | --- | --- | --- |
-| A / Pavitra | 06B | Complete | Verified on feat/06b-cross-view-recovery; publishing for review. Next ready: 07A. |
+| A / Pavitra | 06B | Complete | Pushed in PR #3, based on PR #2; review and merge pending. Next ready: 07A. |
 | B / teammate | 01B | Ready | Inspect the real myUHD flow and build an anonymized portal map. |
 
 ## Decisions to retain
@@ -41,7 +41,7 @@ Updated: 2026-10-24 (America/Chicago)
 
 ## Latest handoff
 
-- Task / owner: **06B / A**, complete on feat/06b-cross-view-recovery, based on open [PR #2](https://github.com/Pavi21P/uhd-student-extension/pull/2). Publication pending; no merge performed. B's 01B assignment is unchanged.
+- Task / owner: **06B / A**, complete on feat/06b-cross-view-recovery, based on open [PR #2](https://github.com/Pavi21P/uhd-student-extension/pull/2). Implementation commit `9f44c4e` is pushed in [PR #3](https://github.com/Pavi21P/uhd-student-extension/pull/3), based on feat/06a-weekly-grid. GitHub source and PR head were verified. Review/merge the parent first, then retarget this PR to main; no merge performed. B's 01B assignment is unchanged.
 - Changed: refresh queue/subscription hook, schedule/settings read handling, grid recovery notice, 10 regression tests and [evidence](evidence/06b-cross-view-recovery.md). Reuses 03B versioned single-writer repository; stored schema, RPC, permissions and dependencies are unchanged.
 - Passed: **161 tests**, lint, strict typecheck, production build/artifact validation. Chrome/Edge two-tab checks cover idle updates, raw draft review, remote deletion, events during reads, missed-event catch-up, corrupt/future records, lost-save replies, transient read recovery and process restart. Desktop/narrow recovery screenshots inspected.
 - Limits: no automatic corruption repair/reset, schema migration or backup/import; an invalid record remains blocked until valid data is restored separately. No live portal/RMP or screen-reader audit. Parent PR reviews/merges remain pending.
