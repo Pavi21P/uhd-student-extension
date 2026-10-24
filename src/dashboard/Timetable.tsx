@@ -1,8 +1,10 @@
 import { Icon } from '../ui/Icon';
 import { CourseEditor, SaveStatus } from './CourseEditor';
+import { WeeklyGrid } from './WeeklyGrid';
+import type { ViewSettings } from './use-view-settings';
 import type { CourseWorkspace } from './use-course-workspace';
 
-export function Timetable({ model }: { model: CourseWorkspace }) {
+export function Timetable({ model, view }: { model: CourseWorkspace; view: ViewSettings }) {
   const saved = model.schedule?.courses ?? [];
   const courses = model.draft && model.newCourse && !saved.some(course => course.id === model.draft?.id)
     ? [...saved, { id: model.draft.id }] : saved;
@@ -31,25 +33,17 @@ export function Timetable({ model }: { model: CourseWorkspace }) {
         <p className="tray-intro">Start blank. Fill in the details whenever you’re ready.</p>
         <div className="course-list">{cards(unscheduled)}</div>
         {model.ready && !unscheduled.length && <p className="tray-footnote">No unscheduled courses. Use Add course to create a card.</p>}
-        {scheduled.length > 0 && <section className="scheduled-courses"><h2>Courses with saved meetings</h2><p className="tray-intro">Your meeting data is kept. Grid placement comes in a later build.</p><div className="course-list">{cards(scheduled)}</div></section>}
+        {scheduled.length > 0 && <section className="scheduled-courses"><h2>Courses with saved meetings</h2><p className="tray-intro">Edit a course here or select one of its meetings on the grid.</p><div className="course-list">{cards(scheduled)}</div></section>}
         {courses.length >= 250 && <p className="tray-footnote">This timetable has reached its 250-course limit.</p>}
       </aside>
       <div className="timetable-detail">
         {model.draft && <CourseEditor key={model.draft.id} model={model} />}
-        <section className="week-panel" aria-labelledby="week-title">
-          <div className="week-heading"><h2 id="week-title">Week at a glance</h2><span>Monday–Friday</span></div>
-          <div className="week-preview"><div className="day-labels" aria-hidden="true">{['Mon', 'Tue', 'Wed', 'Thu', 'Fri'].map(day => <span key={day}>{day}</span>)}</div>
-            <div className="week-canvas"><div className="week-columns" aria-hidden="true">{[0, 1, 2, 3, 4].map(day => <span key={day} />)}</div>
-              <div className="empty-week"><Icon name="calendar" /><h3>Room for your week.</h3><p>Course details save locally.<br />Placing classes on this grid comes next.</p></div>
-            </div>
-          </div>
-          <div className="week-footnote"><span>Grid preview · Meeting editing unavailable</span><span>Stored only in this browser profile</span></div>
-        </section>
+        <WeeklyGrid model={model} view={view} />
       </div>
     </div>
     <details className="availability"><summary>What works in this build?</summary><div className="availability-content">
-      <p>Create blank course cards, edit their details, delete them, and reopen your saved courses. Open the separate course planner from Planner.</p>
-      <p>Grid placement, live professor ratings, and enrollment are not available yet. No connection to myUHD is made.</p>
+      <p>Create course cards, add or remove meetings, and reopen your saved weekly timetable. Change visible days and hours in Settings. Open the separate course planner from Planner.</p>
+      <p>Dragging, live professor ratings, and enrollment are not available yet. No connection to myUHD is made.</p>
     </div></details>
   </>;
 }

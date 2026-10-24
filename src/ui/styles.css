@@ -224,3 +224,84 @@ button:disabled { cursor: not-allowed; }
   .course-editor::backdrop { background: rgb(24 38 33 / 40%); }
   .editor-fields { grid-template-columns: 1fr; }
 }
+
+/* Task 06A: manual placement, exact time geometry and saved view controls. */
+.meeting-fields { margin-top: 28px; padding-top: 24px; border-top: 1px solid var(--line); }
+.meeting-fields h3 { font-size: 16px; font-weight: 600; }
+.meeting-fields > p { font-size: 13px; color: var(--muted); margin: 8px 0 16px; max-width: 68ch; }
+.meeting-row { display: grid; grid-template-columns: minmax(130px, 1.3fr) repeat(2, minmax(90px, 1fr)); gap: 12px; border: 1px solid var(--line); border-radius: 8px; padding: 16px; margin: 16px 0; }
+.meeting-row legend, .view-fields legend { font-size: 14px; font-weight: 600; padding: 0 6px; }
+.meeting-row label { display: grid; align-content: start; gap: 6px; font-size: 13px; font-weight: 500; min-width: 0; }
+.meeting-row input, .meeting-row select { width: 100%; min-width: 0; min-height: 40px; padding: 8px 10px; font: inherit; color: var(--ink); background: var(--surface); border: 1px solid #a4b2ac; border-radius: 8px; }
+.meeting-row input[aria-invalid="true"], .editor-fields input[aria-invalid="true"] { border-color: var(--error); }
+.meeting-row .error-message { font-size: 12px; font-weight: 400; margin-top: 0; }
+.remove-meeting { grid-column: 1 / -1; justify-self: start; }
+.overlap-note { padding: 14px 16px; border: 1px solid #cbb58f; border-radius: 8px; background: #fcf8ef; color: #664b1c; font-size: 13px; margin-top: 16px; }
+.overlap-note p, .overlap-note ul { margin-top: 8px; }
+.overlap-note ul, .saved-meetings ul { padding-left: 20px; }
+.saved-meetings { margin-bottom: 12px; }
+.weekly-grid .week-heading p { margin-top: 4px; font-size: 12px; color: var(--muted); }
+.weekly-grid .week-heading .text-action { margin: 0; }
+.grid-notice { font-size: 13px; padding: 12px 20px; background: var(--surface-soft); border-top: 1px solid var(--line); }
+.grid-notice .button { margin-top: 8px; }
+.grid-notice a { color: var(--accent); }
+.grid-notice.overlap-note { margin: 0; border-radius: 0; background: #fcf8ef; }
+.calendar-scroll { max-height: 740px; overflow: auto; border-top: 1px solid var(--line); overscroll-behavior: contain; }
+.calendar-scroll:focus-visible { outline-offset: -3px; }
+.calendar-board { width: 100%; }
+.calendar-head { display: grid; position: sticky; top: 0; z-index: 5; background: var(--surface-soft); border-bottom: 1px solid var(--line); }
+.calendar-head > span { padding: 12px 8px; text-align: center; font-size: 12px; font-weight: 600; border-left: 1px solid var(--line); }
+.calendar-head .time-head { position: sticky; left: 0; background: var(--surface-soft); z-index: 6; border-left: 0; }
+.calendar-body { display: grid; position: relative; }
+.time-axis { position: sticky; left: 0; background: var(--surface); z-index: 4; }
+.time-axis > span { position: absolute; right: 9px; transform: translateY(-50%); color: var(--muted); font-size: 11px; }
+.time-axis > .first-mark { transform: translateY(3px); }
+.time-axis > .last-mark { transform: translateY(-100%); }
+.calendar-day { position: relative; border-left: 1px solid var(--line); min-width: 0; }
+.hour-line { position: absolute; left: 0; right: 0; border-top: 1px solid #e8edeb; pointer-events: none; }
+.calendar-meeting { position: absolute; display: grid; grid-template-rows: auto 1fr auto; min-height: 0; min-width: 0; padding: 5px 8px; background: var(--accent-soft); border: 1px solid #b7cec3; border-radius: 6px; color: var(--ink); text-align: left; overflow: hidden; }
+.calendar-meeting:hover:not(:disabled) { background: #dcebe3; border-color: var(--accent); }
+.calendar-meeting:focus-visible { z-index: 3; outline-offset: -2px; }
+.calendar-meeting .card-professor { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding-right: 14px; font-size: 10px; }
+.calendar-meeting .card-course-name { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 13px; font-weight: 600; }
+.calendar-meeting .course-color { top: 8px; right: 7px; width: 7px; height: 7px; }
+.meeting-card-footer { display: flex; justify-content: space-between; gap: 6px; font-size: 9px; white-space: nowrap; min-width: 0; }
+.meeting-card-footer .card-room { font-size: 10px; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.compact-meeting { display: block; padding: 0 5px; border: 0; border-radius: 3px; }
+.compact-meeting .card-course-name { display: block; text-align: left; font-size: 11px; padding-right: 12px; }
+.conflicting-meeting { border-style: dashed; }
+.meeting-list { border-top: 1px solid var(--line); padding: 16px 20px; }
+.meeting-list summary { font-size: 14px; font-weight: 600; cursor: pointer; padding: 4px 0; }
+.meeting-list ul { list-style: none; margin: 12px 0 0; padding: 0; }
+.meeting-list li { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 0; }
+.meeting-list li + li { border-top: 1px solid var(--line); }
+.meeting-list li > div { display: grid; gap: 3px; min-width: 0; font-size: 12px; color: var(--muted); overflow-wrap: anywhere; }
+.meeting-list strong { font-size: 13px; color: var(--ink); font-weight: 600; }
+.meeting-list .button { flex-shrink: 0; }
+.overlap-label { color: #664b1c; }
+.view-settings-layout { display: grid; grid-template-columns: minmax(200px, 1fr) minmax(0, 2fr); gap: 40px; max-width: 1100px; margin: 32px 0; }
+.settings-description h2 { font-size: 18px; font-weight: 600; }
+.settings-description p { font-size: 14px; color: var(--muted); margin-top: 12px; max-width: 40ch; }
+.settings-description .settings-preview { border-top: 1px solid var(--line); padding-top: 16px; font-size: 13px; overflow-wrap: anywhere; }
+.view-settings-form { padding: 24px; background: var(--surface-soft); border-radius: 12px; min-width: 0; }
+.view-settings-form > .button { margin-bottom: 16px; }
+.view-fields { padding: 0; border: 0; }
+.view-fields legend { padding: 0; }
+.day-choices { display: flex; flex-wrap: wrap; gap: 8px 20px; margin-top: 12px; }
+.day-choices label { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; font-size: 13px; }
+.day-choices input { accent-color: var(--accent); width: 16px; height: 16px; }
+.view-time-fields { margin-top: 24px; }
+.view-time-fields .error-message { font-size: 12px; }
+.settings-limit { border-top: 1px solid var(--line); padding-top: 20px; font-size: 13px; color: var(--muted); }
+@media (max-width: 800px) {
+  .view-settings-layout { grid-template-columns: 1fr; gap: 24px; }
+  .view-settings-form { padding: 20px; }
+  .calendar-scroll { max-height: 600px; }
+  .meeting-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .meeting-row > label:first-of-type { grid-column: 1 / -1; }
+}
+@media (max-width: 520px) {
+  .meeting-list li { align-items: flex-start; flex-direction: column; gap: 8px; }
+  .grid-notice, .meeting-list { padding-left: 16px; padding-right: 16px; }
+  .meeting-row { padding: 12px; }
+}

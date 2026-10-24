@@ -13,7 +13,7 @@ A desktop Chrome/Edge extension for UHD students planning a term and preparing t
 
 ## Current scope
 
-Tasks 03A–04A provide the MV3 package, popup, validated background storage, navigation and live planner link. Task 05A connects blank course cards and the optional-field editor to local storage, with explicit save, cancel, delete and conflict recovery. The weekly grid remains a preview; meeting placement is a later task. Professors, Enrollment and Settings show truthful unavailable states. No live ratings or enrollment execution is implemented.
+Tasks 03A through 05B provide the MV3 package, validated background storage, navigation, planner link, course editor and meeting validation. Task 06A adds manual meeting rows, exact weekly placement, overlap warnings, an accessible meeting list, and saved visible days/hours. Course details and meetings save together with revision checks and explicit recovery after an uncertain save. Dragging, automatic cross-view refresh, backup/import, live ratings and enrollment remain unfinished.
 
 ## Design commitments
 

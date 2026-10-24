@@ -35,7 +35,7 @@ export function App() {
       </div>
       <footer className="popup-footer">
         <strong>Course cards, saved locally</strong>
-        <p>Add and edit course cards. Grid placement, ratings, and enrollment are still to come.</p>
+        <p>Build your weekly timetable with course cards and meeting times. Ratings and enrollment are still to come.</p>
       </footer>
     </main>
   );

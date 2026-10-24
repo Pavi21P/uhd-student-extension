@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { CourseCard } from '../shared/domain';
+import { MeetingFields } from './MeetingFields';
+import { meetingLabel } from './meeting-model';
 import type { CourseWorkspace } from './use-course-workspace';
 
 const fields = [
@@ -44,13 +46,14 @@ export function CourseEditor({ model }: { model: CourseWorkspace }) {
     onKeyDown={event => { if (event.key === 'Escape') { event.preventDefault(); model.close(); } }}>
     <form onSubmit={event => { event.preventDefault(); if (!blocked) model.save(); }}>
       <h2 id="editor-title">Course details</h2>
-      <p id="editor-help" className="editor-help">Every field is optional. Add meeting times in a later build.</p>
+      <p id="editor-help" className="editor-help">Course details are optional. Add meetings when you know their times.</p>
       <SaveStatus model={model} />
       {model.review && <section className="review-panel" aria-labelledby="review-title">
         <h3 id="review-title">Review the saved version</h3>
-        <p>Your draft is in the fields below. Saving it replaces this course’s saved details; other courses stay as loaded.</p>
+        <p>Your draft is in the fields below. Saving it replaces this course’s saved details and meetings; other courses stay as loaded.</p>
         {model.savedCourse ? <dl>{fields.map(([key, label]) => <div key={key}><dt>{label}</dt><dd>{model.savedCourse?.[key] || 'Blank'}</dd></div>)}<div><dt>Color</dt><dd>{model.savedCourse.color || 'Default'}</dd></div></dl>
           : <p>{missing ? 'This course is no longer saved. Copy any draft text you need, then Cancel. It will not be recreated automatically.' : 'This new card has not been saved. Keep your draft to create it.'}</p>}
+        {model.savedCourse && <div className="saved-meetings"><strong>Saved meetings</strong><ul>{model.schedule?.meetings.filter(meeting => meeting.courseId === draft.id).map(meeting => <li key={meeting.id}>{meetingLabel(meeting)}</li>)}</ul>{!meetingCount && <p>No saved meetings</p>}</div>}
         {!missing && <button type="button" className="button button-secondary" onClick={model.acceptReview}>Keep my draft</button>}
       </section>}
       <fieldset className="editor-fields" disabled={model.busy}>
@@ -66,13 +69,14 @@ export function CourseEditor({ model }: { model: CourseWorkspace }) {
           </select>
         </label>
       </fieldset>
+      <MeetingFields model={model} />
       <div className="editor-actions">
         <button type="submit" className="button button-primary" disabled={blocked}>Save course</button>
         <button type="button" className="button button-secondary" onClick={model.close} disabled={model.busy}>Cancel</button>
       </div>
       <div className="delete-course">
         {confirmDelete ? <div role="group" aria-label="Confirm course deletion"><p>Delete this course and its {meetingCount} {meetingCount === 1 ? 'meeting' : 'meetings'}? This cannot be undone.</p>
-          <div className="editor-actions"><button type="button" className="button button-danger" disabled={blocked} onClick={model.remove}>Confirm delete</button>
+      <div className="editor-actions"><button type="button" className="button button-danger" disabled={blocked} onClick={model.remove}>Confirm delete</button>
           <button type="button" className="button button-secondary" onClick={() => setConfirmDelete(false)} disabled={model.busy}>Keep course</button></div></div>
           : <button type="button" className="button button-danger" disabled={blocked || !model.savedCourse}
             onClick={() => { if (meetingCount) setConfirmDelete(true); else model.remove(); }}>Delete course</button>}
