@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useStorageRefresh } from './use-storage-refresh';
 import { createFoundationClient } from '../shared/client';
 import type { CourseCard, Schedule } from '../shared/domain';
 import { ContractFault } from '../shared/validation';
@@ -24,20 +25,25 @@ export function useCourseWorkspace() {
   const [error, setError] = useState('');
   const origin = useRef<HTMLElement | null>(null);
 
-  const load = useCallback(async (reviewDraft = false) => {
+  const latest = useRef({ schedule, draft, ready }); latest.current = { schedule, draft, ready };
+  const load = useCallback(async (reviewDraft = false, background = false) => {
     if (lock.current) return;
     lock.current = true; setBusy(true);
     try {
       if (typeof chrome === 'undefined' || !chrome.runtime?.id) throw new ContractFault('TRANSPORT_ERROR', 'Load the built extension in Chrome or Edge to save courses. The web preview has no extension storage.');
       const reply = await client('schedule.read', { scheduleId: primaryScheduleId });
       if (!reply.ok && reply.error.code !== 'NOT_FOUND') throw new ContractFault(reply.error.code, reply.error.message);
-      setSchedule(reply.ok ? reply.data : null); setReady(true); setRecovery(false); setReview(reviewDraft);
-      setError(''); setMessage(reviewDraft ? 'Latest saved courses loaded. Review your draft before saving again.' : reply.ok ? 'Saved courses loaded.' : 'No courses yet. Add your first course.');
+      const saved = reply.ok ? reply.data : null;
+      if (background && latest.current.ready && JSON.stringify(saved) === JSON.stringify(latest.current.schedule)) return;
+      const keepDraft = background ? !!latest.current.draft : reviewDraft;
+      setSchedule(saved); setReady(true); setRecovery(false); setReview(keepDraft);
+      setError(''); setMessage(keepDraft ? 'Latest saved courses loaded. Review your draft before saving again.' : reply.ok ? 'Saved courses loaded.' : 'No courses yet. Add your first course.');
     } catch (failure) {
       setRecovery(true); setError(explanation(failure)); setMessage(reviewDraft ? 'Could not load saved courses. Your draft is still here.' : 'Could not load saved courses.');
     } finally { lock.current = false; setBusy(false); }
   }, []);
   useEffect(() => { void load(); }, [load]);
+  useStorageRefresh('uhd.schedule.' + encodeURIComponent(primaryScheduleId), () => load(false, true), () => lock.current || busy || recovery);
   useEffect(() => {
     if (!draft) return;
     const warn = (event: BeforeUnloadEvent) => { event.preventDefault(); event.returnValue = ''; };

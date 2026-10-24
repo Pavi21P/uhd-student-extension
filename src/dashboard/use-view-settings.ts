@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useStorageRefresh } from './use-storage-refresh';
 import { createFoundationClient } from '../shared/client';
 import { ContractFault, defaultSettings } from '../shared/validation';
 import { parseViewDraft, viewDraft, type ViewDraft } from './view-settings-model';
@@ -10,12 +11,15 @@ export function useViewSettings() {
   const [dirty, setDirty] = useState(false); const [recovery, setRecovery] = useState(false); const [review, setReview] = useState(false);
   const [message, setMessage] = useState('Loading view settings…');
   const [error, setError] = useState(''); const [field, setField] = useState<string | undefined>();
-  const load = useCallback(async (keepDraft = false) => {
+  const latest = useRef({ settings, dirty, ready }); latest.current = { settings, dirty, ready };
+  const load = useCallback(async (keepDraft = false, background = false) => {
     if (lock.current) return; lock.current = true; setBusy(true);
     try {
       if (typeof chrome === 'undefined' || !chrome.runtime?.id) throw new ContractFault('TRANSPORT_ERROR', 'Load the extension in Chrome or Edge to use saved view settings.');
       const reply = await client('settings.read', {});
       if (!reply.ok) throw new ContractFault(reply.error.code, reply.error.message);
+      if (background && latest.current.ready && JSON.stringify(reply.data) === JSON.stringify(latest.current.settings)) return;
+      if (background) keepDraft = latest.current.dirty;
       setSettings(reply.data); setReady(true); setRecovery(false); setReview(keepDraft); setError(''); setField(undefined);
       if (!keepDraft) { setDraft(viewDraft(reply.data)); setDirty(false); }
       setMessage(keepDraft ? 'Latest view settings loaded. Review before saving your changes.' : 'View settings loaded.');
@@ -25,6 +29,7 @@ export function useViewSettings() {
     } finally { lock.current = false; setBusy(false); }
   }, []);
   useEffect(() => { void load(); }, [load]);
+  useStorageRefresh('uhd.settings', () => load(false, true), () => lock.current || busy || recovery);
   useEffect(() => {
     if (!dirty) return;
     const warn = (event: BeforeUnloadEvent) => { event.preventDefault(); event.returnValue = ''; };

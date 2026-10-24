@@ -22,6 +22,7 @@ export function WeeklyGrid({ model, view }: { model: CourseWorkspace; view: View
     {!view.ready && <p className="grid-notice" role="status">{view.recovery ? 'View settings unavailable. Showing default days and hours.' : 'Loading saved days and hours…'} <a href="#settings">View settings</a></p>}
     {outside.length > 0 && <div className="grid-notice"><p>{outside.length} {outside.length === 1 ? 'meeting extends' : 'meetings extend'} outside this view. All meeting details remain in the list below.</p>
       <button type="button" className="button button-secondary" onClick={() => setExpanded(true)}>Show meetings</button></div>}
+    {view.ready && view.recovery && <p className="grid-notice" role="status">Saved view settings could not be verified. Showing the last loaded days and hours. <a href="#settings">Reload in Settings</a></p>}
     {expanded && <div className="grid-notice"><p>Expanded to show all meetings. Your saved view is unchanged.</p><button type="button" className="button button-secondary" onClick={() => setExpanded(false)}>Reset to saved view</button></div>}
     {conflicts.length > 0 && <p className="grid-notice overlap-note" role="status">{conflicts.length} {conflicts.length === 1 ? 'overlap' : 'overlaps'}. Conflicting meetings stay side by side and are marked in the meeting list.</p>}
     {!meetings.length && <p className="grid-notice">Your week is open. Add a course, then use Add meeting in its editor to place it here.</p>}

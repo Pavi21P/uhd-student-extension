@@ -7,18 +7,19 @@ Updated: 2026-10-24 (America/Chicago)
 - **01A complete**: [UI specification](UI_SPEC.md); teammate review pending.
 - **02A complete**: [shared contracts](CONTRACTS.md), TypeScript records/messages and synthetic examples.
 - **03A complete**: loadable MV3 extension, working popup launcher, static dashboard preview, pinned toolchain and reproducible build. [Verification and screenshots](evidence/03a-foundation.md).
-- **03B complete**: schedule/settings runtime validation, serialized revision-protected local storage, authenticated worker messages and typed client. [Verification](evidence/03b-storage-messaging.md). 05A now connects the editor; continuous UI storage subscriptions remain 06B.
+- **03B complete**: schedule/settings runtime validation, serialized revision-protected local storage, authenticated worker messages and typed client. [Verification](evidence/03b-storage-messaging.md). 05A now connects the editor; 06B now refreshes dashboard consumers from storage invalidations.
 - **04A complete**: dashboard destination navigation, keyboard/focus/history behavior, and the live planner link. [Verification and screenshots](evidence/04a-navigation-planner.md). 06A now connects the weekly grid and view settings; Professors and Enrollment explain their unavailable features. Reserved commands still return FEATURE_UNAVAILABLE without execution.
 - **05A complete**: blank course cards, optional-field editor, delete/cancel and revision-aware local persistence. [Verification and screenshots](evidence/05a-course-editor.md).
 - **05B complete**: exact meeting-time validation and deterministic overlap detection, with 45 new acceptance tests. [Verification](evidence/05b-meeting-validation.md). 06A now consumes these helpers in the meeting form and weekly grid.
 - **06A complete**: manual meeting rows, exact weekly placement, overlap warnings, full-detail list and saved visible days/hours. [Verification and screenshots](evidence/06a-weekly-grid.md).
+- **06B complete**: queued cross-tab refresh, preserved raw drafts with explicit review, missed-event catch-up and non-destructive read recovery. [Verification and screenshots](evidence/06b-cross-view-recovery.md).
 - Public repo: https://github.com/Pavi21P/uhd-student-extension. Foundation tasks 03A (`cffda38`) and 03B (`b4ea551`) are included in the 2026-10-22 main-branch publication, retaining their original author dates and history. Published `feat/05a-course-editor` at `5635520` includes 04A (`871beb4`) and 05A (`823f33f`). 05B (`2517dc1`) is published on `feat/05b-meeting-validation`, based on that branch. [Pull request #1](https://github.com/Pavi21P/uhd-student-extension/pull/1) includes 04A/05A/05B and is open for review. `main` remains at `a29eea5`; no merge is included.
 
 ## Active work
 
 | Owner | Task | State | Next action |
 | --- | --- | --- | --- |
-| A / Pavitra | 06A | Complete | Pushed in PR #2, based on PR #1; review and merge pending. Next ready: 06B. |
+| A / Pavitra | 06B | Complete | Verified on feat/06b-cross-view-recovery; publishing for review. Next ready: 07A. |
 | B / teammate | 01B | Ready | Inspect the real myUHD flow and build an anonymized portal map. |
 
 ## Decisions to retain
@@ -40,10 +41,10 @@ Updated: 2026-10-24 (America/Chicago)
 
 ## Latest handoff
 
-- Task / owner: **06A / A**, complete on `feat/06a-weekly-grid`, stacked on the open [PR #1](https://github.com/Pavi21P/uhd-student-extension/pull/1). Implementation commit `6352da4` is pushed in [PR #2](https://github.com/Pavi21P/uhd-student-extension/pull/2), based on `feat/05b-meeting-validation`. GitHub source and PR head were verified. Review/merge #1 first, then retarget #2 to main; no merge performed. B's 01B assignment is unchanged.
-- Changed: meeting form/model, exact grid geometry and accessible list, view-settings form/state, course transaction wiring, popup copy, styles, 11 acceptance tests and [evidence](evidence/06a-weekly-grid.md). Stored schema, RPC, dependencies and permissions are unchanged.
-- Passed: **151 tests**, lint, strict typecheck, production build/artifact validation; Chrome and Edge unpacked-extension checks for exact placement, recurrence, overlap/adjacency, settings persistence, restart, stale writes and uncertain-save recovery. Responsive bounds, keyboard scrolling and actual 200% tab zoom checked.
-- Limits: no live portal/RMP, screen-reader audit or vendor toolkit execution. Dragging, automatic cross-view refresh, imports and enrollment remain unfinished. Human review and merge are pending.
-- Next ready task: **06B**, complete remaining bad-data recovery and two-view update handling on the existing 03B repository. Reuse serialized writes and revision guards; do not rebuild the foundation. Stop after 06A.
+- Task / owner: **06B / A**, complete on feat/06b-cross-view-recovery, based on open [PR #2](https://github.com/Pavi21P/uhd-student-extension/pull/2). Publication pending; no merge performed. B's 01B assignment is unchanged.
+- Changed: refresh queue/subscription hook, schedule/settings read handling, grid recovery notice, 10 regression tests and [evidence](evidence/06b-cross-view-recovery.md). Reuses 03B versioned single-writer repository; stored schema, RPC, permissions and dependencies are unchanged.
+- Passed: **161 tests**, lint, strict typecheck, production build/artifact validation. Chrome/Edge two-tab checks cover idle updates, raw draft review, remote deletion, events during reads, missed-event catch-up, corrupt/future records, lost-save replies, transient read recovery and process restart. Desktop/narrow recovery screenshots inspected.
+- Limits: no automatic corruption repair/reset, schema migration or backup/import; an invalid record remains blocked until valid data is restored separately. No live portal/RMP or screen-reader audit. Parent PR reviews/merges remain pending.
+- Next ready task: **07A**, drag/move/resize with exact form and keyboard alternatives. Keep one occurrence independent and retain the existing manual editor. Stop after 06B.
 
 Read the linked evidence for details; do not replay the full history.

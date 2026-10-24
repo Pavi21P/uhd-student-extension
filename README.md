@@ -2,7 +2,7 @@
 
 A Chrome/Edge extension for UHD students: professor ratings, a link to the existing course planner, a weekly timetable, and user-armed enrollment assistance for myUHD.
 
-**Current build: weekly timetable and manual meeting placement (06A).** Create blank cards, edit optional details, and add independent weekday meetings with exact 24-hour times. The grid reflects each duration, warns about overlaps, and retains access to meetings outside your chosen days/hours. Save the view in Settings. Course and view drafts survive navigation; conflicting or uncertain saves require reload/review. Live ratings and enrollment remain unavailable.
+**Current build: weekly timetable and manual meeting placement (06A).** Create blank cards, edit optional details, and add independent weekday meetings with exact 24-hour times. The grid reflects each duration, warns about overlaps, and retains access to meetings outside your chosen days/hours. Save the view in Settings. Course and view drafts survive navigation. Other open dashboard tabs refresh automatically; incoming changes preserve drafts and require review before saving. Failed or uncertain saves still require an explicit reload/review. Live ratings and enrollment remain unavailable.
 
 ## Run locally
 
@@ -13,7 +13,7 @@ npm ci
 npm run check
 ```
 
-`check` runs lint, 151 unit tests, strict TypeScript checking, and the production build. The build verifies the MV3 entrypoints and bundled assets. Output goes to `dist/`, which is intentionally ignored by Git.
+`check` runs lint, 161 unit tests, strict TypeScript checking, and the production build. The build verifies the MV3 entrypoints and bundled assets. Output goes to `dist/`, which is intentionally ignored by Git.
 
 1. Open `chrome://extensions` or `edge://extensions`.
 2. Enable **Developer mode**, choose **Load unpacked**, and select this repository's `dist` folder.
@@ -37,6 +37,7 @@ The foundation requests only `storage`; it has no host permissions or connection
 - [Course editor verification (05A)](docs/evidence/05a-course-editor.md)
 - [Meeting validation and conflicts (05B)](docs/evidence/05b-meeting-validation.md)
 - [Weekly grid, manual placement and view settings (06A)](docs/evidence/06a-weekly-grid.md)
+- [Cross-tab updates and recovery (06B)](docs/evidence/06b-cross-view-recovery.md)
 - [Screen layouts and interaction specification](docs/UI_SPEC.md)
 - [Design references: Taste Skill and Impeccable](docs/DESIGN_GUIDANCE.md)
 - [Recorded visual direction and tokens](DESIGN.md)
