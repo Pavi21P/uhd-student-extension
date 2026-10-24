@@ -21,7 +21,7 @@ Updated: 2026-10-24 (America/Chicago)
 
 | Owner | Task | State | Next action |
 | --- | --- | --- | --- |
-| A / Pavitra | 07B | Complete | Verified on feat/07b-timetable-backup; publishing for review. Next ready: 08A. |
+| A / Pavitra | 07B | Complete | Published in [PR #5](https://github.com/Pavi21P/uhd-student-extension/pull/5); review pending. Next ready: 08A. |
 | B / teammate | 01B | Ready | Inspect the real myUHD flow and build an anonymized portal map. |
 
 ## Decisions to retain
@@ -43,7 +43,7 @@ Updated: 2026-10-24 (America/Chicago)
 
 ## Latest handoff
 
-- Task / owner: **07B / A**, complete on feat/07b-timetable-backup, based on open [PR #4](https://github.com/Pavi21P/uhd-student-extension/pull/4). Publication pending; no merge performed. B's 01B assignment is unchanged.
+- Task / owner: **07B / A**, complete on feat/07b-timetable-backup, based on open [PR #4](https://github.com/Pavi21P/uhd-student-extension/pull/4). Implementation commit 53cbf25 is published in [PR #5](https://github.com/Pavi21P/uhd-student-extension/pull/5), targeting feat/07a-meeting-drag. Remote commit and open PR verified; review pending, no merge performed. B's 01B assignment is unchanged.
 - Changed: backup parser/import planner, authenticated schedule.import command, serialized writer, preview/download UI, workspace integration, styles, 24 import tests and [evidence](evidence/07b-timetable-backup.md). Import expectedRevision now accepts null for create-only fresh targets; stored schema, permissions and dependencies are unchanged. Contract review is pending with the PR.
 - Passed: **200 tests**, lint, strict typecheck, production build/artifact checks. Chrome/Edge actual downloads and native file selection passed round trip, merge collisions, malformed/oversized files, stale preview, uncertain import, cancellation, empty replacement and reload. Responsive bounds, actual 200% zoom and desktop/narrow panels checked.
 - Limits: backups exclude view settings, planner, provider and enrollment data. Corrupt stored targets remain protected; no migration/repair reset or screen-reader audit. Live RMP/enrollment and parent PR reviews remain pending.
