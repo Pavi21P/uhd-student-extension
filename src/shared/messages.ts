@@ -11,7 +11,7 @@ export interface DashboardRpc {
     output: Schedule;
   };
   'schedule.import': {
-    input: { targetScheduleId: string; expectedRevision: number; mode: 'merge' | 'replace'; backup: TimetableBackup };
+    input: { targetScheduleId: string; expectedRevision: number | null; mode: 'merge' | 'replace'; backup: TimetableBackup };
     output: Schedule;
   };
   'settings.read': { input: Record<string, never>; output: DisplaySettings };

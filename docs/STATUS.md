@@ -8,19 +8,20 @@ Updated: 2026-10-24 (America/Chicago)
 - **02A complete**: [shared contracts](CONTRACTS.md), TypeScript records/messages and synthetic examples.
 - **03A complete**: loadable MV3 extension, working popup launcher, static dashboard preview, pinned toolchain and reproducible build. [Verification and screenshots](evidence/03a-foundation.md).
 - **03B complete**: schedule/settings runtime validation, serialized revision-protected local storage, authenticated worker messages and typed client. [Verification](evidence/03b-storage-messaging.md). 05A now connects the editor; 06B now refreshes dashboard consumers from storage invalidations.
-- **04A complete**: dashboard destination navigation, keyboard/focus/history behavior, and the live planner link. [Verification and screenshots](evidence/04a-navigation-planner.md). 06A now connects the weekly grid and view settings; Professors and Enrollment explain their unavailable features. Reserved commands still return FEATURE_UNAVAILABLE without execution.
+- **04A complete**: dashboard destination navigation, keyboard/focus/history behavior, and the live planner link. [Verification and screenshots](evidence/04a-navigation-planner.md). 06A now connects the weekly grid and view settings; Professors and Enrollment explain their unavailable features. Reserved provider/enrollment commands still return FEATURE_UNAVAILABLE without execution.
 - **05A complete**: blank course cards, optional-field editor, delete/cancel and revision-aware local persistence. [Verification and screenshots](evidence/05a-course-editor.md).
 - **05B complete**: exact meeting-time validation and deterministic overlap detection, with 45 new acceptance tests. [Verification](evidence/05b-meeting-validation.md). 06A now consumes these helpers in the meeting form and weekly grid.
 - **06A complete**: manual meeting rows, exact weekly placement, overlap warnings, full-detail list and saved visible days/hours. [Verification and screenshots](evidence/06a-weekly-grid.md).
 - **06B complete**: queued cross-tab refresh, preserved raw drafts with explicit review, missed-event catch-up and non-destructive read recovery. [Verification and screenshots](evidence/06b-cross-view-recovery.md).
 - **07A complete**: native drag placement, per-occurrence move/resize, 15-minute snapping and keyboard/exact-form proposals with explicit Save/Cancel. [Verification and screenshots](evidence/07a-meeting-drag.md).
+- **07B complete**: timetable-only JSON downloads, strict file validation, reviewed merge/replace and atomic revision-protected import. [Verification and screenshots](evidence/07b-timetable-backup.md).
 - Public repo: https://github.com/Pavi21P/uhd-student-extension. Foundation tasks 03A (`cffda38`) and 03B (`b4ea551`) are included in the 2026-10-22 main-branch publication, retaining their original author dates and history. Published `feat/05a-course-editor` at `5635520` includes 04A (`871beb4`) and 05A (`823f33f`). 05B (`2517dc1`) is published on `feat/05b-meeting-validation`, based on that branch. [Pull request #1](https://github.com/Pavi21P/uhd-student-extension/pull/1) includes 04A/05A/05B and is open for review. `main` remains at `a29eea5`; no merge is included.
 
 ## Active work
 
 | Owner | Task | State | Next action |
 | --- | --- | --- | --- |
-| A / Pavitra | 07A | Complete | Pushed in PR #4, based on PR #3; review and merge pending. Next ready: 07B. |
+| A / Pavitra | 07B | Complete | Published in [PR #5](https://github.com/Pavi21P/uhd-student-extension/pull/5); review pending. Next ready: 08A. |
 | B / teammate | 01B | Ready | Inspect the real myUHD flow and build an anonymized portal map. |
 
 ## Decisions to retain
@@ -42,10 +43,10 @@ Updated: 2026-10-24 (America/Chicago)
 
 ## Latest handoff
 
-- Task / owner: **07A / A**, complete on feat/07a-meeting-drag, based on open [PR #3](https://github.com/Pavi21P/uhd-student-extension/pull/3). Implementation commit `94f3bdf` is pushed in [PR #4](https://github.com/Pavi21P/uhd-student-extension/pull/4), based on feat/06b-cross-view-recovery. GitHub source and PR head were verified. Review/merge the parent first, then retarget this PR to main; no merge performed. B's 01B assignment is unchanged.
-- Changed: placement model, drag/keyboard hook, grid/tray controls, proposal-to-editor wiring, feedback/handle styles, 16 tests and [evidence](evidence/07a-meeting-drag.md). No stored schema, RPC, dependency, permission or planner changes.
-- Passed: **177 tests**, lint, strict typecheck, production build/artifact validation. Native Chrome/Edge mouse checks cover place/move/resize, cancellation, stale gestures and reviewed saves; keyboard, exact times, recurrence independence, day-end clipping, short meeting access, 200% zoom, reduced motion and responsive bounds checked. Preview/grid/narrow form screenshots inspected.
-- Limits: desktop mouse dragging verified; touch/pen dragging and screen-reader audit are unverified. No cross-tab drag import, overnight meetings, live ratings or enrollment. Parent PR reviews/merges remain pending.
-- Next ready task: **07B**, validated JSON export/import with preview and explicit merge/replace; preserve existing data on invalid input. Stop after 07A.
+- Task / owner: **07B / A**, complete on feat/07b-timetable-backup, based on open [PR #4](https://github.com/Pavi21P/uhd-student-extension/pull/4). Implementation commit 53cbf25 is published in [PR #5](https://github.com/Pavi21P/uhd-student-extension/pull/5), targeting feat/07a-meeting-drag. Remote commit and open PR verified; review pending, no merge performed. B's 01B assignment is unchanged.
+- Changed: backup parser/import planner, authenticated schedule.import command, serialized writer, preview/download UI, workspace integration, styles, 24 import tests and [evidence](evidence/07b-timetable-backup.md). Import expectedRevision now accepts null for create-only fresh targets; stored schema, permissions and dependencies are unchanged. Contract review is pending with the PR.
+- Passed: **200 tests**, lint, strict typecheck, production build/artifact checks. Chrome/Edge actual downloads and native file selection passed round trip, merge collisions, malformed/oversized files, stale preview, uncertain import, cancellation, empty replacement and reload. Responsive bounds, actual 200% zoom and desktop/narrow panels checked.
+- Limits: backups exclude view settings, planner, provider and enrollment data. Corrupt stored targets remain protected; no migration/repair reset or screen-reader audit. Live RMP/enrollment and parent PR reviews remain pending.
+- Next ready task: **08A**, overlap layout/readability, labels, contrast and responsive timetable polish; retain keyboard/form alternatives and exact geometry. Stop after 07B.
 
 Read the linked evidence for details; do not replay the full history.

@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import type { ImportMode } from '../shared/timetable-backup';
 import { stagePlacement, type PlacementKind } from './placement-model';
 import { useStorageRefresh } from './use-storage-refresh';
 import { createFoundationClient } from '../shared/client';
-import type { CourseCard, Meeting, Schedule } from '../shared/domain';
+import type { CourseCard, Meeting, Schedule, TimetableBackup } from '../shared/domain';
 import { ContractFault } from '../shared/validation';
 import { draftMeeting, meetingLabel, parseMeetingDrafts, type MeetingDraft, type MeetingErrors } from './meeting-model';
 import { changeCourse, emptySchedule, primaryScheduleId, type CourseChange } from './course-model';
@@ -13,6 +14,7 @@ const explanation = (error: unknown) => error instanceof ContractFault ? error.d
 /** Lives above route views so moving between tabs does not discard an editor draft. */
 export function useCourseWorkspace() {
   const [schedule, setSchedule] = useState<Schedule | null>(null);
+  const [transferOpen, setTransferOpen] = useState(false);
   const [ready, setReady] = useState(false);
   const [busy, setBusy] = useState(false);
   const lock = useRef(false);
@@ -65,7 +67,7 @@ export function useCourseWorkspace() {
     });
   }
   async function persist(change: CourseChange, closeAfter: boolean) {
-    if (lock.current || !ready || recovery || review) return;
+    if (lock.current || transferOpen || !ready || recovery || review) return;
     let next: Schedule;
     try { next = changeCourse(schedule ?? emptySchedule(), change); }
     catch (failure) { setError(explanation(failure)); return; }
@@ -82,17 +84,17 @@ export function useCourseWorkspace() {
     } finally { lock.current = false; setBusy(false); }
   }
   function add(trigger: HTMLElement) {
-    if (lock.current || draft || busy || !ready || recovery) return;
+    if (lock.current || transferOpen || draft || busy || !ready || recovery) return;
     const course = { id: crypto.randomUUID() };
     origin.current = trigger; setDraft(course); setNewCourse(true); setMeetingDrafts([]); setMeetingErrors({});
     void persist({ kind: 'add', course }, false);
   }
   function edit(course: CourseCard, trigger: HTMLElement) {
-    if (lock.current || draft || busy || recovery) return;
+    if (lock.current || transferOpen || draft || busy || recovery) return;
     origin.current = trigger; setFocusedMeeting(null); setDraft({ ...course }); setMeetingDrafts((schedule?.meetings ?? []).filter(meeting => meeting.courseId === course.id).map(draftMeeting)); setMeetingErrors({}); setNewCourse(false); setError('');
   }
   function propose(kind: PlacementKind, meeting: Meeting, expectedRevision: number, trigger: HTMLElement): boolean {
-    if (lock.current || draft || busy || recovery || !schedule) return false;
+    if (lock.current || transferOpen || draft || busy || recovery || !schedule) return false;
     try {
       const proposed = stagePlacement(schedule, expectedRevision, kind, meeting);
       const course = proposed.courses.find(item => item.id === meeting.courseId)!;
@@ -103,8 +105,22 @@ export function useCourseWorkspace() {
       return true;
     } catch (failure) { setError(explanation(failure)); return false; }
   }
+  async function applyImport(backup: TimetableBackup, mode: ImportMode, expectedRevision: number | null): Promise<boolean> {
+    if (lock.current || draft || !transferOpen || !ready || recovery) return false;
+    lock.current = true; setBusy(true); setError(''); setMessage('Importing timetable...');
+    try {
+      const reply = await client('schedule.import', { targetScheduleId: primaryScheduleId, expectedRevision, mode, backup });
+      if (!reply.ok) throw new ContractFault(reply.error.code, reply.error.message);
+      setSchedule(reply.data); setTransferOpen(false); setMessage('Timetable imported and saved locally.'); return true;
+    } catch (failure) {
+      setRecovery(true); setError(explanation(failure));
+      setMessage('Import not confirmed. Reload saved courses and check them before making another import preview.'); return false;
+    } finally { lock.current = false; setBusy(false); }
+  }
   const savedCourse = schedule?.courses.find(course => course.id === draft?.id);
-  return { schedule, ready, busy, draft, focusedMeeting, propose, meetingDrafts, meetingErrors, newCourse, savedCourse, recovery, review, message, error,
+  return { schedule, ready, busy, draft, transferOpen, applyImport,
+    openTransfer: () => { if (!lock.current && !draft && ready && !recovery) setTransferOpen(true); },
+    closeTransfer: () => { if (!lock.current) setTransferOpen(false); }, focusedMeeting, propose, meetingDrafts, meetingErrors, newCourse, savedCourse, recovery, review, message, error,
     setDraft: (next: CourseCard) => {
       setDraft(next);
       if (!recovery && !review) { setError(''); setMessage('Unsaved changes. Save course to keep them.'); }

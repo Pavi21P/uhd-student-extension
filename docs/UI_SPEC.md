@@ -70,6 +70,10 @@ My timetable                  [Add course] [Backup] [Import]
 
 Professor is always top left, course name centered, room bottom left. Meeting time is bottom right when scheduled. Empty fields use subdued Professor, Course name, and Room placeholders. No fake course number or rating is inserted. Long text truncates visually while full values remain available in the editor and accessible name. Very short meetings may use a compact card with an accessible details action rather than overlapping text.
 
+### Implemented backup and import (07B)
+
+Timetable contains Download backup and Import backup. Backups contain saved courses/meetings, labels and timetable timezone; view settings and the separate planner are excluded. The inline preview shows current/file/result counts, timezone, course details and every imported meeting. Opening or cancelling a file writes nothing. Merge adds independent copies and explains repeat-import duplication. Replace clearly warns that current courses/meetings will be removed and requires the Replace timetable action. Files above 1 MiB, bad JSON, unsupported schemas and invalid records are rejected. Changed saved data disables confirmation until Refresh import preview. Uncertain imports require explicit reload/review, with a warning that the previous import may already have completed. Escape cancels; focus returns to Import backup. The preview survives destination navigation.
+
 ## Professors and inline ratings
 
 - Search is scoped to UHD. Link profile accepts a supported RMP professor URL; validation errors stay beside the field.

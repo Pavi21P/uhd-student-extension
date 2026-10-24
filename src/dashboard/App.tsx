@@ -6,6 +6,7 @@ import { Planner } from './Planner';
 import { useCourseWorkspace } from './use-course-workspace';
 import { ViewSettings } from './ViewSettings';
 import { useViewSettings } from './use-view-settings';
+import { useTimetableTransfer } from './use-timetable-transfer';
 import { Timetable } from './Timetable';
 import { UnavailableSection } from './UnavailableSection';
 
@@ -17,6 +18,7 @@ const snapshot = () => sectionFromHash(window.location.hash);
 
 export function App() {
   const courses = useCourseWorkspace();
+  const transfer = useTimetableTransfer(courses);
   const view = useViewSettings();
   const section = useSyncExternalStore<SectionId>(subscribe, snapshot, () => 'timetable');
   const main = useRef<HTMLElement>(null);
@@ -47,7 +49,7 @@ export function App() {
           ))}
         </nav>
         <main ref={main} id="main" tabIndex={-1} className="main-content" aria-labelledby="page-title">
-          {section === 'timetable' ? <Timetable model={courses} view={view} /> : section === 'planner' ? <Planner /> : section === 'settings' ? <ViewSettings model={view} /> : <UnavailableSection section={section} />}
+          {section === 'timetable' ? <Timetable model={courses} view={view} transfer={transfer} /> : section === 'planner' ? <Planner /> : section === 'settings' ? <ViewSettings model={view} /> : <UnavailableSection section={section} />}
         </main>
         <footer className="app-footer"><span>Built for UHD students.</span><span>Independent project · Not affiliated with UHD</span></footer>
       </div>

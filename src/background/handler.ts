@@ -34,6 +34,7 @@ export function createMessageHandler(repository: FoundationRepository, extension
       switch (request.type) {
         case 'schedule.read': return { ...base, type: request.type, data: await repository.readSchedule(request.payload.scheduleId) };
         case 'schedule.save': return { ...base, type: request.type, data: await repository.saveSchedule(request.payload.schedule, request.payload.expectedRevision) };
+        case 'schedule.import': return { ...base, type: request.type, data: await repository.importSchedule(request.payload.targetScheduleId, request.payload.expectedRevision, request.payload.mode, request.payload.backup) };
         case 'settings.read': return { ...base, type: request.type, data: await repository.readSettings() };
         case 'settings.save': return { ...base, type: request.type, data: await repository.saveSettings(request.payload.settings, request.payload.expectedRevision) };
       }

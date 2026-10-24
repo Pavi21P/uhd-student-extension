@@ -1,8 +1,9 @@
+import { parseBackup, parseImportMode } from './timetable-backup';
 import type { ContractError } from './domain';
 import type { RequestFor, ResponseFor } from './messages';
 import { ContractFault, id, invalid, parseSchedule, parseSettings, record, revision, text, version } from './validation';
 
-export type FoundationMethod = 'schedule.read' | 'schedule.save' | 'settings.read' | 'settings.save';
+export type FoundationMethod = 'schedule.read' | 'schedule.save' | 'schedule.import' | 'settings.read' | 'settings.save';
 export type FoundationRequest = { [K in FoundationMethod]: RequestFor<K> }[FoundationMethod];
 export type FoundationResponse = { [K in FoundationMethod]: ResponseFor<K> }[FoundationMethod];
 /** A malformed envelope may not have usable correlation fields. Never invent them. */
@@ -37,6 +38,14 @@ export function parseFoundationRequest(value: unknown): FoundationRequest {
         schedule: parseSchedule(row.schedule),
       } };
     }
+    case 'schedule.import': {
+      const row = record(request.payload, ['targetScheduleId', 'expectedRevision', 'mode', 'backup'], 'payload');
+      return { ...base, type: request.type, payload: {
+        targetScheduleId: id(row.targetScheduleId, 'payload.targetScheduleId'),
+        expectedRevision: row.expectedRevision === null ? null : revision(row.expectedRevision, 'payload.expectedRevision'),
+        mode: parseImportMode(row.mode), backup: parseBackup(row.backup),
+      } };
+    }
     case 'settings.read':
       record(request.payload, [], 'payload');
       return { ...base, type: request.type, payload: {} };
@@ -46,7 +55,7 @@ export function parseFoundationRequest(value: unknown): FoundationRequest {
         expectedRevision: revision(row.expectedRevision, 'payload.expectedRevision'), settings: parseSettings(row.settings),
       } };
     }
-    case 'schedule.import': case 'professor.lookup': case 'professor.associate':
+    case 'professor.lookup': case 'professor.associate':
     case 'enrollment.review': case 'enrollment.activate': case 'enrollment.cancel': case 'enrollment.read':
       throw new ContractFault('FEATURE_UNAVAILABLE', 'This command is not available in this build.');
     default: return invalid('request.type');
@@ -73,9 +82,9 @@ export function parseFoundationResponse(value: unknown, request: FoundationReque
     return { ...base, type: request.type, ok: false, error: detail };
   }
   if (row.ok !== true || Object.hasOwn(row, 'error')) invalid('response.ok');
-  if (request.type === 'schedule.read' || request.type === 'schedule.save') {
+  if (request.type === 'schedule.read' || request.type === 'schedule.save' || request.type === 'schedule.import') {
     const data = parseSchedule(row.data);
-    const expectedId = request.type === 'schedule.read' ? request.payload.scheduleId : request.payload.schedule.id;
+    const expectedId = request.type === 'schedule.read' ? request.payload.scheduleId : request.type === 'schedule.import' ? request.payload.targetScheduleId : request.payload.schedule.id;
     if (data.id !== expectedId) invalid('response.data.id');
     return { ...base, type: request.type, ok: true, data };
   }

@@ -320,3 +320,29 @@ button:disabled { cursor: not-allowed; }
 
 .drag-status { min-height: 72px; margin: 0; }
 @media (max-width: 800px) { .drag-status { min-height: 120px; } }
+
+/* 07B: timetable-only backup and explicit import preview. */
+.backup-tools { margin: 16px 0 28px; padding: 20px 0; border-block: 1px solid var(--line); }
+.backup-toolbar, .backup-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
+.backup-toolbar { justify-content: space-between; }
+.backup-toolbar h2 { font-size: 16px; margin: 0; }
+.backup-scope { color: var(--muted); font-size: 13px; line-height: 1.6; margin-bottom: 0; }
+.import-panel { margin-top: 20px; padding: 24px; border: 1px solid var(--line); border-radius: var(--radius); max-width: 900px; }
+.import-panel h3 { margin-top: 0; }
+.import-panel p { line-height: 1.6; }
+.backup-file { display: grid; gap: 8px; font-size: 14px; font-weight: 600; }
+.backup-file input { font: inherit; width: 100%; min-width: 0; padding: 10px; border: 1px solid var(--line); border-radius: 8px; }
+.backup-filename { overflow-wrap: anywhere; font-size: 13px; }
+.import-mode { border: 0; padding: 0; margin: 20px 0 12px; display: flex; flex-wrap: wrap; gap: 16px; }
+.import-mode legend { font-weight: 600; margin-bottom: 12px; }
+.import-mode label { display: flex; align-items: center; gap: 8px; }
+.import-warning { background: #fcf8ef; border-left: 3px solid #9b752d; padding: 12px 16px; }
+.import-summary { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; padding: 16px 0; }
+.import-summary dt { font-weight: 600; font-size: 13px; margin-bottom: 8px; }
+.import-summary dd { margin: 0; font-size: 14px; line-height: 1.6; overflow-wrap: anywhere; }
+.import-contents { margin: 16px 0 24px; }
+.import-contents summary { cursor: pointer; font-weight: 600; }
+.import-contents > ul { max-height: 320px; overflow: auto; padding: 0 12px 0 0; list-style: none; }
+.import-contents > ul > li { padding: 12px 0; border-bottom: 1px solid var(--line); overflow-wrap: anywhere; }
+.import-contents strong, .import-contents span { display: block; margin-bottom: 4px; }
+@media (max-width: 800px) { .import-panel { padding: 16px; } .import-summary { grid-template-columns: 1fr; } .backup-actions .button { flex: 1; } }
