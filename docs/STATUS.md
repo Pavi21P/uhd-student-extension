@@ -18,7 +18,7 @@ Updated: 2026-10-24 (America/Chicago)
 
 | Owner | Task | State | Next action |
 | --- | --- | --- | --- |
-| A / Pavitra | 06A | Complete | Verified locally on feat/06a-weekly-grid; publishing for review. Next ready: 06B. |
+| A / Pavitra | 06A | Complete | Pushed in PR #2, based on PR #1; review and merge pending. Next ready: 06B. |
 | B / teammate | 01B | Ready | Inspect the real myUHD flow and build an anonymized portal map. |
 
 ## Decisions to retain
@@ -40,7 +40,7 @@ Updated: 2026-10-24 (America/Chicago)
 
 ## Latest handoff
 
-- Task / owner: **06A / A**, complete on `feat/06a-weekly-grid`, stacked on the open [PR #1](https://github.com/Pavi21P/uhd-student-extension/pull/1). Publication pending; no merge performed. B's 01B assignment is unchanged.
+- Task / owner: **06A / A**, complete on `feat/06a-weekly-grid`, stacked on the open [PR #1](https://github.com/Pavi21P/uhd-student-extension/pull/1). Implementation commit `6352da4` is pushed in [PR #2](https://github.com/Pavi21P/uhd-student-extension/pull/2), based on `feat/05b-meeting-validation`. GitHub source and PR head were verified. Review/merge #1 first, then retarget #2 to main; no merge performed. B's 01B assignment is unchanged.
 - Changed: meeting form/model, exact grid geometry and accessible list, view-settings form/state, course transaction wiring, popup copy, styles, 11 acceptance tests and [evidence](evidence/06a-weekly-grid.md). Stored schema, RPC, dependencies and permissions are unchanged.
 - Passed: **151 tests**, lint, strict typecheck, production build/artifact validation; Chrome and Edge unpacked-extension checks for exact placement, recurrence, overlap/adjacency, settings persistence, restart, stale writes and uncertain-save recovery. Responsive bounds, keyboard scrolling and actual 200% tab zoom checked.
 - Limits: no live portal/RMP, screen-reader audit or vendor toolkit execution. Dragging, automatic cross-view refresh, imports and enrollment remain unfinished. Human review and merge are pending.
