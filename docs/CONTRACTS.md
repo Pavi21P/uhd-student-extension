@@ -27,6 +27,10 @@ Enrollment activation deduplication and durable executor ownership still belong 
 
 The dashboard uses the existing schedule/settings RPC and schema without new permissions or messages. Course details and all of that course's meeting rows are validated and saved in one schedule transaction; other courses/meetings remain intact. Raw form strings stay local until valid. Visible days/hours use revision-protected settings saves, preserving enrollment timezone. Temporary Show meetings expansion never writes settings or changes meeting times. Missing settings use defaults without a write; bad/future records block saves and remain intact. Uncertain replies require a read and explicit draft review, never automatic replay. 06B implements queued storage invalidation and focus/visibility/pageshow refresh. Reads coalesce while a write/read is active and wait for committed UI state before draining. Own-write events and unchanged reads preserve the current draft/review/error state. Changed authoritative records replace the saved snapshot; course drafts and dirty settings require review. Recovery blocks background refresh and never retries writes. A missing schedule cannot resurrect an edited course; corrupt/unknown versions remain intact. No migration/reset/import command is introduced.
 
+## Task 07A placement consumers
+
+In-page drag sources retain the saved schedule/view snapshot. A changed snapshot cancels the gesture; external drag payloads are never read as timetable data. Pure placement helpers snap to 15 minutes, clip new default meetings at day end, preserve moved durations and resize only the selected end. stagePlacement validates the whole proposed schedule, expected revision, course/occurrence identity and duplicate rules before opening a draft. Unchanged recurring siblings retain their IDs and times. Drops and keyboard proposals do not write; the existing course save/recovery path remains the sole writer. No stored schema, RPC or permission change.
+
 ## Validation rules by feature
 
 | Record | Rules |

@@ -1,10 +1,12 @@
 import { Icon } from '../ui/Icon';
 import { CourseEditor, SaveStatus } from './CourseEditor';
+import { useMeetingDrag } from './use-meeting-drag';
 import { WeeklyGrid } from './WeeklyGrid';
 import type { ViewSettings } from './use-view-settings';
 import type { CourseWorkspace } from './use-course-workspace';
 
 export function Timetable({ model, view }: { model: CourseWorkspace; view: ViewSettings }) {
+  const drag = useMeetingDrag(model, view);
   const saved = model.schedule?.courses ?? [];
   const courses = model.draft && model.newCourse && !saved.some(course => course.id === model.draft?.id)
     ? [...saved, { id: model.draft.id }] : saved;
@@ -14,6 +16,9 @@ export function Timetable({ model, view }: { model: CourseWorkspace; view: ViewS
     return items.map(course => <button type="button" className="course-card" key={course.id}
       disabled={!!model.draft || model.busy || model.recovery}
       aria-label={['Edit course', course.title || 'Untitled course', course.courseCode, course.professorName || 'Professor blank', course.room || 'Room blank'].filter(Boolean).join(', ')}
+      draggable={!drag.disabled && unscheduled.includes(course)}
+      onDragStart={event => drag.begin(event, 'place', course.id)} onDragEnd={drag.end}
+      aria-describedby={unscheduled.includes(course) ? 'placement-help' : undefined}
       onClick={event => model.edit(course, event.currentTarget)}>
       <span className="card-professor" title={course.professorName}>{course.professorName || 'Professor'}</span>
       {course.color && <span className="course-color" style={{ backgroundColor: course.color }} aria-hidden="true" />}
@@ -30,7 +35,7 @@ export function Timetable({ model, view }: { model: CourseWorkspace; view: ViewS
     <div className="workspace-layout">
       <aside className="course-tray live-tray" aria-labelledby="tray-title">
         <div className="section-title"><h2 id="tray-title">Unscheduled</h2><span className="count-label">{unscheduled.length} {unscheduled.length === 1 ? 'course' : 'courses'}</span></div>
-        <p className="tray-intro">Start blank. Fill in the details whenever you’re ready.</p>
+        <p className="tray-intro">Start blank. Fill in the details whenever you’re ready. Drag a card onto the week, or select it to add an exact meeting time.</p>
         <div className="course-list">{cards(unscheduled)}</div>
         {model.ready && !unscheduled.length && <p className="tray-footnote">No unscheduled courses. Use Add course to create a card.</p>}
         {scheduled.length > 0 && <section className="scheduled-courses"><h2>Courses with saved meetings</h2><p className="tray-intro">Edit a course here or select one of its meetings on the grid.</p><div className="course-list">{cards(scheduled)}</div></section>}
@@ -38,12 +43,12 @@ export function Timetable({ model, view }: { model: CourseWorkspace; view: ViewS
       </aside>
       <div className="timetable-detail">
         {model.draft && <CourseEditor key={model.draft.id} model={model} />}
-        <WeeklyGrid model={model} view={view} />
+        <WeeklyGrid model={model} view={view} drag={drag} />
       </div>
     </div>
     <details className="availability"><summary>What works in this build?</summary><div className="availability-content">
-      <p>Create course cards, add or remove meetings, and reopen your saved weekly timetable. Change visible days and hours in Settings. Open the separate course planner from Planner.</p>
-      <p>Dragging, live professor ratings, and enrollment are not available yet. No connection to myUHD is made.</p>
+      <p>Create course cards, add or remove meetings, and reopen your saved weekly timetable. Drag cards to propose meetings; move or resize one occurrence, then review and save. Change visible days and hours in Settings. Open the separate course planner from Planner.</p>
+      <p>Live professor ratings and enrollment are not available yet. No connection to myUHD is made.</p>
     </div></details>
   </>;
 }

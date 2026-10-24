@@ -2,7 +2,7 @@
 
 A Chrome/Edge extension for UHD students: professor ratings, a link to the existing course planner, a weekly timetable, and user-armed enrollment assistance for myUHD.
 
-**Current build: weekly timetable and manual meeting placement (06A).** Create blank cards, edit optional details, and add independent weekday meetings with exact 24-hour times. The grid reflects each duration, warns about overlaps, and retains access to meetings outside your chosen days/hours. Save the view in Settings. Course and view drafts survive navigation. Other open dashboard tabs refresh automatically; incoming changes preserve drafts and require review before saving. Failed or uncertain saves still require an explicit reload/review. Live ratings and enrollment remain unavailable.
+**Current build: draggable weekly timetable with reviewed placement (07A).** Create blank cards, edit optional details, and add independent weekday meetings with exact 24-hour times. The grid reflects each duration, warns about overlaps, and retains access to meetings outside your chosen days/hours. Save the view in Settings. Course and view drafts survive navigation. Other open dashboard tabs refresh automatically; incoming changes preserve drafts and require review before saving. Failed or uncertain saves still require an explicit reload/review. Live ratings and enrollment remain unavailable.
 
 ## Run locally
 
@@ -13,13 +13,13 @@ npm ci
 npm run check
 ```
 
-`check` runs lint, 161 unit tests, strict TypeScript checking, and the production build. The build verifies the MV3 entrypoints and bundled assets. Output goes to `dist/`, which is intentionally ignored by Git.
+`check` runs lint, 177 unit tests, strict TypeScript checking, and the production build. The build verifies the MV3 entrypoints and bundled assets. Output goes to `dist/`, which is intentionally ignored by Git.
 
 1. Open `chrome://extensions` or `edge://extensions`.
 2. Enable **Developer mode**, choose **Load unpacked**, and select this repository's `dist` folder.
 3. Open the extension's toolbar popup and select **Open timetable**. Extension options opens the same dashboard.
 4. In Timetable, choose **Add course**. The blank card is saved immediately. Fill optional details and choose **Save course**; **Cancel** discards edits while keeping the saved card. After a save failure, use **Reload saved courses** and review before retrying.
-5. In the course editor, choose **Add meeting**, select a day, and enter start/end times such as **09:07** and **10:23**. Choose **Save course** to save details and meetings together. Use **Settings** to save visible days and hours; **Show meetings** temporarily reveals anything outside that view. Dragging is not implemented yet.
+5. In the course editor, choose **Add meeting**, select a day, and enter start/end times such as **09:07** and **10:23**. Choose **Save course** to save details and meetings together. Use **Settings** to save visible days and hours; **Show meetings** temporarily reveals anything outside that view. Drag an unscheduled card onto the week, drag a meeting to move it, or drag its bottom handle to resize. Drops propose times in the editor; choose **Save course** or **Cancel**. Dragging snaps to 15 minutes. With a meeting focused, arrow keys propose a move; Shift + Up/Down proposes a resize. Enter opens exact editing.
 6. Select **Planner**, then **Open course planner**. It opens https://uhd-course-planner.pages.dev in a new tab; planner data saves separately.
 7. After source changes, run `npm run build` and reload the extension on the extensions page.
 
@@ -38,6 +38,7 @@ The foundation requests only `storage`; it has no host permissions or connection
 - [Meeting validation and conflicts (05B)](docs/evidence/05b-meeting-validation.md)
 - [Weekly grid, manual placement and view settings (06A)](docs/evidence/06a-weekly-grid.md)
 - [Cross-tab updates and recovery (06B)](docs/evidence/06b-cross-view-recovery.md)
+- [Drag placement, move/resize and keyboard editing (07A)](docs/evidence/07a-meeting-drag.md)
 - [Screen layouts and interaction specification](docs/UI_SPEC.md)
 - [Design references: Taste Skill and Impeccable](docs/DESIGN_GUIDANCE.md)
 - [Recorded visual direction and tokens](DESIGN.md)

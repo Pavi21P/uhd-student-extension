@@ -32,6 +32,9 @@ export function CourseEditor({ model }: { model: CourseWorkspace }) {
     media.addEventListener('change', display);
     return () => { media.removeEventListener('change', display); element.close(); };
   }, []);
+  useEffect(() => {
+    if (model.focusedMeeting) document.getElementById('start-' + model.focusedMeeting)?.focus();
+  }, [model.focusedMeeting]);
   const draft = model.draft!;
   const meetingCount = model.schedule?.meetings.filter(meeting => meeting.courseId === draft.id).length ?? 0;
   const missing = !model.savedCourse && !model.newCourse;
