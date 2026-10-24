@@ -32,7 +32,7 @@ export function ViewSettings({ model }: { model: ViewSettingsModel }) {
           <button type="button" className="button button-secondary" disabled={model.busy || !model.dirty} onClick={model.cancel}>Cancel changes</button></div>
       </form>
     </div>
-    <p className="settings-limit">Backup, import, and timezone controls are not available yet. Changing the view never changes your meeting times.</p>
+    <p className="settings-limit">Timezone controls are not available yet. Changing the view never changes your meeting times. Backup and import are on the Timetable page.</p>
     <a className="text-action" href="#timetable">Back to timetable</a>
   </>;
 }

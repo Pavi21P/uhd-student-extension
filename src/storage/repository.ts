@@ -1,3 +1,4 @@
+import { buildImport, parseBackup, parseImportMode, type ImportMode } from '../shared/timetable-backup';
 import type { DisplaySettings, Schedule, ContractErrorCode } from '../shared/domain';
 import type { StateEvent } from '../shared/messages';
 import { ContractFault, defaultSettings, id, parseSchedule, parseSettings, revision } from '../shared/validation';
@@ -59,6 +60,18 @@ export class FoundationRepository {
       if (expectedRevision === null ? current !== undefined : !current || current.revision !== expectedRevision) this.conflict();
       const saved: Schedule = { ...schedule, revision: current ? this.increment(current.revision) : 0 };
       await this.persist(scheduleKey(saved.id), saved, { protocolVersion: 1, type: 'schedule.changed', payload: { scheduleId: saved.id, revision: saved.revision } });
+      return saved;
+    });
+  }
+  importSchedule(targetId: string, expectedRevision: number | null, mode: ImportMode, input: unknown): Promise<Schedule> {
+    const target = id(targetId); const backup = parseBackup(input); const checkedMode = parseImportMode(mode);
+    if (expectedRevision !== null) revision(expectedRevision, 'expectedRevision');
+    return this.serial(async () => {
+      const current = await this.currentSchedule(target);
+      if (expectedRevision === null ? current !== undefined : !current || current.revision !== expectedRevision) this.conflict();
+      const proposed = buildImport(current ?? null, target, checkedMode, backup);
+      const saved = { ...proposed, revision: current ? this.increment(current.revision) : 0 };
+      await this.persist(scheduleKey(target), saved, { protocolVersion: 1, type: 'schedule.changed', payload: { scheduleId: target, revision: saved.revision } });
       return saved;
     });
   }

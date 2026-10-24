@@ -11,7 +11,7 @@ export function useMeetingDrag(model: CourseWorkspace, view: ViewSettings) {
   const source = useRef<DragSource | null>(null);
   const [preview, setPreview] = useState<Meeting | null>(null);
   const [message, setMessage] = useState('');
-  const disabled = !!model.draft || model.busy || model.recovery || !model.schedule || !view.ready || view.busy || view.recovery;
+  const disabled = model.transferOpen || !!model.draft || model.busy || model.recovery || !model.schedule || !view.ready || view.busy || view.recovery;
   function cancel(text = 'Drag cancelled. Nothing was saved.') {
     if (source.current) { source.current = null; setPreview(null); setMessage(text); }
   }

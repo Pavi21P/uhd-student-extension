@@ -51,7 +51,7 @@ describe('authenticated runtime messages', () => {
     expect(storage.get).not.toHaveBeenCalled();
     expect(storage.set).not.toHaveBeenCalled();
   });
-  it.each(['schedule.import', 'professor.lookup', 'professor.associate', 'enrollment.review', 'enrollment.activate', 'enrollment.cancel', 'enrollment.read'])('fails closed for unimplemented %s', async type => {
+  it.each(['professor.lookup', 'professor.associate', 'enrollment.review', 'enrollment.activate', 'enrollment.cancel', 'enrollment.read'])('fails closed for unimplemented %s', async type => {
     const { handle, storage } = setup();
     expect(await handle({ ...activateNow, type }, sender)).toMatchObject({ ok: false, error: { code: 'FEATURE_UNAVAILABLE' } });
     expect(storage.set).not.toHaveBeenCalled();

@@ -16,7 +16,7 @@ export function WeeklyGrid({ model, view, drag }: { model: CourseWorkspace; view
   const conflictIds = new Set(conflicts.flatMap(conflict => conflict.meetingIds));
   const outside = meetings.filter(meeting => outsideView(meeting, shown));
   const marks = hourMarks(shown); const scale = minuteScale(shown); const height = (shown.endMinute - shown.startMinute) * scale;
-  const disabled = !!model.draft || model.busy || model.recovery;
+  const disabled = model.transferOpen || !!model.draft || model.busy || model.recovery;
   const ghost = drag.preview ? positionMeetings([drag.preview], shown)[0] : undefined;
   const sorted = [...meetings].sort((a, b) => a.dayOfWeek - b.dayOfWeek || a.startMinute - b.startMinute || a.endMinute - b.endMinute);
   return <section className="week-panel weekly-grid" aria-labelledby="week-title">
