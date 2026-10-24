@@ -1,6 +1,6 @@
 # Project checkpoint
 
-Updated: 2026-10-23 (America/Chicago)
+Updated: 2026-10-24 (America/Chicago)
 
 ## Current state
 
@@ -8,16 +8,17 @@ Updated: 2026-10-23 (America/Chicago)
 - **02A complete**: [shared contracts](CONTRACTS.md), TypeScript records/messages and synthetic examples.
 - **03A complete**: loadable MV3 extension, working popup launcher, static dashboard preview, pinned toolchain and reproducible build. [Verification and screenshots](evidence/03a-foundation.md).
 - **03B complete**: schedule/settings runtime validation, serialized revision-protected local storage, authenticated worker messages and typed client. [Verification](evidence/03b-storage-messaging.md). 05A now connects the editor; continuous UI storage subscriptions remain 06B.
-- **04A complete**: dashboard destination navigation, keyboard/focus/history behavior, and the live planner link. [Verification and screenshots](evidence/04a-navigation-planner.md). The weekly grid remains a preview; Professors, Enrollment and Settings explain their unavailable features. Reserved commands still return FEATURE_UNAVAILABLE without execution.
+- **04A complete**: dashboard destination navigation, keyboard/focus/history behavior, and the live planner link. [Verification and screenshots](evidence/04a-navigation-planner.md). 06A now connects the weekly grid and view settings; Professors and Enrollment explain their unavailable features. Reserved commands still return FEATURE_UNAVAILABLE without execution.
 - **05A complete**: blank course cards, optional-field editor, delete/cancel and revision-aware local persistence. [Verification and screenshots](evidence/05a-course-editor.md).
-- **05B complete**: exact meeting-time validation and deterministic overlap detection, with 45 new acceptance tests. [Verification](evidence/05b-meeting-validation.md). Helpers are ready for 06A; no meeting UI is connected yet.
+- **05B complete**: exact meeting-time validation and deterministic overlap detection, with 45 new acceptance tests. [Verification](evidence/05b-meeting-validation.md). 06A now consumes these helpers in the meeting form and weekly grid.
+- **06A complete**: manual meeting rows, exact weekly placement, overlap warnings, full-detail list and saved visible days/hours. [Verification and screenshots](evidence/06a-weekly-grid.md).
 - Public repo: https://github.com/Pavi21P/uhd-student-extension. Foundation tasks 03A (`cffda38`) and 03B (`b4ea551`) are included in the 2026-10-22 main-branch publication, retaining their original author dates and history. Published `feat/05a-course-editor` at `5635520` includes 04A (`871beb4`) and 05A (`823f33f`). 05B (`2517dc1`) is published on `feat/05b-meeting-validation`, based on that branch. [Pull request #1](https://github.com/Pavi21P/uhd-student-extension/pull/1) includes 04A/05A/05B and is open for review. `main` remains at `a29eea5`; no merge is included.
 
 ## Active work
 
 | Owner | Task | State | Next action |
 | --- | --- | --- | --- |
-| A / Pavitra | 05B | Complete; PR #1 open | Next ready task is 06A weekly grid and manual placement. |
+| A / Pavitra | 06A | Complete | Pushed in PR #2, based on PR #1; review and merge pending. Next ready: 06B. |
 | B / teammate | 01B | Ready | Inspect the real myUHD flow and build an anonymized portal map. |
 
 ## Decisions to retain
@@ -39,10 +40,10 @@ Updated: 2026-10-23 (America/Chicago)
 
 ## Latest handoff
 
-- Task / owner: **05B / A**, complete on `feat/05b-meeting-validation`. Implementation commit `2517dc1` is pushed; [PR #1](https://github.com/Pavi21P/uhd-student-extension/pull/1) is open against `main`. Remote source/PR head were verified; review and merge are pending. B's 01B assignment is unchanged.
-- Changed: `src/shared/meeting-time.ts`, 45 acceptance tests, contract-consumer guidance, README test count and [evidence](evidence/05b-meeting-validation.md). No UI, existing validator, stored record, RPC, dependency or permission changes.
-- Passed: targeted **45 tests**; full **140 tests**, lint, strict typecheck, production build/artifact checks. Boundary/adjacency/recurrence cases, independent occupancy oracle and 1000-meeting capacity checked.
-- Limits: helpers are not yet connected to UI, so no new browser behavior or visual QA is claimed. Grid placement, continuous two-view refresh, imports, ratings, settings controls and enrollment remain unfinished. Existing RMP/portal/timing blockers are unchanged.
-- Next ready task: **06A**, weekly grid and manual meeting placement, now unblocked by 05A/05B. Use exact wall-time parsing and derived conflict warnings; allow valid overlaps. Stop after 05B.
+- Task / owner: **06A / A**, complete on `feat/06a-weekly-grid`, stacked on the open [PR #1](https://github.com/Pavi21P/uhd-student-extension/pull/1). Implementation commit `6352da4` is pushed in [PR #2](https://github.com/Pavi21P/uhd-student-extension/pull/2), based on `feat/05b-meeting-validation`. GitHub source and PR head were verified. Review/merge #1 first, then retarget #2 to main; no merge performed. B's 01B assignment is unchanged.
+- Changed: meeting form/model, exact grid geometry and accessible list, view-settings form/state, course transaction wiring, popup copy, styles, 11 acceptance tests and [evidence](evidence/06a-weekly-grid.md). Stored schema, RPC, dependencies and permissions are unchanged.
+- Passed: **151 tests**, lint, strict typecheck, production build/artifact validation; Chrome and Edge unpacked-extension checks for exact placement, recurrence, overlap/adjacency, settings persistence, restart, stale writes and uncertain-save recovery. Responsive bounds, keyboard scrolling and actual 200% tab zoom checked.
+- Limits: no live portal/RMP, screen-reader audit or vendor toolkit execution. Dragging, automatic cross-view refresh, imports and enrollment remain unfinished. Human review and merge are pending.
+- Next ready task: **06B**, complete remaining bad-data recovery and two-view update handling on the existing 03B repository. Reuse serialized writes and revision guards; do not rebuild the foundation. Stop after 06A.
 
 Read the linked evidence for details; do not replay the full history.

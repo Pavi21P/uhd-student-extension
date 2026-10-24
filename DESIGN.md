@@ -6,7 +6,7 @@ Established during task 03A. Implemented styles live in [styles.css](src/ui/styl
 
 A light, framed workspace for students working in a browser alongside course information. The white working sheet, soft green-gray outer surface, and restrained teal details relate to the existing planner. Public Sans carries all text. A small mark made from three course blocks identifies this extension; it is an original project mark, not UHD's official logo.
 
-The timetable is the main working area. A narrow Unscheduled tray establishes the requested card anatomy. Task 05A adds persisted cards and a details editor in the main column above the weekly preview. At 800px and below the editor uses a native modal dialog. The grid remains a static preview until placement is implemented. Color is a small identity marker; neutral card text retains contrast.
+The timetable is the main working area. The Unscheduled tray and saved-course cards retain the requested anatomy. The editor appears above the grid on desktop and in a native modal at 800px and below. Task 06A adds labeled meeting rows and a real weekly grid: exact proportional placement, simple overlap lanes, and an always-available full-detail meeting list. Short meetings use compact grid marks; the list keeps their details and editing accessible. Color remains a small identity marker.
 
 Taste's app-screen guidance informed hierarchy, flat surfaces and disciplined density. Impeccable's Operate guidance informed familiar controls, consistent states and purposeful feedback. The implementation uses these as reviewed design references: no randomized draw, vendor inspector, vendor binary or separate reviewer agent was run. The user's bounded-work and no-subagent instructions remain in force.
 
@@ -40,7 +40,9 @@ No resting shadows, gradients, decorative metrics or simulated live ratings. Cou
 - Popup: 360px wide, one working Open timetable action, opening state, and a recoverable failure state.
 - All five destinations now use native hash links in the underline navigation strip, with aria-current, visible focus, Tab/Enter access, browser history and a route-specific page title. Focus moves to the new main content; the skip link preserves the selected destination.
 - Planner uses one destination panel and an adjacent separate-save explanation, stacked at 768px and below. Its native external link clearly announces a new browser tab.
-- Add course remains disabled. Professors, Enrollment and Settings each explain what is unavailable; they contain no simulated records or enabled feature controls. Details disclosure explains what currently works in Timetable.
+- Add course, meeting editing and Settings days/hours are enabled. Professors and Enrollment retain truthful unavailable states. Backup, import and timezone controls remain deferred.
+- The week scrolls inside a labeled keyboard-focusable region with sticky day/time headers. Normal scale is 72px/hour; short visible ranges expand proportionally to at least 180px. Partial cards are clipped to the view, with full details and an out-of-view reveal action.
+- Settings uses native weekday checkboxes and exact HH:mm fields, explicit save/cancel, and preserved drafts through navigation and save recovery.
 - Body text, placeholders, labels and state descriptions must remain readable at browser zoom. No animation delays content or enrollment actions.
 
 ## Visual review
@@ -48,3 +50,5 @@ No resting shadows, gradients, decorative metrics or simulated live ratings. Cou
 Use the screenshot and browser evidence in [03A foundation verification](docs/evidence/03a-foundation.md). That report distinguishes actual browser checks from unrun third-party checks. [04A verification](docs/evidence/04a-navigation-planner.md) adds the destination views and live planner link. Later tasks should extend this system rather than choose another theme.
 
 Task 05A reuses Taste app-screen form guidance and Impeccable Operate: labeled optional fields, explicit save/cancel, destructive action separated last, readable recovery state, preserved drafts, and native narrow-screen focus management. [Editor evidence](docs/evidence/05a-course-editor.md) includes desktop, narrow and conflict views. Vendor toolkits were not executed.
+
+Task 06A reuses the same Taste app-screen form/settings and Impeccable Operate guidance. [Grid and settings evidence](docs/evidence/06a-weekly-grid.md) records inspected desktop/narrow screenshots and Chrome/Edge functional checks. Browser zoom was checked using actual tab zoom and DOM bounds; a full-page screenshot capture artifact is not presented as visual proof. No vendor toolkit or screen-reader audit was run.

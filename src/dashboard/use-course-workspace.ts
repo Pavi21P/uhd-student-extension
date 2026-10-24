@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { createFoundationClient } from '../shared/client';
 import type { CourseCard, Schedule } from '../shared/domain';
 import { ContractFault } from '../shared/validation';
+import { draftMeeting, parseMeetingDrafts, type MeetingDraft, type MeetingErrors } from './meeting-model';
 import { changeCourse, emptySchedule, primaryScheduleId, type CourseChange } from './course-model';
 
 const client = createFoundationClient();
@@ -14,6 +15,8 @@ export function useCourseWorkspace() {
   const [busy, setBusy] = useState(false);
   const lock = useRef(false);
   const [draft, setDraft] = useState<CourseCard | null>(null);
+  const [meetingDrafts, setMeetingDrafts] = useState<MeetingDraft[]>([]);
+  const [meetingErrors, setMeetingErrors] = useState<MeetingErrors>({});
   const [newCourse, setNewCourse] = useState(false);
   const [recovery, setRecovery] = useState(false);
   const [review, setReview] = useState(false);
@@ -44,7 +47,7 @@ export function useCourseWorkspace() {
 
   function close() {
     if (lock.current) return;
-    setDraft(null); setReview(false);
+    setDraft(null); setReview(false); setMeetingDrafts([]); setMeetingErrors({});
     if (recovery) setMessage('Save not confirmed. Reload saved courses before editing again.');
     else { setError(''); setMessage(schedule ? 'Saved locally.' : 'No courses yet. Add your first course.'); }
     queueMicrotask(() => {
@@ -73,22 +76,32 @@ export function useCourseWorkspace() {
   function add(trigger: HTMLElement) {
     if (lock.current || draft || busy || !ready || recovery) return;
     const course = { id: crypto.randomUUID() };
-    origin.current = trigger; setDraft(course); setNewCourse(true);
+    origin.current = trigger; setDraft(course); setNewCourse(true); setMeetingDrafts([]); setMeetingErrors({});
     void persist({ kind: 'add', course }, false);
   }
   function edit(course: CourseCard, trigger: HTMLElement) {
     if (lock.current || draft || busy || recovery) return;
-    origin.current = trigger; setDraft({ ...course }); setNewCourse(false); setError('');
+    origin.current = trigger; setDraft({ ...course }); setMeetingDrafts((schedule?.meetings ?? []).filter(meeting => meeting.courseId === course.id).map(draftMeeting)); setMeetingErrors({}); setNewCourse(false); setError('');
   }
   const savedCourse = schedule?.courses.find(course => course.id === draft?.id);
-  return { schedule, ready, busy, draft, newCourse, savedCourse, recovery, review, message, error,
+  return { schedule, ready, busy, draft, meetingDrafts, meetingErrors, newCourse, savedCourse, recovery, review, message, error,
     setDraft: (next: CourseCard) => {
       setDraft(next);
+      if (!recovery && !review) { setError(''); setMessage('Unsaved changes. Save course to keep them.'); }
+    },
+    setMeetings: (next: MeetingDraft[]) => {
+      setMeetingDrafts(next); setMeetingErrors({});
       if (!recovery && !review) { setError(''); setMessage('Unsaved changes. Save course to keep them.'); }
     }, add, edit, close,
     reload: () => { void load(!!draft); },
     acceptReview: () => { setReview(false); setError(''); setMessage('Draft kept. Save when you are ready.'); },
-    save: () => { if (draft) void persist({ kind: savedCourse ? 'edit' : 'add', course: draft }, true); },
+    save: () => {
+      if (!draft || (!savedCourse && !newCourse)) return;
+      const parsed = parseMeetingDrafts(draft.id, meetingDrafts);
+      if (!parsed.ok) { setMeetingErrors(parsed.errors); setMessage('Check the meeting times below. Nothing was saved.'); return; }
+      setMeetingErrors({});
+      void persist({ kind: savedCourse ? 'edit' : 'add', course: draft, meetings: parsed.meetings }, true);
+    },
     remove: () => { if (draft) void persist({ kind: 'delete', courseId: draft.id }, true); },
   };
 }

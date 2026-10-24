@@ -28,7 +28,7 @@ Dashboard navigation order: Timetable, Professors, Planner, Enrollment, Settings
 
 ## Timetable layout and interactions
 
-Implementation checkpoint (05A): blank creation, optional text/color editing, cancel, delete and local persistence are implemented. The desktop editor shares the main column above the grid preview; at 800px and below it is a native modal. Drafts survive destination navigation. Save failures retain the draft and require a read of saved state, then explicit draft review before another save. Deleted courses are not silently recreated. Meeting forms/grid placement remain 06A; existing meetings are preserved or removed with their course in one transaction. See [05A evidence](evidence/05a-course-editor.md).
+Implementation checkpoint (06A): blank cards, optional details, manual weekday meeting rows, exact grid placement and saved visible days/hours are implemented. Course details and meetings save atomically; invalid rows retain input without partial saves. Valid overlaps show warnings and simple separate lanes. Meetings outside the view remain in the full-detail list and can be temporarily revealed. The desktop editor sits above the grid; at 800px and below it is a native modal. Course and settings drafts survive destination navigation; save failures require authoritative reload and explicit review. Deleted courses are not silently recreated. Drag/move/resize remains 07A, continuous two-view refresh remains 06B. See [06A evidence](evidence/06a-weekly-grid.md).
 
 ```text
 UHD Student Extension                       [Enrollment status]

@@ -10,7 +10,7 @@ Persisted records use schemaVersion; transport uses protocolVersion. Both start 
 
 ## Implemented runtime subset (03B / 05B)
 
-- `src/shared/validation.ts` parses CourseCard, Meeting, Schedule and DisplaySettings from unknown values into fresh records. IDs are bounded to 128 characters; controls and lone surrogates are rejected. Extra fields, accessors, prototype keys, invalid references/versions, duplicate IDs/occurrences and product limits are enforced. Other overlapping meetings are retained; 05B now supplies derived conflict data for the future placement UI.
+- `src/shared/validation.ts` parses CourseCard, Meeting, Schedule and DisplaySettings from unknown values into fresh records. IDs are bounded to 128 characters; controls and lone surrogates are rejected. Extra fields, accessors, prototype keys, invalid references/versions, duplicate IDs/occurrences and product limits are enforced. Other overlapping meetings are retained; 05B supplies derived conflict data consumed by the 06A meeting form and weekly grid.
 - `src/shared/meeting-time.ts` (05B) parses exact HH:mm wall times, allowing 24:00 only as the end of the current day, and rejects nonpositive/overnight ranges. `findMeetingConflicts` revalidates a Schedule and returns deterministic pairwise overlap intervals without mutation. Intervals are [start, end), so adjacent meetings do not conflict; weekday occurrences remain independent. This derived API changes no stored record or RPC. See [05B evidence](evidence/05b-meeting-validation.md).
 - `src/shared/foundation-rpc.ts` validates only `schedule.read`, `schedule.save`, `settings.read` and `settings.save`, including response schema and correlation. Reserved import/provider/enrollment commands return `FEATURE_UNAVAILABLE` without parsing or executing those features. Unknown commands return `INVALID_INPUT`. Their domain-specific validators must be added with their owning feature tasks before enabling those commands.
 - `src/background/handler.ts` verifies browser-supplied extension ID and the exact dashboard document URL (hash navigation allowed, queries denied), top-level frame and active lifecycle when supplied. Payload fields cannot self-authorize a sender. Popup, external-page and unsupported-document senders cannot read or write through this API.
@@ -22,6 +22,10 @@ Persisted records use schemaVersion; transport uses protocolVersion. Both start 
 - StateEvent notifications are best-effort metadata-only runtime messages emitted after persistence; a missing listener does not fail an already committed save. There is no UI subscription yet. Later consumers must refetch on startup/reconnect and honor revisions; events are not durable delivery or a replay protocol.
 
 Enrollment activation deduplication and durable executor ownership still belong to 14B. This storage queue does not establish those guarantees and enables no enrollment action.
+
+## Task 06A consumers
+
+The dashboard uses the existing schedule/settings RPC and schema without new permissions or messages. Course details and all of that course's meeting rows are validated and saved in one schedule transaction; other courses/meetings remain intact. Raw form strings stay local until valid. Visible days/hours use revision-protected settings saves, preserving enrollment timezone. Temporary Show meetings expansion never writes settings or changes meeting times. Missing settings use defaults without a write; bad/future records block saves and remain intact. Uncertain replies require a read and explicit draft review, never automatic replay. Continuous event subscriptions remain 06B.
 
 ## Validation rules by feature
 

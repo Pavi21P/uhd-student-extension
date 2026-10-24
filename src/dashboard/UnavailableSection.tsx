@@ -11,11 +11,6 @@ const content = {
     heading: 'Enrollment tools aren’t available yet',
     description: 'Immediate and scheduled enrollment are still being built. Visiting this page does not select classes or submit enrollment.',
   },
-  settings: {
-    title: 'Settings', subtitle: 'A timetable that fits your week.',
-    heading: 'Settings aren’t available yet',
-    description: 'Visible days, timetable hours, and timezone controls are still being built. Backup and import controls are not available yet.',
-  },
 } as const;
 
 export function UnavailableSection({ section }: { section: keyof typeof content }) {
