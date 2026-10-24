@@ -13,7 +13,7 @@ npm ci
 npm run check
 ```
 
-`check` runs lint, 95 unit tests, strict TypeScript checking, and the production build. The build verifies the MV3 entrypoints and bundled assets. Output goes to `dist/`, which is intentionally ignored by Git.
+`check` runs lint, 140 unit tests, strict TypeScript checking, and the production build. The build verifies the MV3 entrypoints and bundled assets. Output goes to `dist/`, which is intentionally ignored by Git.
 
 1. Open `chrome://extensions` or `edge://extensions`.
 2. Enable **Developer mode**, choose **Load unpacked**, and select this repository's `dist` folder.
@@ -34,6 +34,7 @@ The foundation requests only `storage`; it has no host permissions or connection
 - [Storage and messaging verification (03B)](docs/evidence/03b-storage-messaging.md)
 - [Navigation and planner verification (04A)](docs/evidence/04a-navigation-planner.md)
 - [Course editor verification (05A)](docs/evidence/05a-course-editor.md)
+- [Meeting validation and conflicts (05B)](docs/evidence/05b-meeting-validation.md)
 - [Screen layouts and interaction specification](docs/UI_SPEC.md)
 - [Design references: Taste Skill and Impeccable](docs/DESIGN_GUIDANCE.md)
 - [Recorded visual direction and tokens](DESIGN.md)

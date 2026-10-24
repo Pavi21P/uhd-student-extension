@@ -1,4 +1,4 @@
-# Shared contracts: tasks 02A / 03B
+# Shared contracts: tasks 02A / 03B / 05B
 
 Contract version 1. [domain.ts](../src/shared/domain.ts) owns records; [messages.ts](../src/shared/messages.ts) owns message shapes. [Synthetic examples](../tests/fixtures/contracts.examples.ts) cover an unnamed card, recurring meetings, a precise enrollment review, an activation request and a revision conflict. Task 02A established these compile-time shapes. Task 03B implements the schedule/settings runtime subset below; provider, portal, import and enrollment execution remain later tasks.
 
@@ -8,9 +8,10 @@ A owns timetable/editor consumers; B owns portal/provider adapters. Changes to s
 
 Persisted records use schemaVersion; transport uses protocolVersion. Both start at 1. Reject unknown versions with UNSUPPORTED_VERSION and leave saved data intact. A migration must explicitly read an old version and produce a validated new one; never reset a schedule because parsing failed. Unknown input enters validators as unknown, never through a type assertion.
 
-## Implemented runtime subset (03B)
+## Implemented runtime subset (03B / 05B)
 
-- `src/shared/validation.ts` parses CourseCard, Meeting, Schedule and DisplaySettings from unknown values into fresh records. IDs are bounded to 128 characters; controls and lone surrogates are rejected. Extra fields, accessors, prototype keys, invalid references/versions, duplicate IDs/occurrences and product limits are enforced. Other overlapping meetings are retained; conflict warnings/interval utilities remain 05B.
+- `src/shared/validation.ts` parses CourseCard, Meeting, Schedule and DisplaySettings from unknown values into fresh records. IDs are bounded to 128 characters; controls and lone surrogates are rejected. Extra fields, accessors, prototype keys, invalid references/versions, duplicate IDs/occurrences and product limits are enforced. Other overlapping meetings are retained; 05B now supplies derived conflict data for the future placement UI.
+- `src/shared/meeting-time.ts` (05B) parses exact HH:mm wall times, allowing 24:00 only as the end of the current day, and rejects nonpositive/overnight ranges. `findMeetingConflicts` revalidates a Schedule and returns deterministic pairwise overlap intervals without mutation. Intervals are [start, end), so adjacent meetings do not conflict; weekday occurrences remain independent. This derived API changes no stored record or RPC. See [05B evidence](evidence/05b-meeting-validation.md).
 - `src/shared/foundation-rpc.ts` validates only `schedule.read`, `schedule.save`, `settings.read` and `settings.save`, including response schema and correlation. Reserved import/provider/enrollment commands return `FEATURE_UNAVAILABLE` without parsing or executing those features. Unknown commands return `INVALID_INPUT`. Their domain-specific validators must be added with their owning feature tasks before enabling those commands.
 - `src/background/handler.ts` verifies browser-supplied extension ID and the exact dashboard document URL (hash navigation allowed, queries denied), top-level frame and active lifecycle when supplied. Payload fields cannot self-authorize a sender. Popup, external-page and unsupported-document senders cannot read or write through this API.
 - Invalid envelopes return `RpcRejection`: `protocolVersion: 1`, `ok: false`, a typed error and nullable `requestId`/`type`. These fields are null only when a valid envelope identity could not be parsed. A valid envelope, including an unsupported protocol version, retains its identity in the rejection.
