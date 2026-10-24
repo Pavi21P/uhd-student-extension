@@ -20,7 +20,7 @@ Updated: 2026-10-24 (America/Chicago)
 
 | Owner | Task | State | Next action |
 | --- | --- | --- | --- |
-| A / Pavitra | 07A | Complete | Verified on feat/07a-meeting-drag; publishing for review. Next ready: 07B. |
+| A / Pavitra | 07A | Complete | Pushed in PR #4, based on PR #3; review and merge pending. Next ready: 07B. |
 | B / teammate | 01B | Ready | Inspect the real myUHD flow and build an anonymized portal map. |
 
 ## Decisions to retain
@@ -42,7 +42,7 @@ Updated: 2026-10-24 (America/Chicago)
 
 ## Latest handoff
 
-- Task / owner: **07A / A**, complete on feat/07a-meeting-drag, based on open [PR #3](https://github.com/Pavi21P/uhd-student-extension/pull/3). Publication pending; no merge performed. B's 01B assignment is unchanged.
+- Task / owner: **07A / A**, complete on feat/07a-meeting-drag, based on open [PR #3](https://github.com/Pavi21P/uhd-student-extension/pull/3). Implementation commit `94f3bdf` is pushed in [PR #4](https://github.com/Pavi21P/uhd-student-extension/pull/4), based on feat/06b-cross-view-recovery. GitHub source and PR head were verified. Review/merge the parent first, then retarget this PR to main; no merge performed. B's 01B assignment is unchanged.
 - Changed: placement model, drag/keyboard hook, grid/tray controls, proposal-to-editor wiring, feedback/handle styles, 16 tests and [evidence](evidence/07a-meeting-drag.md). No stored schema, RPC, dependency, permission or planner changes.
 - Passed: **177 tests**, lint, strict typecheck, production build/artifact validation. Native Chrome/Edge mouse checks cover place/move/resize, cancellation, stale gestures and reviewed saves; keyboard, exact times, recurrence independence, day-end clipping, short meeting access, 200% zoom, reduced motion and responsive bounds checked. Preview/grid/narrow form screenshots inspected.
 - Limits: desktop mouse dragging verified; touch/pen dragging and screen-reader audit are unverified. No cross-tab drag import, overnight meetings, live ratings or enrollment. Parent PR reviews/merges remain pending.
