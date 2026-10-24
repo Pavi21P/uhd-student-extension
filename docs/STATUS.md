@@ -13,13 +13,14 @@ Updated: 2026-10-24 (America/Chicago)
 - **05B complete**: exact meeting-time validation and deterministic overlap detection, with 45 new acceptance tests. [Verification](evidence/05b-meeting-validation.md). 06A now consumes these helpers in the meeting form and weekly grid.
 - **06A complete**: manual meeting rows, exact weekly placement, overlap warnings, full-detail list and saved visible days/hours. [Verification and screenshots](evidence/06a-weekly-grid.md).
 - **06B complete**: queued cross-tab refresh, preserved raw drafts with explicit review, missed-event catch-up and non-destructive read recovery. [Verification and screenshots](evidence/06b-cross-view-recovery.md).
+- **07A complete**: native drag placement, per-occurrence move/resize, 15-minute snapping and keyboard/exact-form proposals with explicit Save/Cancel. [Verification and screenshots](evidence/07a-meeting-drag.md).
 - Public repo: https://github.com/Pavi21P/uhd-student-extension. Foundation tasks 03A (`cffda38`) and 03B (`b4ea551`) are included in the 2026-10-22 main-branch publication, retaining their original author dates and history. Published `feat/05a-course-editor` at `5635520` includes 04A (`871beb4`) and 05A (`823f33f`). 05B (`2517dc1`) is published on `feat/05b-meeting-validation`, based on that branch. [Pull request #1](https://github.com/Pavi21P/uhd-student-extension/pull/1) includes 04A/05A/05B and is open for review. `main` remains at `a29eea5`; no merge is included.
 
 ## Active work
 
 | Owner | Task | State | Next action |
 | --- | --- | --- | --- |
-| A / Pavitra | 06B | Complete | Pushed in PR #3, based on PR #2; review and merge pending. Next ready: 07A. |
+| A / Pavitra | 07A | Complete | Verified on feat/07a-meeting-drag; publishing for review. Next ready: 07B. |
 | B / teammate | 01B | Ready | Inspect the real myUHD flow and build an anonymized portal map. |
 
 ## Decisions to retain
@@ -41,10 +42,10 @@ Updated: 2026-10-24 (America/Chicago)
 
 ## Latest handoff
 
-- Task / owner: **06B / A**, complete on feat/06b-cross-view-recovery, based on open [PR #2](https://github.com/Pavi21P/uhd-student-extension/pull/2). Implementation commit `9f44c4e` is pushed in [PR #3](https://github.com/Pavi21P/uhd-student-extension/pull/3), based on feat/06a-weekly-grid. GitHub source and PR head were verified. Review/merge the parent first, then retarget this PR to main; no merge performed. B's 01B assignment is unchanged.
-- Changed: refresh queue/subscription hook, schedule/settings read handling, grid recovery notice, 10 regression tests and [evidence](evidence/06b-cross-view-recovery.md). Reuses 03B versioned single-writer repository; stored schema, RPC, permissions and dependencies are unchanged.
-- Passed: **161 tests**, lint, strict typecheck, production build/artifact validation. Chrome/Edge two-tab checks cover idle updates, raw draft review, remote deletion, events during reads, missed-event catch-up, corrupt/future records, lost-save replies, transient read recovery and process restart. Desktop/narrow recovery screenshots inspected.
-- Limits: no automatic corruption repair/reset, schema migration or backup/import; an invalid record remains blocked until valid data is restored separately. No live portal/RMP or screen-reader audit. Parent PR reviews/merges remain pending.
-- Next ready task: **07A**, drag/move/resize with exact form and keyboard alternatives. Keep one occurrence independent and retain the existing manual editor. Stop after 06B.
+- Task / owner: **07A / A**, complete on feat/07a-meeting-drag, based on open [PR #3](https://github.com/Pavi21P/uhd-student-extension/pull/3). Publication pending; no merge performed. B's 01B assignment is unchanged.
+- Changed: placement model, drag/keyboard hook, grid/tray controls, proposal-to-editor wiring, feedback/handle styles, 16 tests and [evidence](evidence/07a-meeting-drag.md). No stored schema, RPC, dependency, permission or planner changes.
+- Passed: **177 tests**, lint, strict typecheck, production build/artifact validation. Native Chrome/Edge mouse checks cover place/move/resize, cancellation, stale gestures and reviewed saves; keyboard, exact times, recurrence independence, day-end clipping, short meeting access, 200% zoom, reduced motion and responsive bounds checked. Preview/grid/narrow form screenshots inspected.
+- Limits: desktop mouse dragging verified; touch/pen dragging and screen-reader audit are unverified. No cross-tab drag import, overnight meetings, live ratings or enrollment. Parent PR reviews/merges remain pending.
+- Next ready task: **07B**, validated JSON export/import with preview and explicit merge/replace; preserve existing data on invalid input. Stop after 07A.
 
 Read the linked evidence for details; do not replay the full history.

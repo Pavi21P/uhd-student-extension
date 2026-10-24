@@ -13,7 +13,7 @@ A desktop Chrome/Edge extension for UHD students planning a term and preparing t
 
 ## Current scope
 
-Tasks 03A through 05B provide the MV3 package, validated background storage, navigation, planner link, course editor and meeting validation. Task 06A adds manual meeting rows, exact weekly placement, overlap warnings, an accessible meeting list, and saved visible days/hours. Course details and meetings save together with revision checks and explicit recovery after an uncertain save. Task 06B refreshes open dashboard views from saved changes while retaining drafts for explicit review. Invalid records remain intact and block writes; transient failures recover by explicit reload. Dragging, backup/import, live ratings and enrollment remain unfinished.
+Tasks 03A through 05B provide the MV3 package, validated background storage, navigation, planner link, course editor and meeting validation. Task 06A adds manual meeting rows, exact weekly placement, overlap warnings, an accessible meeting list, and saved visible days/hours. Course details and meetings save together with revision checks and explicit recovery after an uncertain save. Task 06B refreshes open dashboard views from saved changes while retaining drafts for explicit review. Invalid records remain intact and block writes; transient failures recover by explicit reload. Task 07A adds in-page drag placement, independent occurrence movement/resizing and keyboard proposals. Drops open editable drafts; Save course confirms them. Drag interactions snap to 15 minutes, while forms retain exact minute editing. Backup/import, live ratings and enrollment remain unfinished.
 
 ## Design commitments
 

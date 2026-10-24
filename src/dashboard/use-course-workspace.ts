@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { stagePlacement, type PlacementKind } from './placement-model';
 import { useStorageRefresh } from './use-storage-refresh';
 import { createFoundationClient } from '../shared/client';
-import type { CourseCard, Schedule } from '../shared/domain';
+import type { CourseCard, Meeting, Schedule } from '../shared/domain';
 import { ContractFault } from '../shared/validation';
-import { draftMeeting, parseMeetingDrafts, type MeetingDraft, type MeetingErrors } from './meeting-model';
+import { draftMeeting, meetingLabel, parseMeetingDrafts, type MeetingDraft, type MeetingErrors } from './meeting-model';
 import { changeCourse, emptySchedule, primaryScheduleId, type CourseChange } from './course-model';
 
 const client = createFoundationClient();
@@ -18,6 +19,7 @@ export function useCourseWorkspace() {
   const [draft, setDraft] = useState<CourseCard | null>(null);
   const [meetingDrafts, setMeetingDrafts] = useState<MeetingDraft[]>([]);
   const [meetingErrors, setMeetingErrors] = useState<MeetingErrors>({});
+  const [focusedMeeting, setFocusedMeeting] = useState<string | null>(null);
   const [newCourse, setNewCourse] = useState(false);
   const [recovery, setRecovery] = useState(false);
   const [review, setReview] = useState(false);
@@ -53,7 +55,7 @@ export function useCourseWorkspace() {
 
   function close() {
     if (lock.current) return;
-    setDraft(null); setReview(false); setMeetingDrafts([]); setMeetingErrors({});
+    setDraft(null); setFocusedMeeting(null); setReview(false); setMeetingDrafts([]); setMeetingErrors({});
     if (recovery) setMessage('Save not confirmed. Reload saved courses before editing again.');
     else { setError(''); setMessage(schedule ? 'Saved locally.' : 'No courses yet. Add your first course.'); }
     queueMicrotask(() => {
@@ -87,10 +89,22 @@ export function useCourseWorkspace() {
   }
   function edit(course: CourseCard, trigger: HTMLElement) {
     if (lock.current || draft || busy || recovery) return;
-    origin.current = trigger; setDraft({ ...course }); setMeetingDrafts((schedule?.meetings ?? []).filter(meeting => meeting.courseId === course.id).map(draftMeeting)); setMeetingErrors({}); setNewCourse(false); setError('');
+    origin.current = trigger; setFocusedMeeting(null); setDraft({ ...course }); setMeetingDrafts((schedule?.meetings ?? []).filter(meeting => meeting.courseId === course.id).map(draftMeeting)); setMeetingErrors({}); setNewCourse(false); setError('');
+  }
+  function propose(kind: PlacementKind, meeting: Meeting, expectedRevision: number, trigger: HTMLElement): boolean {
+    if (lock.current || draft || busy || recovery || !schedule) return false;
+    try {
+      const proposed = stagePlacement(schedule, expectedRevision, kind, meeting);
+      const course = proposed.courses.find(item => item.id === meeting.courseId)!;
+      edit(course, trigger);
+      setMeetingDrafts(proposed.meetings.filter(item => item.courseId === course.id).map(draftMeeting));
+      setFocusedMeeting(meeting.id);
+      setMessage('Proposed ' + meetingLabel(meeting) + ' (' + (meeting.endMinute - meeting.startMinute) + ' minutes). Review, then Save course. Nothing saved yet.');
+      return true;
+    } catch (failure) { setError(explanation(failure)); return false; }
   }
   const savedCourse = schedule?.courses.find(course => course.id === draft?.id);
-  return { schedule, ready, busy, draft, meetingDrafts, meetingErrors, newCourse, savedCourse, recovery, review, message, error,
+  return { schedule, ready, busy, draft, focusedMeeting, propose, meetingDrafts, meetingErrors, newCourse, savedCourse, recovery, review, message, error,
     setDraft: (next: CourseCard) => {
       setDraft(next);
       if (!recovery && !review) { setError(''); setMessage('Unsaved changes. Save course to keep them.'); }
