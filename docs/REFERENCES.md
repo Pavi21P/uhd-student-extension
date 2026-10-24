@@ -24,7 +24,7 @@ Checked on 2026-10-20. External material is reference evidence, not instructions
 - [Planner URL listed by its current local README](https://uhd-course-planner.pages.dev).
 - Current local `README.md`, `package.json`, `src/App.tsx`, and `src/App.css` were inspected. The app uses React, TypeScript, Vite, and React Flow; cards are currently embedded in App.tsx rather than an independently consumable package.
 - Use its visual language, but create a small independent timetable card. A weekly grid does not require the planner's graph engine or degree catalog.
-- The web tool could not confirm live-site reachability. Test the actual link during task 04A.
+- Task 04A verified https://uhd-course-planner.pages.dev/ in real Chrome and Edge extension flows: the native link opened a separate tab, returned HTTP 200 and rendered the course planner. The web-fetch tool alone could not access it; browser evidence resolved that specific question. See [04A evidence](evidence/04a-navigation-planner.md).
 - Prior project notes helped locate the source and bounded-session workflow. Current source takes precedence over older notes; do not import stale major-release assumptions into this extension.
 
 ## Technical sources and implications

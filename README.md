@@ -2,7 +2,7 @@
 
 A Chrome/Edge extension for UHD students: professor ratings, a link to the existing course planner, a weekly timetable, and user-armed enrollment assistance for myUHD.
 
-**Current build: Manifest V3 foundation with validated storage and messaging (03A/03B).** The popup opens a responsive dashboard preview. A background API can save/reload schedules and display settings with revision protection. The visible dashboard remains a preview: course editing, working destination tabs, ratings, and enrollment are not implemented yet.
+**Current build: locally saved course cards (05A), dashboard navigation and planner link (04A).** Create blank cards, edit optional details, cancel drafts, and delete courses. Professor, title and room keep their specified positions. Changes survive browser restart; conflicting or uncertain saves require reload/review. The weekly grid is still a preview. Live ratings, settings controls and enrollment remain unavailable.
 
 ## Run locally
 
@@ -13,14 +13,16 @@ npm ci
 npm run check
 ```
 
-`check` runs lint, 90 unit tests, strict TypeScript checking, and the production build. The build verifies the MV3 entrypoints and bundled assets. Output goes to `dist/`, which is intentionally ignored by Git.
+`check` runs lint, 140 unit tests, strict TypeScript checking, and the production build. The build verifies the MV3 entrypoints and bundled assets. Output goes to `dist/`, which is intentionally ignored by Git.
 
 1. Open `chrome://extensions` or `edge://extensions`.
 2. Enable **Developer mode**, choose **Load unpacked**, and select this repository's `dist` folder.
 3. Open the extension's toolbar popup and select **Open timetable**. Extension options opens the same dashboard.
-4. After source changes, run `npm run build` and reload the extension on the extensions page.
+4. In Timetable, choose **Add course**. The blank card is saved immediately. Fill optional details and choose **Save course**; **Cancel** discards edits while keeping the saved card. After a save failure, use **Reload saved courses** and review before retrying.
+5. Select **Planner**, then **Open course planner**. It opens https://uhd-course-planner.pages.dev in a new tab; planner data saves separately.
+6. After source changes, run `npm run build` and reload the extension on the extensions page.
 
-For UI development, run `npm run dev` and open the printed local URL with `/dashboard.html` or `/popup.html`. This previews ordinary web pages; it does not load an extension. `npm run build:watch` rebuilds the unpacked files, but browser extension reloads remain manual. Run `npm run check` before submitting changes.
+For UI development, run `npm run dev` and open the printed local URL with `/dashboard.html` or `/popup.html`. This previews ordinary web pages; it does not load an extension. Course persistence requires the unpacked extension; the web preview explains that storage is unavailable. `npm run build:watch` rebuilds the unpacked files, but browser extension reloads remain manual. Run `npm run check` before submitting changes.
 
 The foundation requests only `storage`; it has no host permissions or connection to myUHD. A module background worker owns schedule/settings writes and accepts commands only from this extension's dashboard. Fonts and scripts are bundled locally. Unsupported import, ratings, and enrollment commands return `FEATURE_UNAVAILABLE`.
 
@@ -30,6 +32,9 @@ The foundation requests only `storage`; it has no host permissions or connection
 - [Current checkpoint and next task](docs/STATUS.md)
 - [Foundation verification and screenshots](docs/evidence/03a-foundation.md)
 - [Storage and messaging verification (03B)](docs/evidence/03b-storage-messaging.md)
+- [Navigation and planner verification (04A)](docs/evidence/04a-navigation-planner.md)
+- [Course editor verification (05A)](docs/evidence/05a-course-editor.md)
+- [Meeting validation and conflicts (05B)](docs/evidence/05b-meeting-validation.md)
 - [Screen layouts and interaction specification](docs/UI_SPEC.md)
 - [Design references: Taste Skill and Impeccable](docs/DESIGN_GUIDANCE.md)
 - [Recorded visual direction and tokens](DESIGN.md)

@@ -1,6 +1,6 @@
 # UI specification: task 01A
 
-Status: task deliverable complete; implementation has not started. Based on the approved build plan and the user's confirmed myUHD select-and-submit behavior. Teammate review has not yet occurred. This document is the implementation baseline for task 02A, not evidence that any screen already works.
+Status: specification delivered in 01A; current implementation is tracked in [STATUS.md](STATUS.md). Based on the approved build plan and the user's confirmed myUHD select-and-submit behavior. Teammate review has not yet occurred. This is a behavioral specification, not evidence that every feature already works.
 
 ## Scope and ownership
 
@@ -24,9 +24,11 @@ The toolbar popup is a launcher. The dashboard is a regular extension page. Open
 | Enrollment | Portal connection state, exact section review, Now/Schedule, job status and results | Enroll now / Schedule enrollment | Open the supported myUHD enrollment page and sign in. |
 | Settings | Visible days/hours, timezone, JSON backup/import, local-data controls | Save settings | Sensible defaults; no account required. |
 
-Dashboard navigation order: Timetable, Professors, Planner, Enrollment, Settings. Progress is absent until implemented. Popup shortcuts open the relevant dashboard view; enrollment activation is only on the full review screen. A header job-status link returns to Enrollment when a job is armed or has a new result.
+Dashboard navigation order: Timetable, Professors, Planner, Enrollment, Settings. Task 04A implements these as native hash navigation links with aria-current, browser history, route titles, and focus transfer to main content. Use Tab/Shift+Tab and Enter; these links do not use ARIA tab-widget roles or arrow-key activation. Unknown hashes fall back to Timetable. The skip link focuses content without changing destinations. Progress is absent until implemented. Popup shortcuts open the relevant dashboard view; enrollment activation is only on the full review screen. A header job-status link returns to Enrollment when a job is armed or has a new result.
 
 ## Timetable layout and interactions
+
+Implementation checkpoint (05A): blank creation, optional text/color editing, cancel, delete and local persistence are implemented. The desktop editor shares the main column above the grid preview; at 800px and below it is a native modal. Drafts survive destination navigation. Save failures retain the draft and require a read of saved state, then explicit draft review before another save. Deleted courses are not silently recreated. Meeting forms/grid placement remain 06A; existing meetings are preserved or removed with their course in one transaction. See [05A evidence](evidence/05a-course-editor.md).
 
 ```text
 UHD Student Extension                       [Enrollment status]
