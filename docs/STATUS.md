@@ -20,13 +20,14 @@ Updated: 2026-10-25 (America/Chicago)
 - **09A pending human acceptance**: Chrome/Edge end-to-end journey passed; [two-person checklist](evidence/09a-human-qa.md) prepared. [Browser evidence](evidence/09a-browser-qa.md). Neither human sign-off has been received.
 - **10A complete (UI scope)**: validated session-only profile-link drafts and seven explicitly synthetic rating states. [Verification and screenshots](evidence/10a-professor-preview.md). Live ratings and saved associations remain unavailable.
 - **11A complete (fixture scope)**: accessible inline badge, guarded profile navigation and synthetic enrollment-control isolation checks. [Evidence](evidence/11a-professor-badges.md). No live portal injection.
+- **01B preparation complete; live inspection pending**: user-requested [inspection checklist](evidence/01b-inspection-checklist.md) and [portal map worksheet](evidence/portal-map.md). No live facts/selectors or G1 completion claimed.
 - Public repo: https://github.com/Pavi21P/uhd-student-extension. Foundation tasks 03A (`cffda38`) and 03B (`b4ea551`) are included in the 2026-10-22 main-branch publication, retaining their original author dates and history. Published `feat/05a-course-editor` at `5635520` includes 04A (`871beb4`) and 05A (`823f33f`). 05B (`2517dc1`) is published on `feat/05b-meeting-validation`, based on that branch. [Pull request #1](https://github.com/Pavi21P/uhd-student-extension/pull/1) includes 04A/05A/05B and is open for review. `main` remains at `a29eea5`; no merge is included.
 
 ## Active work
 
 | Owner | Task | State | Next action |
 | --- | --- | --- | --- |
-| A / Pavitra | 11A | Complete, published | PR #10 open; fixture checks passed. 12A needs 11B; 09A needs both human results. |
+| A / Pavitra | 01B support | Checklist prepared; publication pending | Await B's sanitized observations; full 01B remains incomplete. |
 | B / teammate | 01B | Ready | Inspect the real myUHD flow and build an anonymized portal map. |
 
 ## Decisions to retain
@@ -48,10 +49,10 @@ Updated: 2026-10-25 (America/Chicago)
 
 ## Latest handoff
 
-- Task / owner: **11A / A**, complete for the planned component/fixture scope. Branch feat/11a-professor-badges is based on [PR #9](https://github.com/Pavi21P/uhd-student-extension/pull/9). Published in [PR #10](https://github.com/Pavi21P/uhd-student-extension/pull/10), targeting feat/10a-professor-preview; implementation commit 59ec442 and remote PR head verified. No merge or release. B's 01B assignment is unchanged.
-- Changed: reusable native-disclosure badge, guarded display/source model, shared URL parser, scoped CSS, synthetic enrollment fixture, 24 unit cases and a reproducible browser runner. [Evidence](evidence/11a-professor-badges.md).
-- Passed: lint, 266 tests, TypeScript, production/MV3 checks; Chrome/Edge native keyboard/source/checkbox/submission checks, five widths, 200% text enlargement and reduced motion. Desktop/narrow screenshots inspected. Source navigation was intercepted with synthetic content.
-- Remaining: real portal mounting/event compatibility, identity matching, permitted RMP source, persistent associations and observer/cache work. The badge is fixture-only, not injected by the installed extension. Both 09A human sign-offs and parent reviews remain pending.
-- Next ready project task: **01B / B**, observed/anonymized myUHD portal map. A's **12A** is blocked on 11B; resume 09A when both human results arrive. Do not invent a portal adapter or advance to release.
+- Task / owner: **01B support / A**, user-requested inspection checklist prepared; **01B itself remains incomplete**. Branch docs/01b-portal-inspection is based on [PR #10](https://github.com/Pavi21P/uhd-student-extension/pull/10). Publication pending; no merge or release. B's live inspection assignment is unchanged.
+- Changed: [inspection checklist](evidence/01b-inspection-checklist.md), [portal map worksheet](evidence/portal-map.md), README links and reference record. The map separates public guidance, synthetic fixtures and unknown live state; no guessed selectors or origins.
+- Validation: documentation links and staged diff checked. Official registration-guide text re-read for route orientation; it is dated November 2023, not current authenticated evidence. No code changed; passing 11A checks (266 tests/build/Chrome/Edge fixture checks) were not rerun.
+- Blocker: user confirmed inspection has not happened. Browser connection failed before inventory; no signed-in content was inspected or saved. Current origins, control semantics, confirmation/results and portal constraints remain unknown. 09A still needs both human results.
+- Next ready action: **01B / B**, run the checklist and return its sanitized reply template. Incorporate observations and keep unknown states open before claiming completion. 12A needs 11B; portal-dependent work and release remain blocked.
 
 Read linked evidence for details; do not replay the full history.
