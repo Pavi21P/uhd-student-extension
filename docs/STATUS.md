@@ -24,7 +24,7 @@ Updated: 2026-10-24 (America/Chicago)
 
 | Owner | Task | State | Next action |
 | --- | --- | --- | --- |
-| A / Pavitra | 09A | Awaiting human QA | Browser checks passed; checklist prepared. Two independent human results are required to complete 09A. |
+| A / Pavitra | 09A | Awaiting human QA | Browser checks/checklist in [draft PR #8](https://github.com/Pavi21P/uhd-student-extension/pull/8). Two independent human results are required. |
 | B / teammate | 01B | Ready | Inspect the real myUHD flow and build an anonymized portal map. |
 
 ## Decisions to retain
@@ -46,7 +46,7 @@ Updated: 2026-10-24 (America/Chicago)
 
 ## Latest handoff
 
-- Task / owner: **09A / A**, incomplete pending two independent human passes. Browser checks and checklist prepared on test/09a-browser-qa, based on [PR #7](https://github.com/Pavi21P/uhd-student-extension/pull/7). Draft publication pending; no merge or alpha tag. B's 01B assignment is unchanged.
+- Task / owner: **09A / A**, incomplete pending two independent human passes. Browser checks and checklist prepared on test/09a-browser-qa, based on [PR #7](https://github.com/Pavi21P/uhd-student-extension/pull/7). Published in [draft PR #8](https://github.com/Pavi21P/uhd-student-extension/pull/8), targeting test/08b-timetable-regressions; remote commit and draft state verified. No merge or alpha tag. B's 01B assignment is unchanged.
 - Changed: README links, [human checklist](evidence/09a-human-qa.md), [browser report](evidence/09a-browser-qa.md) and structured results. No production changes or reproduced defect.
 - Passed fresh in Chrome/Edge: create/place/edit/invalid-form/export/reload, real browser restart, cancelled import, live planner HTTP 200 and 200% zoom. Prior 08B integration checks passed 217 tests; unchanged checks were not rerun for documentation only.
 - Blocker: user confirmed both human checks are not yet done. Neither agent automation nor a second browser substitutes for two people. Live RMP/enrollment and parent reviews remain pending.
