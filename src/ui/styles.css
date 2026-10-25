@@ -346,3 +346,24 @@ button:disabled { cursor: not-allowed; }
 .import-contents > ul > li { padding: 12px 0; border-bottom: 1px solid var(--line); overflow-wrap: anywhere; }
 .import-contents strong, .import-contents span { display: block; margin-bottom: 4px; }
 @media (max-width: 800px) { .import-panel { padding: 16px; } .import-summary { grid-template-columns: 1fr; } .backup-actions .button { flex: 1; } }
+
+/* 08A: readable overlap lanes, precise short marks and full-detail alternatives. */
+.grid-reading-help { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 12px 20px; border-top: 1px solid var(--line); }
+.grid-reading-help p { flex: 1 1 240px; color: var(--muted); font-size: 13px; }
+.calendar-meeting { padding: 6px 8px 10px; border-color: #698779; }
+.calendar-meeting .card-professor, .meeting-card-footer, .meeting-card-footer .card-room { font-size: 12px; line-height: 16px; }
+.calendar-meeting .card-course-name { line-height: 18px; }
+.calendar-meeting .card-professor { text-align: left; }
+.meeting-card-footer > span:last-child { flex-shrink: 0; }
+.card-overlap { color: #664b1c; font-weight: 700; }
+.conflicting-meeting { border: 1px dashed #8a6935; background: #fcf8ef; }
+.conflicting-meeting:hover:not(:disabled) { background: #f4ead6; border-color: #664b1c; }
+.compact-meeting { padding: 2px 8px; }
+.compact-meeting .card-course-name { font-size: 12px; line-height: 18px; }
+.compact-time { display: block; font-size: 12px; line-height: 16px; }
+.tiny-meeting { padding: 0; border-block: 0; border-radius: 0; background: #21675a; }
+.tiny-meeting.conflicting-meeting { background: #8a6935; }
+.tiny-meeting > * { visibility: hidden; }
+.meeting-list li > div { font-size: 13px; line-height: 1.5; }
+.meeting-list strong { font-size: 14px; }
+@media (max-width: 520px) { .grid-reading-help { padding-inline: 16px; } }

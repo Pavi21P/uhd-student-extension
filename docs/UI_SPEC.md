@@ -55,6 +55,8 @@ My timetable                  [Add course] [Backup] [Import]
 - Persist confirmed changes and display Saving, Saved locally, or Could not save. On a save failure, retain the edited state and offer Retry; do not falsely show Saved.
 - Import presents a validated preview and explicit Merge or Replace choice. Cancel leaves the current timetable unchanged. Reject invalid input before modifying saved data; details belong to 02A/07B.
 
+Task 08A reserves 184px per overlap lane within a horizontally scrollable grid. Full cards preserve professor/title/room positions and add an Overlap label with a dashed border. Cards under 84px high use compact labels; under 24px they become exact-duration marks with full accessible names. The full-detail list includes optional course codes and all text; Go to meeting list opens and focuses it.
+
 ### Course card
 
 ```text

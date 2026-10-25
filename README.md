@@ -2,7 +2,7 @@
 
 A Chrome/Edge extension for UHD students: professor ratings, a link to the existing course planner, a weekly timetable, and user-armed enrollment assistance for myUHD.
 
-**Current build: weekly timetable with JSON backup and reviewed import (07B).** Create blank cards, edit optional details, and add independent weekday meetings with exact 24-hour times. The grid reflects each duration, warns about overlaps, and retains access to meetings outside your chosen days/hours. Save the view in Settings. Course and view drafts survive navigation. Other open dashboard tabs refresh automatically; incoming changes preserve drafts and require review before saving. Failed or uncertain saves still require an explicit reload/review. Live ratings and enrollment remain unavailable.
+**Current build: readable overlapping timetables with reviewed JSON import (08A).** Create blank cards, edit optional details, and add independent weekday meetings with exact 24-hour times. Crowded days widen inside the scrollable grid so overlapping cards remain readable. Go to meeting list exposes full course details and editing, including very short meetings. The grid reflects each duration, warns about overlaps, and retains access to meetings outside your chosen days/hours. Save the view in Settings. Course and view drafts survive navigation. Other open dashboard tabs refresh automatically; incoming changes preserve drafts and require review before saving. Failed or uncertain saves still require an explicit reload/review. Live ratings and enrollment remain unavailable.
 
 ## Run locally
 
@@ -13,7 +13,7 @@ npm ci
 npm run check
 ```
 
-`check` runs lint, 200 unit tests, strict TypeScript checking, and the production build. The build verifies the MV3 entrypoints and bundled assets. Output goes to `dist/`, which is intentionally ignored by Git.
+`check` runs lint, 202 unit tests, strict TypeScript checking, and the production build. The build verifies the MV3 entrypoints and bundled assets. Output goes to `dist/`, which is intentionally ignored by Git.
 
 1. Open `chrome://extensions` or `edge://extensions`.
 2. Enable **Developer mode**, choose **Load unpacked**, and select this repository's `dist` folder.
@@ -41,6 +41,7 @@ The foundation requests only `storage`; it has no host permissions or connection
 - [Cross-tab updates and recovery (06B)](docs/evidence/06b-cross-view-recovery.md)
 - [Drag placement, move/resize and keyboard editing (07A)](docs/evidence/07a-meeting-drag.md)
 - [Timetable backup and reviewed import (07B)](docs/evidence/07b-timetable-backup.md)
+- [Overlap readability and responsive timetable (08A)](docs/evidence/08a-timetable-readability.md)
 - [Screen layouts and interaction specification](docs/UI_SPEC.md)
 - [Design references: Taste Skill and Impeccable](docs/DESIGN_GUIDANCE.md)
 - [Recorded visual direction and tokens](DESIGN.md)
