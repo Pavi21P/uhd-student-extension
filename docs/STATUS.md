@@ -27,7 +27,7 @@ Updated: 2026-10-25 (America/Chicago)
 
 | Owner | Task | State | Next action |
 | --- | --- | --- | --- |
-| A / Pavitra | 01B support | Checklist prepared; publication pending | Await B's sanitized observations; full 01B remains incomplete. |
+| A / Pavitra | 01B support | Checklist published | Draft PR #11; await B's sanitized observations. Full 01B remains incomplete. |
 | B / teammate | 01B | Ready | Inspect the real myUHD flow and build an anonymized portal map. |
 
 ## Decisions to retain
@@ -49,7 +49,7 @@ Updated: 2026-10-25 (America/Chicago)
 
 ## Latest handoff
 
-- Task / owner: **01B support / A**, user-requested inspection checklist prepared; **01B itself remains incomplete**. Branch docs/01b-portal-inspection is based on [PR #10](https://github.com/Pavi21P/uhd-student-extension/pull/10). Publication pending; no merge or release. B's live inspection assignment is unchanged.
+- Task / owner: **01B support / A**, user-requested inspection checklist prepared; **01B itself remains incomplete**. Branch docs/01b-portal-inspection is based on [PR #10](https://github.com/Pavi21P/uhd-student-extension/pull/10). Published in [draft PR #11](https://github.com/Pavi21P/uhd-student-extension/pull/11), targeting feat/11a-professor-badges; commit b10c67e and draft PR head verified. No merge or release. B's live inspection assignment is unchanged.
 - Changed: [inspection checklist](evidence/01b-inspection-checklist.md), [portal map worksheet](evidence/portal-map.md), README links and reference record. The map separates public guidance, synthetic fixtures and unknown live state; no guessed selectors or origins.
 - Validation: documentation links and staged diff checked. Official registration-guide text re-read for route orientation; it is dated November 2023, not current authenticated evidence. No code changed; passing 11A checks (266 tests/build/Chrome/Edge fixture checks) were not rerun.
 - Blocker: user confirmed inspection has not happened. Browser connection failed before inventory; no signed-in content was inspected or saved. Current origins, control semantics, confirmation/results and portal constraints remain unknown. 09A still needs both human results.
