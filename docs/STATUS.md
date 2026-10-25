@@ -23,7 +23,7 @@ Updated: 2026-10-24 (America/Chicago)
 
 | Owner | Task | State | Next action |
 | --- | --- | --- | --- |
-| A / Pavitra | 08B | Complete | Verified on test/08b-timetable-regressions; publishing for review. Next ready: 09A. |
+| A / Pavitra | 08B | Complete | Published in [PR #7](https://github.com/Pavi21P/uhd-student-extension/pull/7); review pending. Next ready: 09A. |
 | B / teammate | 01B | Ready | Inspect the real myUHD flow and build an anonymized portal map. |
 
 ## Decisions to retain
@@ -45,7 +45,7 @@ Updated: 2026-10-24 (America/Chicago)
 
 ## Latest handoff
 
-- Task / owner: **08B / A**, complete on test/08b-timetable-regressions, based on [PR #6](https://github.com/Pavi21P/uhd-student-extension/pull/6). Publication pending; no merge performed. B's 01B assignment is unchanged.
+- Task / owner: **08B / A**, complete on test/08b-timetable-regressions, based on [PR #6](https://github.com/Pavi21P/uhd-student-extension/pull/6). Implementation commit 151afe0 is published in [PR #7](https://github.com/Pavi21P/uhd-student-extension/pull/7), targeting feat/08a-timetable-readability. Remote commit and open PR verified; no merge performed. B's 01B assignment is unchanged.
 - Changed: tests/unit/timetable-regressions.test.ts, README test count and [evidence](evidence/08b-timetable-regressions.md). Fifteen new cases cover data-loss boundaries; no production/UI/contract/dependency changes were needed.
 - Passed: targeted **15 tests**, full **217 tests**, lint, strict typecheck, production build and MV3 checks. Synthetic faults exercise actual storage/RPC/mutation code; no live browser lifecycle or portal claim.
 - Limits: browser UI checks were not repeated for a test-only change. Independent human QA, live RMP/enrollment and parent reviews remain pending.
