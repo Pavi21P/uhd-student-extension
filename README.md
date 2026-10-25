@@ -13,7 +13,7 @@ npm ci
 npm run check
 ```
 
-`check` runs lint, 202 unit tests, strict TypeScript checking, and the production build. The build verifies the MV3 entrypoints and bundled assets. Output goes to `dist/`, which is intentionally ignored by Git.
+`check` runs lint, 217 unit tests, strict TypeScript checking, and the production build. The build verifies the MV3 entrypoints and bundled assets. Output goes to `dist/`, which is intentionally ignored by Git.
 
 1. Open `chrome://extensions` or `edge://extensions`.
 2. Enable **Developer mode**, choose **Load unpacked**, and select this repository's `dist` folder.
@@ -42,6 +42,7 @@ The foundation requests only `storage`; it has no host permissions or connection
 - [Drag placement, move/resize and keyboard editing (07A)](docs/evidence/07a-meeting-drag.md)
 - [Timetable backup and reviewed import (07B)](docs/evidence/07b-timetable-backup.md)
 - [Overlap readability and responsive timetable (08A)](docs/evidence/08a-timetable-readability.md)
+- [Storage/import/recurrence regressions (08B)](docs/evidence/08b-timetable-regressions.md)
 - [Screen layouts and interaction specification](docs/UI_SPEC.md)
 - [Design references: Taste Skill and Impeccable](docs/DESIGN_GUIDANCE.md)
 - [Recorded visual direction and tokens](DESIGN.md)
