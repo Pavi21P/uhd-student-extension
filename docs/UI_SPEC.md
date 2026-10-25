@@ -85,6 +85,8 @@ Implementation checkpoint (10A): the dashboard accepts a professor name and supp
 - Ambiguous matches show candidate identities and a Choose professor action. Correct match lets the student replace a saved association. Multiple instructors get separate identities; Staff/TBA is Unassigned instructor.
 - States: Loading; Match found; Choose a match; No match found; No reviews; Cached (checked date); Ratings unavailable. Missing values are unavailable, never zero.
 - During a link-only release, say Open profile to view ratings; do not render invented sample values as live results. Development fixtures must be visibly labeled Sample data.
+Implementation checkpoint (11A): a reusable native-disclosure badge and synthetic enrollment fixture now exercise source navigation, uncertainty and stale/missing states. Badge interactions stop bubbling to the fixture row handler; checkbox labels and explicit submission remain unchanged. No portal adapter or live injection is implemented. Details expand in document flow, Escape returns focus to the summary, and source links open separate tabs. See [11A evidence](evidence/11a-professor-badges.md).
+
 - Inline myUHD badges sit beside instructor text without covering or changing portal controls. A badge opens details/source; it cannot select a course or submit enrollment.
 - Provider permission and retrieval remain task 02B/G2 work. This spec does not assert that a usable live API exists.
 

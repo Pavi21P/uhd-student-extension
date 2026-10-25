@@ -1,0 +1,15 @@
+/* Scoped styles only; no portal control or global selectors. */
+.uhdx-professor { display: inline-block; vertical-align: middle; max-inline-size: min(100%, 28rem); margin: 4px 0; color: #202e2d; font: 14px/1.5 "Public Sans", system-ui, sans-serif; text-align: start; overflow-wrap: anywhere; }
+.uhdx-professor > summary { box-sizing: border-box; min-block-size: 32px; padding: 4px 9px; border: 1px solid #b4c5c0; border-radius: 6px; background: #f6f8f7; color: #21675a; cursor: pointer; font-weight: 600; }
+.uhdx-professor > summary:hover { background: #eaf2ee; }
+.uhdx-professor > summary:active { background: #dce9e3; }
+.uhdx-professor > summary:focus-visible, .uhdx-professor a:focus-visible { outline: 3px solid #21675a; outline-offset: 3px; }
+.uhdx-professor[open] > summary { border-radius: 6px 6px 0 0; }
+.uhdx-professor .uhdx-professor-details { padding: 12px; border: 1px solid #b4c5c0; border-block-start: 0; background: #fff; border-radius: 0 0 6px 6px; }
+.uhdx-professor p { margin: 8px 0; }
+.uhdx-professor .uhdx-professor-sample { font-weight: 600; }
+.uhdx-professor dl { margin: 12px 0; }
+.uhdx-professor dl > div { display: flex; flex-wrap: wrap; gap: 4px 12px; justify-content: space-between; border-block-end: 1px solid #dce3df; padding: 5px 0; }
+.uhdx-professor dt { color: #596763; }
+.uhdx-professor dd { margin: 0; font-variant-numeric: tabular-nums; }
+.uhdx-professor a { display: inline-block; padding-block: 6px; color: #21675a; text-decoration: underline; text-underline-offset: 3px; }

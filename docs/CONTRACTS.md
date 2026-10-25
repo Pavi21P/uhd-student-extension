@@ -108,3 +108,9 @@ Verification on 2026-10-20: TypeScript 6.0.3 under Node 24.21.0 passed `--noEmit
 ## Professor preview boundary (10A)
 
 The dashboard uses a session-only ProfileLinkDraft containing instructorName, professorId and canonical profileUrl. It is not a ProfessorAssociation: no school identity is verified and nothing is written to storage or cache. Format validation accepts only HTTPS RMP professor paths and strips query/fragment data; it does not establish profile existence or identity. Synthetic candidate/rating states remain visibly labeled and in React state only. Existing provider/association RPCs still return FEATURE_UNAVAILABLE; no storage schema or permission changes are included. Persistence and matching remain later integration work (12A/11B).
+
+## Inline badge boundary (11A)
+
+ProfessorBadge consumes ProfessorResult plus local loading, unassigned and link-only states. The caller supplies confirmed/unverified identity; this component cannot establish a match. An unverified identity hides numeric snapshots and source navigation; ambiguous results never pick a candidate. Validated link-only input remains explicitly unverified. Synthetic snapshot provenance forces visible sample labeling, even without a sample prop. Invalid scores/counts, mismatched source/profile IDs and invalid times fail closed. A supplied stale state or an already-expired timestamp is labeled stale at render; ongoing cache refresh/invalidation remains 12B.
+
+The component owns no portal selectors, enrollment callbacks, provider requests or storage. Its future adapter must mount beside instructor text, outside checkbox labels/buttons, and verify compatibility with the actual page event model. Fixture bubbling checks do not establish compatibility with unknown capture handlers or portal rerenders. Shared URL parsing moved to src/shared/professor-profile.ts without changing 10A semantics.
