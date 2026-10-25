@@ -36,3 +36,8 @@ export function hourMarks(view: WeekView): number[] {
   for (let minute = Math.ceil((view.startMinute + 1) / 60) * 60; minute < view.endMinute; minute += 60) marks.push(minute);
   return [...marks, view.endMinute];
 }
+
+/** Widen crowded days instead of shrinking overlapping cards below a readable lane. */
+export function dayColumnWidths(positions: PositionedMeeting[], days: Meeting['dayOfWeek'][]): number[] {
+  return days.map(day => 184 * positions.reduce((lanes, position) => position.meeting.dayOfWeek === day ? Math.max(lanes, position.lanes) : lanes, 1));
+}
