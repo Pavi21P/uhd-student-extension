@@ -26,7 +26,7 @@ Updated: 2026-10-25 (America/Chicago)
 
 | Owner | Task | State | Next action |
 | --- | --- | --- | --- |
-| A / Pavitra | 11A | Complete, publication pending | Fixture acceptance passed. 12A needs 11B; 09A needs both human results. |
+| A / Pavitra | 11A | Complete, published | PR #10 open; fixture checks passed. 12A needs 11B; 09A needs both human results. |
 | B / teammate | 01B | Ready | Inspect the real myUHD flow and build an anonymized portal map. |
 
 ## Decisions to retain
@@ -48,7 +48,7 @@ Updated: 2026-10-25 (America/Chicago)
 
 ## Latest handoff
 
-- Task / owner: **11A / A**, complete for the planned component/fixture scope. Branch feat/11a-professor-badges is based on [PR #9](https://github.com/Pavi21P/uhd-student-extension/pull/9). Publication pending; no merge or release. B's 01B assignment is unchanged.
+- Task / owner: **11A / A**, complete for the planned component/fixture scope. Branch feat/11a-professor-badges is based on [PR #9](https://github.com/Pavi21P/uhd-student-extension/pull/9). Published in [PR #10](https://github.com/Pavi21P/uhd-student-extension/pull/10), targeting feat/10a-professor-preview; implementation commit 59ec442 and remote PR head verified. No merge or release. B's 01B assignment is unchanged.
 - Changed: reusable native-disclosure badge, guarded display/source model, shared URL parser, scoped CSS, synthetic enrollment fixture, 24 unit cases and a reproducible browser runner. [Evidence](evidence/11a-professor-badges.md).
 - Passed: lint, 266 tests, TypeScript, production/MV3 checks; Chrome/Edge native keyboard/source/checkbox/submission checks, five widths, 200% text enlargement and reduced motion. Desktop/narrow screenshots inspected. Source navigation was intercepted with synthetic content.
 - Remaining: real portal mounting/event compatibility, identity matching, permitted RMP source, persistent associations and observer/cache work. The badge is fixture-only, not injected by the installed extension. Both 09A human sign-offs and parent reviews remain pending.
