@@ -1,0 +1,50 @@
+{
+  "testedCommit": "9737c8fe0692b829d5bb1ddd9ed73906347fa659",
+  "date": "2026-10-24",
+  "mode": "Agent-driven headless installed browsers, isolated synthetic profiles",
+  "humanSignoffs": 0,
+  "results": [
+    {
+      "browser": "Chrome/156.0.8078.47",
+      "checks": [
+        "popup launches dashboard; blank create/Cancel/reload preserves empty fields",
+        "course details and two exact-time recurring meetings save together",
+        "keyboard proposal Cancel writes nothing; Save moves only Monday",
+        "invalid end time preserves draft and saved data; correction saves the shared room",
+        "actual JSON download includes both courses and exact meetings, excludes settings/planner",
+        "dashboard close/reopen and real browser-process restart preserve saved timetable",
+        "downloaded file validates; cancelling import leaves data unchanged",
+        "live planner opens from keyboard in separate tab, HTTP 200, no opener or timetable changes",
+        "200% tab zoom retains list/form editing and Escape without data changes"
+      ],
+      "plannerResponses": [
+        {
+          "url": "https://uhd-course-planner.pages.dev/",
+          "status": 200
+        }
+      ],
+      "errors": []
+    },
+    {
+      "browser": "Edg/155.0.4283.62",
+      "checks": [
+        "popup launches dashboard; blank create/Cancel/reload preserves empty fields",
+        "course details and two exact-time recurring meetings save together",
+        "keyboard proposal Cancel writes nothing; Save moves only Monday",
+        "invalid end time preserves draft and saved data; correction saves the shared room",
+        "actual JSON download includes both courses and exact meetings, excludes settings/planner",
+        "dashboard close/reopen and real browser-process restart preserve saved timetable",
+        "downloaded file validates; cancelling import leaves data unchanged",
+        "live planner opens from keyboard in separate tab, HTTP 200, no opener or timetable changes",
+        "200% tab zoom retains list/form editing and Escape without data changes"
+      ],
+      "plannerResponses": [
+        {
+          "url": "https://uhd-course-planner.pages.dev/",
+          "status": 200
+        }
+      ],
+      "errors": []
+    }
+  ]
+}

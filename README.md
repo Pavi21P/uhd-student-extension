@@ -43,6 +43,8 @@ The foundation requests only `storage`; it has no host permissions or connection
 - [Timetable backup and reviewed import (07B)](docs/evidence/07b-timetable-backup.md)
 - [Overlap readability and responsive timetable (08A)](docs/evidence/08a-timetable-readability.md)
 - [Storage/import/recurrence regressions (08B)](docs/evidence/08b-timetable-regressions.md)
+- [Browser QA handoff (09A, human acceptance pending)](docs/evidence/09a-browser-qa.md)
+- [Two-person QA checklist](docs/evidence/09a-human-qa.md)
 - [Screen layouts and interaction specification](docs/UI_SPEC.md)
 - [Design references: Taste Skill and Impeccable](docs/DESIGN_GUIDANCE.md)
 - [Recorded visual direction and tokens](DESIGN.md)

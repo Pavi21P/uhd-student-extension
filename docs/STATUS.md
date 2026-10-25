@@ -17,13 +17,14 @@ Updated: 2026-10-24 (America/Chicago)
 - **07B complete**: timetable-only JSON downloads, strict file validation, reviewed merge/replace and atomic revision-protected import. [Verification and screenshots](evidence/07b-timetable-backup.md).
 - **08A complete**: readable overlap columns, clearer labels/contrast and a full-detail list shortcut. [Verification and screenshots](evidence/08a-timetable-readability.md).
 - **08B complete**: 15 data-loss regressions for save/import races, uncertain writes/replies, limits and imported recurrence. [Verification](evidence/08b-timetable-regressions.md).
+- **09A pending human acceptance**: Chrome/Edge end-to-end journey passed; [two-person checklist](evidence/09a-human-qa.md) prepared. [Browser evidence](evidence/09a-browser-qa.md). Neither human sign-off has been received.
 - Public repo: https://github.com/Pavi21P/uhd-student-extension. Foundation tasks 03A (`cffda38`) and 03B (`b4ea551`) are included in the 2026-10-22 main-branch publication, retaining their original author dates and history. Published `feat/05a-course-editor` at `5635520` includes 04A (`871beb4`) and 05A (`823f33f`). 05B (`2517dc1`) is published on `feat/05b-meeting-validation`, based on that branch. [Pull request #1](https://github.com/Pavi21P/uhd-student-extension/pull/1) includes 04A/05A/05B and is open for review. `main` remains at `a29eea5`; no merge is included.
 
 ## Active work
 
 | Owner | Task | State | Next action |
 | --- | --- | --- | --- |
-| A / Pavitra | 08B | Complete | Published in [PR #7](https://github.com/Pavi21P/uhd-student-extension/pull/7); review pending. Next ready: 09A. |
+| A / Pavitra | 09A | Awaiting human QA | Browser checks/checklist in [draft PR #8](https://github.com/Pavi21P/uhd-student-extension/pull/8). Two independent human results are required. |
 | B / teammate | 01B | Ready | Inspect the real myUHD flow and build an anonymized portal map. |
 
 ## Decisions to retain
@@ -45,10 +46,10 @@ Updated: 2026-10-24 (America/Chicago)
 
 ## Latest handoff
 
-- Task / owner: **08B / A**, complete on test/08b-timetable-regressions, based on [PR #6](https://github.com/Pavi21P/uhd-student-extension/pull/6). Implementation commit 151afe0 is published in [PR #7](https://github.com/Pavi21P/uhd-student-extension/pull/7), targeting feat/08a-timetable-readability. Remote commit and open PR verified; no merge performed. B's 01B assignment is unchanged.
-- Changed: tests/unit/timetable-regressions.test.ts, README test count and [evidence](evidence/08b-timetable-regressions.md). Fifteen new cases cover data-loss boundaries; no production/UI/contract/dependency changes were needed.
-- Passed: targeted **15 tests**, full **217 tests**, lint, strict typecheck, production build and MV3 checks. Synthetic faults exercise actual storage/RPC/mutation code; no live browser lifecycle or portal claim.
-- Limits: browser UI checks were not repeated for a test-only change. Independent human QA, live RMP/enrollment and parent reviews remain pending.
-- Next ready: **09A**, browser QA and fixes for timetable/planner. Completion requires two people independently completing create/place/edit/export/reload; do not substitute agent runs for that gate. Stop after 08B.
+- Task / owner: **09A / A**, incomplete pending two independent human passes. Browser checks and checklist prepared on test/09a-browser-qa, based on [PR #7](https://github.com/Pavi21P/uhd-student-extension/pull/7). Published in [draft PR #8](https://github.com/Pavi21P/uhd-student-extension/pull/8), targeting test/08b-timetable-regressions; remote commit and draft state verified. No merge or alpha tag. B's 01B assignment is unchanged.
+- Changed: README links, [human checklist](evidence/09a-human-qa.md), [browser report](evidence/09a-browser-qa.md) and structured results. No production changes or reproduced defect.
+- Passed fresh in Chrome/Edge: create/place/edit/invalid-form/export/reload, real browser restart, cancelled import, live planner HTTP 200 and 200% zoom. Prior 08B integration checks passed 217 tests; unchanged checks were not rerun for documentation only.
+- Blocker: user confirmed both human checks are not yet done. Neither agent automation nor a second browser substitutes for two people. Live RMP/enrollment and parent reviews remain pending.
+- Next ready action: **resume 09A** using the two-person checklist; collect both results and address failures before completion. Do not silently proceed to 09B or release.
 
 Read linked evidence for details; do not replay the full history.
