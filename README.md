@@ -50,6 +50,8 @@ The foundation requests only `storage`; it has no host permissions or connection
 - [Professor profile preview and sample states (10A)](docs/evidence/10a-professor-preview.md)
 - [Inline badge component and synthetic enrollment fixture (11A)](docs/evidence/11a-professor-badges.md)
 - [Two-person QA checklist](docs/evidence/09a-human-qa.md)
+- [myUHD inspection checklist (01B)](docs/evidence/01b-inspection-checklist.md)
+- [Portal map: live observations pending](docs/evidence/portal-map.md)
 - [Screen layouts and interaction specification](docs/UI_SPEC.md)
 - [Design references: Taste Skill and Impeccable](docs/DESIGN_GUIDANCE.md)
 - [Recorded visual direction and tokens](DESIGN.md)
