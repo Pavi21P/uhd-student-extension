@@ -22,7 +22,7 @@ Updated: 2026-10-24 (America/Chicago)
 
 | Owner | Task | State | Next action |
 | --- | --- | --- | --- |
-| A / Pavitra | 08A | Complete | Verified on feat/08a-timetable-readability; publishing for review. Next ready: 08B. |
+| A / Pavitra | 08A | Complete | Published in [PR #6](https://github.com/Pavi21P/uhd-student-extension/pull/6); review pending. Next ready: 08B. |
 | B / teammate | 01B | Ready | Inspect the real myUHD flow and build an anonymized portal map. |
 
 ## Decisions to retain
@@ -44,7 +44,7 @@ Updated: 2026-10-24 (America/Chicago)
 
 ## Latest handoff
 
-- Task / owner: **08A / A**, complete on feat/08a-timetable-readability, based on [PR #5](https://github.com/Pavi21P/uhd-student-extension/pull/5). Publication pending; no merge performed. B's 01B assignment is unchanged.
+- Task / owner: **08A / A**, complete on feat/08a-timetable-readability, based on [PR #5](https://github.com/Pavi21P/uhd-student-extension/pull/5). Implementation commit 3c54ff1 is published in [PR #6](https://github.com/Pavi21P/uhd-student-extension/pull/6), targeting feat/07b-timetable-backup. Remote commit and open PR verified; no merge performed. B's 01B assignment is unchanged.
 - Changed: overlap widths, full/compact labels and contrast, meeting-list shortcut/code, two geometry tests, README/design/UI and [evidence](evidence/08a-timetable-readability.md). No contract, storage or permission changes.
 - Passed: **202 tests**, lint, strict typecheck, production build/artifact checks. Chrome/Edge overlap/blank/long text, five widths, 200% zoom, targeted contrast, keyboard/list/form editing and native drag/resize passed. Desktop/narrow screenshots inspected.
 - Limits: dense days scroll horizontally; tiny meetings use list editing. No screen-reader or independent human audit. Live RMP/enrollment and parent reviews remain pending.
