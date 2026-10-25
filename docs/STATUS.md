@@ -16,13 +16,14 @@ Updated: 2026-10-24 (America/Chicago)
 - **07A complete**: native drag placement, per-occurrence move/resize, 15-minute snapping and keyboard/exact-form proposals with explicit Save/Cancel. [Verification and screenshots](evidence/07a-meeting-drag.md).
 - **07B complete**: timetable-only JSON downloads, strict file validation, reviewed merge/replace and atomic revision-protected import. [Verification and screenshots](evidence/07b-timetable-backup.md).
 - **08A complete**: readable overlap columns, clearer labels/contrast and a full-detail list shortcut. [Verification and screenshots](evidence/08a-timetable-readability.md).
+- **08B complete**: 15 data-loss regressions for save/import races, uncertain writes/replies, limits and imported recurrence. [Verification](evidence/08b-timetable-regressions.md).
 - Public repo: https://github.com/Pavi21P/uhd-student-extension. Foundation tasks 03A (`cffda38`) and 03B (`b4ea551`) are included in the 2026-10-22 main-branch publication, retaining their original author dates and history. Published `feat/05a-course-editor` at `5635520` includes 04A (`871beb4`) and 05A (`823f33f`). 05B (`2517dc1`) is published on `feat/05b-meeting-validation`, based on that branch. [Pull request #1](https://github.com/Pavi21P/uhd-student-extension/pull/1) includes 04A/05A/05B and is open for review. `main` remains at `a29eea5`; no merge is included.
 
 ## Active work
 
 | Owner | Task | State | Next action |
 | --- | --- | --- | --- |
-| A / Pavitra | 08A | Complete | Published in [PR #6](https://github.com/Pavi21P/uhd-student-extension/pull/6); review pending. Next ready: 08B. |
+| A / Pavitra | 08B | Complete | Published in [PR #7](https://github.com/Pavi21P/uhd-student-extension/pull/7); review pending. Next ready: 09A. |
 | B / teammate | 01B | Ready | Inspect the real myUHD flow and build an anonymized portal map. |
 
 ## Decisions to retain
@@ -44,10 +45,10 @@ Updated: 2026-10-24 (America/Chicago)
 
 ## Latest handoff
 
-- Task / owner: **08A / A**, complete on feat/08a-timetable-readability, based on [PR #5](https://github.com/Pavi21P/uhd-student-extension/pull/5). Implementation commit 3c54ff1 is published in [PR #6](https://github.com/Pavi21P/uhd-student-extension/pull/6), targeting feat/07b-timetable-backup. Remote commit and open PR verified; no merge performed. B's 01B assignment is unchanged.
-- Changed: overlap widths, full/compact labels and contrast, meeting-list shortcut/code, two geometry tests, README/design/UI and [evidence](evidence/08a-timetable-readability.md). No contract, storage or permission changes.
-- Passed: **202 tests**, lint, strict typecheck, production build/artifact checks. Chrome/Edge overlap/blank/long text, five widths, 200% zoom, targeted contrast, keyboard/list/form editing and native drag/resize passed. Desktop/narrow screenshots inspected.
-- Limits: dense days scroll horizontally; tiny meetings use list editing. No screen-reader or independent human audit. Live RMP/enrollment and parent reviews remain pending.
-- Next ready: **08B**, storage/import/recurrence regression coverage. 09A needs 08B and two independent human QA passes. Stop after 08A.
+- Task / owner: **08B / A**, complete on test/08b-timetable-regressions, based on [PR #6](https://github.com/Pavi21P/uhd-student-extension/pull/6). Implementation commit 151afe0 is published in [PR #7](https://github.com/Pavi21P/uhd-student-extension/pull/7), targeting feat/08a-timetable-readability. Remote commit and open PR verified; no merge performed. B's 01B assignment is unchanged.
+- Changed: tests/unit/timetable-regressions.test.ts, README test count and [evidence](evidence/08b-timetable-regressions.md). Fifteen new cases cover data-loss boundaries; no production/UI/contract/dependency changes were needed.
+- Passed: targeted **15 tests**, full **217 tests**, lint, strict typecheck, production build and MV3 checks. Synthetic faults exercise actual storage/RPC/mutation code; no live browser lifecycle or portal claim.
+- Limits: browser UI checks were not repeated for a test-only change. Independent human QA, live RMP/enrollment and parent reviews remain pending.
+- Next ready: **09A**, browser QA and fixes for timetable/planner. Completion requires two people independently completing create/place/edit/export/reload; do not substitute agent runs for that gate. Stop after 08B.
 
 Read linked evidence for details; do not replay the full history.
