@@ -13,7 +13,7 @@ npm ci
 npm run check
 ```
 
-`check` runs lint, 242 unit tests, strict TypeScript checking, and the production build. The build verifies the MV3 entrypoints and bundled assets. Output goes to `dist/`, which is intentionally ignored by Git.
+`check` runs lint, 266 unit tests, strict TypeScript checking, and the production build. The build verifies the MV3 entrypoints and bundled assets. Output goes to `dist/`, which is intentionally ignored by Git.
 
 1. Open `chrome://extensions` or `edge://extensions`.
 2. Enable **Developer mode**, choose **Load unpacked**, and select this repository's `dist` folder.
@@ -26,6 +26,8 @@ npm run check
 9. After source changes, run `npm run build` and reload the extension on the extensions page.
 
 For UI development, run `npm run dev` and open the printed local URL with `/dashboard.html` or `/popup.html`. This previews ordinary web pages; it does not load an extension. Course persistence requires the unpacked extension; the web preview explains that storage is unavailable. `npm run build:watch` rebuilds the unpacked files, but browser extension reloads remain manual. Run `npm run check` before submitting changes.
+
+Task 11A provides a reusable inline professor badge and a development fixture. Run `npm run dev` and open `/tests/fixtures/professor-badges.html` to inspect it. The fixture is excluded from the production extension; badges are not yet injected into myUHD.
 
 The foundation requests only `storage`; it has no host permissions or connection to myUHD. A module background worker owns schedule/settings writes and accepts commands only from this extension's dashboard. Fonts and scripts are bundled locally. Unsupported ratings and enrollment commands return `FEATURE_UNAVAILABLE`.
 
@@ -46,6 +48,7 @@ The foundation requests only `storage`; it has no host permissions or connection
 - [Storage/import/recurrence regressions (08B)](docs/evidence/08b-timetable-regressions.md)
 - [Browser QA handoff (09A, human acceptance pending)](docs/evidence/09a-browser-qa.md)
 - [Professor profile preview and sample states (10A)](docs/evidence/10a-professor-preview.md)
+- [Inline badge component and synthetic enrollment fixture (11A)](docs/evidence/11a-professor-badges.md)
 - [Two-person QA checklist](docs/evidence/09a-human-qa.md)
 - [Screen layouts and interaction specification](docs/UI_SPEC.md)
 - [Design references: Taste Skill and Impeccable](docs/DESIGN_GUIDANCE.md)

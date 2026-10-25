@@ -19,13 +19,14 @@ Updated: 2026-10-25 (America/Chicago)
 - **08B complete**: 15 data-loss regressions for save/import races, uncertain writes/replies, limits and imported recurrence. [Verification](evidence/08b-timetable-regressions.md).
 - **09A pending human acceptance**: Chrome/Edge end-to-end journey passed; [two-person checklist](evidence/09a-human-qa.md) prepared. [Browser evidence](evidence/09a-browser-qa.md). Neither human sign-off has been received.
 - **10A complete (UI scope)**: validated session-only profile-link drafts and seven explicitly synthetic rating states. [Verification and screenshots](evidence/10a-professor-preview.md). Live ratings and saved associations remain unavailable.
+- **11A complete (fixture scope)**: accessible inline badge, guarded profile navigation and synthetic enrollment-control isolation checks. [Evidence](evidence/11a-professor-badges.md). No live portal injection.
 - Public repo: https://github.com/Pavi21P/uhd-student-extension. Foundation tasks 03A (`cffda38`) and 03B (`b4ea551`) are included in the 2026-10-22 main-branch publication, retaining their original author dates and history. Published `feat/05a-course-editor` at `5635520` includes 04A (`871beb4`) and 05A (`823f33f`). 05B (`2517dc1`) is published on `feat/05b-meeting-validation`, based on that branch. [Pull request #1](https://github.com/Pavi21P/uhd-student-extension/pull/1) includes 04A/05A/05B and is open for review. `main` remains at `a29eea5`; no merge is included.
 
 ## Active work
 
 | Owner | Task | State | Next action |
 | --- | --- | --- | --- |
-| A / Pavitra | 10A | Complete, published | UI checks passed; PR #9 open. Next ready: 11A. 09A still needs both human sign-offs in draft PR #8. |
+| A / Pavitra | 11A | Complete, published | PR #10 open; fixture checks passed. 12A needs 11B; 09A needs both human results. |
 | B / teammate | 01B | Ready | Inspect the real myUHD flow and build an anonymized portal map. |
 
 ## Decisions to retain
@@ -47,10 +48,10 @@ Updated: 2026-10-25 (America/Chicago)
 
 ## Latest handoff
 
-- Task / owner: **10A / A**, complete for the planned UI/fixture scope. Branch feat/10a-professor-preview is based on [draft PR #8](https://github.com/Pavi21P/uhd-student-extension/pull/8). Published in [PR #9](https://github.com/Pavi21P/uhd-student-extension/pull/9), targeting test/09a-browser-qa; implementation commit fc97928 and remote PR head verified. No merge or release. B's 01B assignment is unchanged.
-- Changed: Professors screen, session-only profile validation/review, route state, responsive styles, 25 unit tests and [evidence](evidence/10a-professor-preview.md). Supporting product/design/contracts documents now distinguish preview behavior from planned integration.
-- Passed: lint, 242 tests, strict TypeScript, production/MV3 checks; unpacked Chrome/Edge invalid/review/navigation/sample-state/storage/width/200% zoom checks. Three screenshots inspected. External profile navigation used intercepted synthetic content.
-- Remaining: permitted live RMP source, school/identity matching and saved associations; myUHD portal map; both 09A human sign-offs. Samples do not complete live ratings. Parent PR reviews remain pending.
-- Next ready task: **11A**, accessible inline badge and profile navigation in a synthetic fixture, without changing checkbox/submit behavior. Resume 09A separately when both human results arrive.
+- Task / owner: **11A / A**, complete for the planned component/fixture scope. Branch feat/11a-professor-badges is based on [PR #9](https://github.com/Pavi21P/uhd-student-extension/pull/9). Published in [PR #10](https://github.com/Pavi21P/uhd-student-extension/pull/10), targeting feat/10a-professor-preview; implementation commit 59ec442 and remote PR head verified. No merge or release. B's 01B assignment is unchanged.
+- Changed: reusable native-disclosure badge, guarded display/source model, shared URL parser, scoped CSS, synthetic enrollment fixture, 24 unit cases and a reproducible browser runner. [Evidence](evidence/11a-professor-badges.md).
+- Passed: lint, 266 tests, TypeScript, production/MV3 checks; Chrome/Edge native keyboard/source/checkbox/submission checks, five widths, 200% text enlargement and reduced motion. Desktop/narrow screenshots inspected. Source navigation was intercepted with synthetic content.
+- Remaining: real portal mounting/event compatibility, identity matching, permitted RMP source, persistent associations and observer/cache work. The badge is fixture-only, not injected by the installed extension. Both 09A human sign-offs and parent reviews remain pending.
+- Next ready project task: **01B / B**, observed/anonymized myUHD portal map. A's **12A** is blocked on 11B; resume 09A when both human results arrive. Do not invent a portal adapter or advance to release.
 
 Read linked evidence for details; do not replay the full history.

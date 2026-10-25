@@ -1,0 +1,16 @@
+{
+  "channel": "msedge",
+  "version": "155.0.4283.62",
+  "checks": [
+    "native Tab/Enter/Space/Escape disclosure and detail clicks preserve selected boxes and never submit or request ratings",
+    "keyboard source link opens canonical address in a separate noopener tab; target intercepted, no live source fetched",
+    "all eleven fixtures preserve sample/identity/expiry/missing-value states and reject unsafe or ambiguous navigation",
+    "original control nodes/attributes retained; row selection, checkbox labels and explicit submit still work exactly once",
+    "five widths, 200% text enlargement and reduced motion preserve readable in-flow details without document overflow"
+  ],
+  "errors": [],
+  "profileRequests": [
+    "https://www.ratemyprofessors.com/professor/12345"
+  ],
+  "ok": true
+}
