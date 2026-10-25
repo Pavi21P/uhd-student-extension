@@ -25,7 +25,7 @@ Updated: 2026-10-25 (America/Chicago)
 
 | Owner | Task | State | Next action |
 | --- | --- | --- | --- |
-| A / Pavitra | 10A | Complete, publication pending | UI checks passed. Next ready: 11A. 09A still needs both human sign-offs in draft PR #8. |
+| A / Pavitra | 10A | Complete, published | UI checks passed; PR #9 open. Next ready: 11A. 09A still needs both human sign-offs in draft PR #8. |
 | B / teammate | 01B | Ready | Inspect the real myUHD flow and build an anonymized portal map. |
 
 ## Decisions to retain
@@ -47,7 +47,7 @@ Updated: 2026-10-25 (America/Chicago)
 
 ## Latest handoff
 
-- Task / owner: **10A / A**, complete for the planned UI/fixture scope. Branch feat/10a-professor-preview is based on [draft PR #8](https://github.com/Pavi21P/uhd-student-extension/pull/8). Publication pending; no merge or release. B's 01B assignment is unchanged.
+- Task / owner: **10A / A**, complete for the planned UI/fixture scope. Branch feat/10a-professor-preview is based on [draft PR #8](https://github.com/Pavi21P/uhd-student-extension/pull/8). Published in [PR #9](https://github.com/Pavi21P/uhd-student-extension/pull/9), targeting test/09a-browser-qa; implementation commit fc97928 and remote PR head verified. No merge or release. B's 01B assignment is unchanged.
 - Changed: Professors screen, session-only profile validation/review, route state, responsive styles, 25 unit tests and [evidence](evidence/10a-professor-preview.md). Supporting product/design/contracts documents now distinguish preview behavior from planned integration.
 - Passed: lint, 242 tests, strict TypeScript, production/MV3 checks; unpacked Chrome/Edge invalid/review/navigation/sample-state/storage/width/200% zoom checks. Three screenshots inspected. External profile navigation used intercepted synthetic content.
 - Remaining: permitted live RMP source, school/identity matching and saved associations; myUHD portal map; both 09A human sign-offs. Samples do not complete live ratings. Parent PR reviews remain pending.
