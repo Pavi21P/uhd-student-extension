@@ -55,3 +55,7 @@ The user added [Taste Skill](https://github.com/Leonxlnx/taste-skill) and [Impec
 ## Foundation API refresh (03B)
 
 On 2026-10-22, storage access levels, asynchronous message replies, and module service-worker registration were rechecked in official Chrome documentation. [03B evidence](evidence/03b-storage-messaging.md) records the sources and tested browser versions. Storage permission is now implemented; portal permissions remain absent.
+
+## Task 10A targeted check (2026-10-24)
+
+A [public RMP professor page](https://www.ratemyprofessors.com/professor/1568446) confirmed the public /professor/<number> path shape for format validation. No real professor identity, rating or review was copied into fixtures. This does not establish a permitted retrieval source, school matching or a working provider. Browser navigation checks intercepted the explicit profile link with synthetic content; they do not claim a live profile fetch. Existing Taste/Impeccable app guidance was reused; no vendor toolkit was executed.

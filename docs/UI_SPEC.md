@@ -78,6 +78,8 @@ Timetable contains Download backup and Import backup. Backups contain saved cour
 
 ## Professors and inline ratings
 
+Implementation checkpoint (10A): the dashboard accepts a professor name and supported HTTPS profile URL for explicit review. This is an unverified session draft, not a saved association; it survives route navigation and clears on reload. Editing either field invalidates the reviewed link. School/identity/ratings remain unverified and no lookup runs. An opt-in Sample data disclosure demonstrates all seven result states and explicit ambiguous-candidate choice/correction without persistence. The bullets below describe the full integration target; live search, saved correction and inline portal integration are still pending. See [10A evidence](evidence/10a-professor-preview.md).
+
 - Search is scoped to UHD. Link profile accepts a supported RMP professor URL; validation errors stay beside the field.
 - A result shows professor name, school/department where supplied, rating out of five, review count, source link, and checked date. Numeric data appears only when supplied by the chosen provider.
 - Ambiguous matches show candidate identities and a Choose professor action. Correct match lets the student replace a saved association. Multiple instructors get separate identities; Staff/TBA is Unassigned instructor.
