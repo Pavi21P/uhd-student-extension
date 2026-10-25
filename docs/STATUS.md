@@ -1,6 +1,6 @@
 # Project checkpoint
 
-Updated: 2026-10-24 (America/Chicago)
+Updated: 2026-10-25 (America/Chicago)
 
 ## Current state
 
@@ -8,7 +8,7 @@ Updated: 2026-10-24 (America/Chicago)
 - **02A complete**: [shared contracts](CONTRACTS.md), TypeScript records/messages and synthetic examples.
 - **03A complete**: loadable MV3 extension, working popup launcher, static dashboard preview, pinned toolchain and reproducible build. [Verification and screenshots](evidence/03a-foundation.md).
 - **03B complete**: schedule/settings runtime validation, serialized revision-protected local storage, authenticated worker messages and typed client. [Verification](evidence/03b-storage-messaging.md). 05A now connects the editor; 06B now refreshes dashboard consumers from storage invalidations.
-- **04A complete**: dashboard destination navigation, keyboard/focus/history behavior, and the live planner link. [Verification and screenshots](evidence/04a-navigation-planner.md). 06A now connects the weekly grid and view settings; Professors and Enrollment explain their unavailable features. Reserved provider/enrollment commands still return FEATURE_UNAVAILABLE without execution.
+- **04A complete**: dashboard destination navigation, keyboard/focus/history behavior, and the live planner link. [Verification and screenshots](evidence/04a-navigation-planner.md). 06A now connects the weekly grid and view settings; 10A now adds the Professors profile preview; live ratings and Enrollment remain unavailable. Reserved provider/enrollment commands still return FEATURE_UNAVAILABLE without execution.
 - **05A complete**: blank course cards, optional-field editor, delete/cancel and revision-aware local persistence. [Verification and screenshots](evidence/05a-course-editor.md).
 - **05B complete**: exact meeting-time validation and deterministic overlap detection, with 45 new acceptance tests. [Verification](evidence/05b-meeting-validation.md). 06A now consumes these helpers in the meeting form and weekly grid.
 - **06A complete**: manual meeting rows, exact weekly placement, overlap warnings, full-detail list and saved visible days/hours. [Verification and screenshots](evidence/06a-weekly-grid.md).
@@ -18,13 +18,14 @@ Updated: 2026-10-24 (America/Chicago)
 - **08A complete**: readable overlap columns, clearer labels/contrast and a full-detail list shortcut. [Verification and screenshots](evidence/08a-timetable-readability.md).
 - **08B complete**: 15 data-loss regressions for save/import races, uncertain writes/replies, limits and imported recurrence. [Verification](evidence/08b-timetable-regressions.md).
 - **09A pending human acceptance**: Chrome/Edge end-to-end journey passed; [two-person checklist](evidence/09a-human-qa.md) prepared. [Browser evidence](evidence/09a-browser-qa.md). Neither human sign-off has been received.
+- **10A complete (UI scope)**: validated session-only profile-link drafts and seven explicitly synthetic rating states. [Verification and screenshots](evidence/10a-professor-preview.md). Live ratings and saved associations remain unavailable.
 - Public repo: https://github.com/Pavi21P/uhd-student-extension. Foundation tasks 03A (`cffda38`) and 03B (`b4ea551`) are included in the 2026-10-22 main-branch publication, retaining their original author dates and history. Published `feat/05a-course-editor` at `5635520` includes 04A (`871beb4`) and 05A (`823f33f`). 05B (`2517dc1`) is published on `feat/05b-meeting-validation`, based on that branch. [Pull request #1](https://github.com/Pavi21P/uhd-student-extension/pull/1) includes 04A/05A/05B and is open for review. `main` remains at `a29eea5`; no merge is included.
 
 ## Active work
 
 | Owner | Task | State | Next action |
 | --- | --- | --- | --- |
-| A / Pavitra | 09A | Awaiting human QA | Browser checks/checklist in [draft PR #8](https://github.com/Pavi21P/uhd-student-extension/pull/8). Two independent human results are required. |
+| A / Pavitra | 10A | Complete, publication pending | UI checks passed. Next ready: 11A. 09A still needs both human sign-offs in draft PR #8. |
 | B / teammate | 01B | Ready | Inspect the real myUHD flow and build an anonymized portal map. |
 
 ## Decisions to retain
@@ -46,10 +47,10 @@ Updated: 2026-10-24 (America/Chicago)
 
 ## Latest handoff
 
-- Task / owner: **09A / A**, incomplete pending two independent human passes. Browser checks and checklist prepared on test/09a-browser-qa, based on [PR #7](https://github.com/Pavi21P/uhd-student-extension/pull/7). Published in [draft PR #8](https://github.com/Pavi21P/uhd-student-extension/pull/8), targeting test/08b-timetable-regressions; remote commit and draft state verified. No merge or alpha tag. B's 01B assignment is unchanged.
-- Changed: README links, [human checklist](evidence/09a-human-qa.md), [browser report](evidence/09a-browser-qa.md) and structured results. No production changes or reproduced defect.
-- Passed fresh in Chrome/Edge: create/place/edit/invalid-form/export/reload, real browser restart, cancelled import, live planner HTTP 200 and 200% zoom. Prior 08B integration checks passed 217 tests; unchanged checks were not rerun for documentation only.
-- Blocker: user confirmed both human checks are not yet done. Neither agent automation nor a second browser substitutes for two people. Live RMP/enrollment and parent reviews remain pending.
-- Next ready action: **resume 09A** using the two-person checklist; collect both results and address failures before completion. Do not silently proceed to 09B or release.
+- Task / owner: **10A / A**, complete for the planned UI/fixture scope. Branch feat/10a-professor-preview is based on [draft PR #8](https://github.com/Pavi21P/uhd-student-extension/pull/8). Publication pending; no merge or release. B's 01B assignment is unchanged.
+- Changed: Professors screen, session-only profile validation/review, route state, responsive styles, 25 unit tests and [evidence](evidence/10a-professor-preview.md). Supporting product/design/contracts documents now distinguish preview behavior from planned integration.
+- Passed: lint, 242 tests, strict TypeScript, production/MV3 checks; unpacked Chrome/Edge invalid/review/navigation/sample-state/storage/width/200% zoom checks. Three screenshots inspected. External profile navigation used intercepted synthetic content.
+- Remaining: permitted live RMP source, school/identity matching and saved associations; myUHD portal map; both 09A human sign-offs. Samples do not complete live ratings. Parent PR reviews remain pending.
+- Next ready task: **11A**, accessible inline badge and profile navigation in a synthetic fixture, without changing checkbox/submit behavior. Resume 09A separately when both human results arrive.
 
 Read linked evidence for details; do not replay the full history.

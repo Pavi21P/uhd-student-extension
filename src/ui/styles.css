@@ -367,3 +367,35 @@ button:disabled { cursor: not-allowed; }
 .meeting-list li > div { font-size: 13px; line-height: 1.5; }
 .meeting-list strong { font-size: 14px; }
 @media (max-width: 520px) { .grid-reading-help { padding-inline: 16px; } }
+
+/* 10A: explicit profile draft and isolated sample states; no live provider claims. */
+.professor-availability { color: var(--muted); max-width: 85ch; margin: 24px 0; font-size: 14px; }
+.professor-layout { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(260px, 1fr); gap: 32px; align-items: start; }
+.profile-editor, .profile-review { padding: 24px; border: 1px solid var(--line); border-radius: var(--radius); min-width: 0; }
+.profile-editor h2, .profile-review h2, .sample-content h2 { font-size: 18px; margin-bottom: 12px; }
+.profile-editor p, .profile-review p, .sample-content p { font-size: 13px; color: var(--muted); margin-top: 12px; overflow-wrap: anywhere; }
+.profile-editor label, .sample-content label { display: grid; gap: 8px; font-size: 14px; font-weight: 500; margin-top: 24px; }
+.profile-editor input, .sample-content select { width: 100%; min-width: 0; min-height: 44px; padding: 10px 12px; font: inherit; color: var(--ink); background: var(--surface); border: 1px solid #87958e; border-radius: 8px; }
+.profile-editor input[aria-invalid="true"] { border-color: var(--error); }
+.profile-editor .error-message { color: var(--error); }
+.profile-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+.profile-review dl { margin: 20px 0; display: grid; gap: 16px; }
+.profile-review dt, .sample-rating dt { font-size: 12px; color: var(--muted); }
+.profile-review dd, .sample-rating dd { margin: 4px 0 0; font-size: 14px; overflow-wrap: anywhere; }
+.profile-review .button { white-space: normal; }
+.professor-samples { margin-top: 32px; border-top: 1px solid var(--line); padding: 20px 0; }
+.professor-samples > summary { cursor: pointer; font-size: 14px; font-weight: 600; padding: 8px 0; }
+.sample-content { padding-top: 20px; max-width: 960px; }
+.sample-content select { max-width: 360px; }
+.sample-result { margin-top: 24px; padding: 24px; border: 1px dashed #87958e; border-radius: var(--radius); }
+.sample-result h3 { font-size: 16px; }
+.sample-candidates { padding: 0; list-style: none; }
+.sample-candidates li { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--line); }
+.sample-candidates li > div { display: grid; gap: 6px; min-width: 0; overflow-wrap: anywhere; font-size: 14px; }
+.sample-candidates span { color: var(--muted); font-size: 13px; }
+.sample-candidates .button { flex-shrink: 0; }
+.sample-candidates [aria-pressed="true"] { outline: 2px solid var(--accent); outline-offset: 2px; }
+.sample-rating { display: flex; flex-wrap: wrap; gap: 32px; margin-block: 20px; }
+.sample-rating dd { font-size: 20px; font-weight: 600; }
+@media (max-width: 800px) { .professor-layout { grid-template-columns: 1fr; gap: 20px; } }
+@media (max-width: 520px) { .profile-editor, .profile-review, .sample-result { padding: 20px 16px; } .sample-candidates li { align-items: flex-start; flex-direction: column; } }

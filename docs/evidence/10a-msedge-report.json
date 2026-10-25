@@ -1,0 +1,23 @@
+{
+  "channel": "msedge",
+  "browser": {
+    "protocolVersion": "1.3",
+    "product": "Edg/155.0.4283.62",
+    "revision": "@aa3a7406ba8c53a83536df539f07124d73c899bd",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+    "jsVersion": "15.5.9.7"
+  },
+  "checks": [
+    "initial view has no numeric ratings; empty/Staff/unsafe URL errors are focused and never create a link",
+    "explicit review canonicalizes link without lookup; unverified draft and fields survive navigation",
+    "explicit keyboard link opens only the approved address in a separate tab; target intercepted, no live profile fetched",
+    "all seven sample states are labeled; missing differs from zero; ambiguous choice/correction is explicit and resets between scenarios",
+    "long/literal text, five widths, 200% zoom and clear/focus work without document overflow",
+    "reload clears session drafts; no persisted sample/association data and no background provider request"
+  ],
+  "errors": [],
+  "profileRequests": [
+    "https://www.ratemyprofessors.com/professor/12345"
+  ],
+  "ok": true
+}

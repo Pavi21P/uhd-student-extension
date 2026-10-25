@@ -2,7 +2,7 @@
 
 A Chrome/Edge extension for UHD students: professor ratings, a link to the existing course planner, a weekly timetable, and user-armed enrollment assistance for myUHD.
 
-**Current build: readable overlapping timetables with reviewed JSON import (08A).** Create blank cards, edit optional details, and add independent weekday meetings with exact 24-hour times. Crowded days widen inside the scrollable grid so overlapping cards remain readable. Go to meeting list exposes full course details and editing, including very short meetings. The grid reflects each duration, warns about overlaps, and retains access to meetings outside your chosen days/hours. Save the view in Settings. Course and view drafts survive navigation. Other open dashboard tabs refresh automatically; incoming changes preserve drafts and require review before saving. Failed or uncertain saves still require an explicit reload/review. Live ratings and enrollment remain unavailable.
+**Current build: timetable tools plus a professor profile-link preview (10A).** Create blank cards, edit optional details, and add independent weekday meetings with exact 24-hour times. Crowded days widen inside the scrollable grid so overlapping cards remain readable. Go to meeting list exposes full course details and editing, including very short meetings. The grid reflects each duration, warns about overlaps, and retains access to meetings outside your chosen days/hours. Save the view in Settings. Course and view drafts survive navigation. Other open dashboard tabs refresh automatically; incoming changes preserve drafts and require review before saving. Failed or uncertain saves still require an explicit reload/review. Live ratings and enrollment remain unavailable.
 
 ## Run locally
 
@@ -13,7 +13,7 @@ npm ci
 npm run check
 ```
 
-`check` runs lint, 217 unit tests, strict TypeScript checking, and the production build. The build verifies the MV3 entrypoints and bundled assets. Output goes to `dist/`, which is intentionally ignored by Git.
+`check` runs lint, 242 unit tests, strict TypeScript checking, and the production build. The build verifies the MV3 entrypoints and bundled assets. Output goes to `dist/`, which is intentionally ignored by Git.
 
 1. Open `chrome://extensions` or `edge://extensions`.
 2. Enable **Developer mode**, choose **Load unpacked**, and select this repository's `dist` folder.
@@ -22,7 +22,8 @@ npm run check
 5. In the course editor, choose **Add meeting**, select a day, and enter start/end times such as **09:07** and **10:23**. Choose **Save course** to save details and meetings together. Use **Settings** to save visible days and hours; **Show meetings** temporarily reveals anything outside that view. Drag an unscheduled card onto the week, drag a meeting to move it, or drag its bottom handle to resize. Drops propose times in the editor; choose **Save course** or **Cancel**. Dragging snaps to 15 minutes. With a meeting focused, arrow keys propose a move; Shift + Up/Down proposes a resize. Enter opens exact editing.
 6. Use **Download backup** to save timetable-only JSON. **Import backup** validates files up to 1 MiB and previews **Merge as new courses** or **Replace this timetable** before confirmation. Merge adds separate copies, including on repeated imports; replace removes current timetable content. View settings and planner data are not included.
 7. Select **Planner**, then **Open course planner**. It opens https://uhd-course-planner.pages.dev in a new tab; planner data saves separately.
-8. After source changes, run `npm run build` and reload the extension on the extensions page.
+8. Select **Professors** to review a professor name and RMP profile link. The draft survives navigation but clears on reload; school, identity and ratings are not verified. An optional disclosure previews clearly labeled sample rating states.
+9. After source changes, run `npm run build` and reload the extension on the extensions page.
 
 For UI development, run `npm run dev` and open the printed local URL with `/dashboard.html` or `/popup.html`. This previews ordinary web pages; it does not load an extension. Course persistence requires the unpacked extension; the web preview explains that storage is unavailable. `npm run build:watch` rebuilds the unpacked files, but browser extension reloads remain manual. Run `npm run check` before submitting changes.
 
@@ -44,6 +45,7 @@ The foundation requests only `storage`; it has no host permissions or connection
 - [Overlap readability and responsive timetable (08A)](docs/evidence/08a-timetable-readability.md)
 - [Storage/import/recurrence regressions (08B)](docs/evidence/08b-timetable-regressions.md)
 - [Browser QA handoff (09A, human acceptance pending)](docs/evidence/09a-browser-qa.md)
+- [Professor profile preview and sample states (10A)](docs/evidence/10a-professor-preview.md)
 - [Two-person QA checklist](docs/evidence/09a-human-qa.md)
 - [Screen layouts and interaction specification](docs/UI_SPEC.md)
 - [Design references: Taste Skill and Impeccable](docs/DESIGN_GUIDANCE.md)
