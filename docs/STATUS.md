@@ -29,7 +29,7 @@ Updated: 2026-10-25 (America/Chicago)
 
 | Owner | Task | State | Next action |
 | --- | --- | --- | --- |
-| A / Pavitra | 10B fallback | Verified; publication pending | Typed unavailable lookup and existing manual links verified. Live ratings/cache remain blocked. |
+| A / Pavitra | 10B fallback | Verified and published | PR #13 open; lookup/manual-link checks passed. Live ratings/cache remain blocked. |
 | B / teammate | 01B | Ready | Inspect the real myUHD flow and build an anonymized portal map. |
 
 ## Decisions to retain
@@ -51,7 +51,7 @@ Updated: 2026-10-25 (America/Chicago)
 
 ## Latest handoff
 
-- Task / owner: **10B fallback / A**, complete for the explicitly permitted link-only branch. Live provider/cache and G2 remain blocked. Branch feat/10b-provider-fallback is based on [draft PR #12](https://github.com/Pavi21P/uhd-student-extension/pull/12). Publication pending; no merge or release. B's 01B assignment is unchanged.
+- Task / owner: **10B fallback / A**, complete for the explicitly permitted link-only branch. Live provider/cache and G2 remain blocked. Branch feat/10b-provider-fallback is based on [draft PR #12](https://github.com/Pavi21P/uhd-student-extension/pull/12). Published in [PR #13](https://github.com/Pavi21P/uhd-student-extension/pull/13), targeting research/02b-source-timing; implementation commit f517fd0 and remote PR head verified. No merge or release. B's 01B assignment is unchanged.
 - Changed: link-only provider, strict lookup input/response boundary, handler/client method support, shared name helpers, 32 provider unit cases, browser runner and [evidence](evidence/10b-provider-fallback.md). No new UI, permissions or persistence.
 - Passed: lint, 297 tests, TypeScript, production/MV3 checks; Chrome/Edge built-worker valid/invalid/popup requests, no lookup network/storage effects, disabled associations/enrollment and preserved manual-link/reload behavior. Explicit navigation used an intercepted synthetic target.
 - Remaining: permitted live ratings source and verified UHD matching/cache; 01B portal observations; association persistence; both 09A human QA results. Typed unavailable results do not complete live ratings.
