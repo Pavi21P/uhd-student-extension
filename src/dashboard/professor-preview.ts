@@ -1,15 +1,7 @@
-import { parseProfileLink } from '../shared/professor-profile';
-export { parseProfileLink } from '../shared/professor-profile';
+import { parseProfileLink, validateInstructor } from '../shared/professor-profile';
+export { parseProfileLink, normalizeInstructor, validateInstructor } from '../shared/professor-profile';
 import { useState } from 'react';
 export interface ProfileLinkDraft { instructorName: string; professorId: string; profileUrl: string }
-const hasControl = (value: string, includeSpace = false) => [...value].some(char => char.charCodeAt(0) < (includeSpace ? 33 : 32) || char.charCodeAt(0) === 127);
-export function normalizeInstructor(value: string): string { return value.normalize('NFC').trim().replace(/\s+/gu, ' '); }
-export function validateInstructor(value: string): string {
-  const name = normalizeInstructor(value);
-  if (!name || name.length > 200 || hasControl(name)) throw Error('Enter one professor name, up to 200 characters.');
-  if (/^(staff|tba|tbd|to be (announced|assigned))$/iu.test(name)) throw Error('Unassigned instructor. Wait for a professor name before linking a profile.');
-  return name;
-}
 export const sampleStates = ['unavailable', 'loading', 'available', 'ambiguous', 'no-match', 'no-reviews', 'stale'] as const;
 export type SampleState = typeof sampleStates[number];
 export const sampleCandidates = [

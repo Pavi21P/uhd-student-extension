@@ -32,3 +32,6 @@ No live response schema, verified UHD school identifier, provider TTL, rate limi
 The terms list support@ratemyprofessors.com as a contact for questions. The project owner can ask about authorized API/partner access, the intended UHD student extension, fields needed, redistribution/display, request volume and cache limits. This is preparation only; no email or other message was sent. Do not put access credentials or private correspondence into the public repository. [Source: RMP terms](https://www.ratemyprofessors.com/terms-of-use).
 
 The [timer research](timing-report.md) is independent of this source decision. Neither preliminary timers nor links complete live RMP or enrollment.
+## 10B fallback implementation
+
+The authenticated professor.lookup command now validates input and returns unavailable/provider-unconfigured without network or cache access. Manual profile links retain their existing unverified/session-only behavior. [10B evidence](10b-provider-fallback.md) records boundary tests and built Chrome/Edge checks. This implements only the plan's explicit fallback branch; live retrieval and G2 remain blocked.

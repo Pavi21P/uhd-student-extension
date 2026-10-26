@@ -1,0 +1,50 @@
+// Run with Node and Playwright available through module resolution or PLAYWRIGHT_MODULE_PATH.
+import {createRequire} from 'node:module';
+import {mkdir,writeFile} from 'node:fs/promises';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+const require=createRequire(import.meta.url); const {chromium}=require(process.env.PLAYWRIGHT_MODULE_PATH||'playwright');
+const channel=process.argv[2]||'chrome'; assert(['chrome','msedge'].includes(channel));
+await mkdir('.local/qa',{recursive:true});
+const context=await chromium.launchPersistentContext(path.resolve('.local/qa/10b-'+channel),{channel,headless:true,args:['--enable-unsafe-extension-debugging'],ignoreDefaultArgs:['--disable-extensions']});
+const cdp=await context.browser().newBrowserCDPSession();
+const browser=await cdp.send('Browser.getVersion');
+const report={channel,browserVersion:browser.product,checks:[],errors:[],externalRequests:[]};
+const {id}=await cdp.send('Extensions.loadUnpacked',{path:path.resolve('dist')});
+const page=await context.newPage(); page.on('pageerror',e=>report.errors.push(e.message));
+context.on('request',r=>{if(/^https?:/.test(r.url()))report.externalRequests.push(r.url().split('?')[0]);});
+await context.route('https://www.ratemyprofessors.com/**',route=>route.fulfill({contentType:'text/html',body:'<title>Synthetic target</title><p>Intercepted profile navigation</p>'}));
+const check=s=>{report.checks.push(s);console.log(channel+': '+s);};
+const send=(target,type,payload,requestId='lookup-browser')=>target.evaluate(args=>chrome.runtime.sendMessage({protocolVersion:1,...args}),{type,payload,requestId});
+try {
+  await page.goto('chrome-extension://'+id+'/dashboard.html#professors');
+  await page.getByRole('heading',{name:'Professors',exact:true}).waitFor();
+  const before=await page.evaluate(()=>chrome.storage.local.get(null));
+  assert.deepEqual(await send(page,'professor.lookup',{instructorName:'Alex Synthetic',department:'Computer Science'}),{protocolVersion:1,requestId:'lookup-browser',type:'professor.lookup',ok:true,data:{status:'unavailable',reason:'provider-unconfigured'}});
+  assert.equal((await send(page,'professor.lookup',{instructorName:''})).error.code,'INVALID_INPUT');
+  assert.equal((await send(page,'professor.lookup',{instructorName:'Alex Synthetic',profileUrl:'https://evil.example/'})).error.code,'INVALID_INPUT');
+  assert.equal((await send(page,'professor.associate',{instructorName:'Alex Synthetic',profileUrl:'https://www.ratemyprofessors.com/professor/12345'})).error.code,'FEATURE_UNAVAILABLE');
+  assert.equal((await send(page,'enrollment.activate',{})).error.code,'FEATURE_UNAVAILABLE');
+  const popup=await context.newPage(); await popup.goto('chrome-extension://'+id+'/popup.html');
+  assert.equal((await send(popup,'professor.lookup',{instructorName:'Alex Synthetic'})).error.code,'UNAUTHORIZED_SENDER'); await popup.close();
+  assert.deepEqual(await page.evaluate(()=>chrome.storage.local.get(null)),before);
+  assert.deepEqual(report.externalRequests,[]);
+  check('built worker accepts validated dashboard lookup, rejects malformed/popup requests, keeps association/enrollment disabled and leaves storage/network untouched');
+  await page.getByLabel('Professor name',{exact:true}).fill('Alex Synthetic');
+  await page.getByLabel('RateMyProfessors profile link',{exact:true}).fill('https://ratemyprofessors.com/professor/12345/?fixture=1');
+  await page.getByRole('button',{name:'Review link',exact:true}).click();
+  await page.getByRole('heading',{name:'Unverified profile link',exact:true}).waitFor();
+  const link=page.getByRole('link',{name:/Open profile to view ratings/});
+  assert.equal(await link.getAttribute('href'),'https://www.ratemyprofessors.com/professor/12345');
+  assert.deepEqual(report.externalRequests,[]);
+  const next=context.waitForEvent('page'); await link.focus(); await page.keyboard.press('Enter'); const target=await next;
+  await target.waitForURL('https://www.ratemyprofessors.com/professor/12345'); await target.waitForLoadState('domcontentloaded');
+  assert.equal(await target.evaluate(()=>window.opener),null); await target.close();
+  assert.deepEqual(report.externalRequests,['https://www.ratemyprofessors.com/professor/12345']);
+  await page.reload(); await page.getByRole('heading',{name:'Professors',exact:true}).waitFor();
+  assert.equal(await page.getByLabel('Professor name',{exact:true}).inputValue(),'');
+  assert.deepEqual(await page.evaluate(()=>chrome.storage.local.get(null)),before);
+  check('existing session-only manual fallback survives shared-validator extraction; explicit keyboard link opens an intercepted canonical target and reload clears the draft');
+  assert.deepEqual(report.errors,[]); report.ok=true;
+} catch(error){report.failure=error.stack;throw error;}
+finally{await writeFile('.local/qa/10b-'+channel+'-report.json',JSON.stringify(report,null,2));await context.close();}

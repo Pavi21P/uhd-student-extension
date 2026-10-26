@@ -1,3 +1,4 @@
+import { rmpProvider } from '../adapters/rmp/provider';
 import type { FoundationRepository } from '../storage/repository';
 import type { FoundationResponse, RpcRejection } from '../shared/foundation-rpc';
 import { parseEnvelope, parseFoundationRequest } from '../shared/foundation-rpc';
@@ -32,6 +33,7 @@ export function createMessageHandler(repository: FoundationRepository, extension
       if (!await storageReady) throw new ContractFault('STORAGE_ERROR', 'Local storage access could not be initialized. Nothing was changed.');
       const base = { protocolVersion: 1 as const, requestId: request.requestId, ok: true as const };
       switch (request.type) {
+        case 'professor.lookup': return { ...base, type: request.type, data: rmpProvider.lookup(request.payload) };
         case 'schedule.read': return { ...base, type: request.type, data: await repository.readSchedule(request.payload.scheduleId) };
         case 'schedule.save': return { ...base, type: request.type, data: await repository.saveSchedule(request.payload.schedule, request.payload.expectedRevision) };
         case 'schedule.import': return { ...base, type: request.type, data: await repository.importSchedule(request.payload.targetScheduleId, request.payload.expectedRevision, request.payload.mode, request.payload.backup) };
