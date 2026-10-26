@@ -21,13 +21,14 @@ Updated: 2026-10-25 (America/Chicago)
 - **10A complete (UI scope)**: validated session-only profile-link drafts and seven explicitly synthetic rating states. [Verification and screenshots](evidence/10a-professor-preview.md). Live ratings and saved associations remain unavailable.
 - **11A complete (fixture scope)**: accessible inline badge, guarded profile navigation and synthetic enrollment-control isolation checks. [Evidence](evidence/11a-professor-badges.md). No live portal injection.
 - **01B preparation complete; live inspection pending**: user-requested [inspection checklist](evidence/01b-inspection-checklist.md) and [portal map worksheet](evidence/portal-map.md). No live facts/selectors or G1 completion claimed.
+- **02B independent research complete; portal-specific review pending**: [RMP source decision](evidence/rmp-source.md) retains links with live retrieval blocked; [preliminary timers](evidence/timing-report.md) retain all 84 measured trials. No live ratings or enrollment/timing gate passed.
 - Public repo: https://github.com/Pavi21P/uhd-student-extension. Foundation tasks 03A (`cffda38`) and 03B (`b4ea551`) are included in the 2026-10-22 main-branch publication, retaining their original author dates and history. Published `feat/05a-course-editor` at `5635520` includes 04A (`871beb4`) and 05A (`823f33f`). 05B (`2517dc1`) is published on `feat/05b-meeting-validation`, based on that branch. [Pull request #1](https://github.com/Pavi21P/uhd-student-extension/pull/1) includes 04A/05A/05B and is open for review. `main` remains at `a29eea5`; no merge is included.
 
 ## Active work
 
 | Owner | Task | State | Next action |
 | --- | --- | --- | --- |
-| A / Pavitra | 01B support | Checklist published | Draft PR #11; await B's sanitized observations. Full 01B remains incomplete. |
+| A / Pavitra | 02B (independent slice) | Research complete; publication pending | Source decision and timer evidence ready. Portal-specific review waits for 01B. |
 | B / teammate | 01B | Ready | Inspect the real myUHD flow and build an anonymized portal map. |
 
 ## Decisions to retain
@@ -49,10 +50,10 @@ Updated: 2026-10-25 (America/Chicago)
 
 ## Latest handoff
 
-- Task / owner: **01B support / A**, user-requested inspection checklist prepared; **01B itself remains incomplete**. Branch docs/01b-portal-inspection is based on [PR #10](https://github.com/Pavi21P/uhd-student-extension/pull/10). Published in [draft PR #11](https://github.com/Pavi21P/uhd-student-extension/pull/11), targeting feat/11a-professor-badges; commit b10c67e and draft PR head verified. No merge or release. B's live inspection assignment is unchanged.
-- Changed: [inspection checklist](evidence/01b-inspection-checklist.md), [portal map worksheet](evidence/portal-map.md), README links and reference record. The map separates public guidance, synthetic fixtures and unknown live state; no guessed selectors or origins.
-- Validation: documentation links and staged diff checked. Official registration-guide text re-read for route orientation; it is dated November 2023, not current authenticated evidence. No code changed; passing 11A checks (266 tests/build/Chrome/Edge fixture checks) were not rerun.
-- Blocker: user confirmed inspection has not happened. Browser connection failed before inventory; no signed-in content was inspected or saved. Current origins, control semantics, confirmation/results and portal constraints remain unknown. 09A still needs both human results.
-- Next ready action: **01B / B**, run the checklist and return its sanitized reply template. Incorporate observations and keep unknown states open before claiming completion. 12A needs 11B; portal-dependent work and release remain blocked.
+- Task / owner: **02B independent research / A**. Source decision and generic timing prototype complete; portal-specific review remains pending 01B. Branch research/02b-source-timing is based on [draft PR #11](https://github.com/Pavi21P/uhd-student-extension/pull/11). Publication pending; no merge or release. B's live inspection assignment is unchanged.
+- Changed: diagnostic timer fixture/runner, raw Chrome/Edge measurements, [source decision](evidence/rmp-source.md), [timer report](evidence/timing-report.md), README/reference links. No production code, permissions, retrieval adapter or enrollment actions changed.
+- Passed: lint, 266 tests, TypeScript, production/MV3 checks. 84 measured timer trials plus two warmups completed in isolated headless pages. Both idle groups: median 5 ms, max 15 ms; induced stalls retained all misses. Six long-stall trials expired; twelve simulated clock-shift trials required review, with zero markers in those groups.
+- Limits/blockers: no permitted live ratings source established; explicit profile links remain the fallback. Timings concern ordinary-page callbacks, not submission or foreground/package behavior. G1/G2/G3/G4 remain pending. No 01B observations or either 09A human sign-off received.
+- Next ready project action: **01B / B**, return sanitized portal observations using its checklist. Then finish 02B portal-specific review and advance dependent tasks. Do not treat this research as a completed live integration or release gate.
 
 Read linked evidence for details; do not replay the full history.
