@@ -13,7 +13,7 @@ npm ci
 npm run check
 ```
 
-`check` runs lint, 266 unit tests, strict TypeScript checking, and the production build. The build verifies the MV3 entrypoints and bundled assets. Output goes to `dist/`, which is intentionally ignored by Git.
+`check` runs lint, 297 unit tests, strict TypeScript checking, and the production build. The build verifies the MV3 entrypoints and bundled assets. Output goes to `dist/`, which is intentionally ignored by Git.
 
 1. Open `chrome://extensions` or `edge://extensions`.
 2. Enable **Developer mode**, choose **Load unpacked**, and select this repository's `dist` folder.
@@ -29,7 +29,7 @@ For UI development, run `npm run dev` and open the printed local URL with `/dash
 
 Task 11A provides a reusable inline professor badge and a development fixture. Run `npm run dev` and open `/tests/fixtures/professor-badges.html` to inspect it. The fixture is excluded from the production extension; badges are not yet injected into myUHD.
 
-The foundation requests only `storage`; it has no host permissions or connection to myUHD. A module background worker owns schedule/settings writes and accepts commands only from this extension's dashboard. Fonts and scripts are bundled locally. Unsupported ratings and enrollment commands return `FEATURE_UNAVAILABLE`.
+The foundation requests only `storage`; it has no host permissions or connection to myUHD. A module background worker owns schedule/settings writes and accepts commands only from this extension's dashboard. Fonts and scripts are bundled locally. Validated `professor.lookup` requests return `unavailable / provider-unconfigured` without network or cache access. Association and enrollment commands still return `FEATURE_UNAVAILABLE`.
 
 ## Start here
 
@@ -53,6 +53,7 @@ The foundation requests only `storage`; it has no host permissions or connection
 - [myUHD inspection checklist (01B)](docs/evidence/01b-inspection-checklist.md)
 - [Portal map: live observations pending](docs/evidence/portal-map.md)
 - [RMP source decision and remaining access blocker (02B)](docs/evidence/rmp-source.md)
+- [Validated provider fallback and browser checks (10B)](docs/evidence/10b-provider-fallback.md)
 - [Preliminary Chrome/Edge timer measurements (02B)](docs/evidence/timing-report.md)
 - [Screen layouts and interaction specification](docs/UI_SPEC.md)
 - [Design references: Taste Skill and Impeccable](docs/DESIGN_GUIDANCE.md)

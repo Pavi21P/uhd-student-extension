@@ -1,9 +1,10 @@
+import { parseProfessorLookup, parseUnconfiguredProfessorResult } from './professor-lookup';
 import { parseBackup, parseImportMode } from './timetable-backup';
 import type { ContractError } from './domain';
 import type { RequestFor, ResponseFor } from './messages';
 import { ContractFault, id, invalid, parseSchedule, parseSettings, record, revision, text, version } from './validation';
 
-export type FoundationMethod = 'schedule.read' | 'schedule.save' | 'schedule.import' | 'settings.read' | 'settings.save';
+export type FoundationMethod = 'schedule.read' | 'schedule.save' | 'schedule.import' | 'settings.read' | 'settings.save' | 'professor.lookup';
 export type FoundationRequest = { [K in FoundationMethod]: RequestFor<K> }[FoundationMethod];
 export type FoundationResponse = { [K in FoundationMethod]: ResponseFor<K> }[FoundationMethod];
 /** A malformed envelope may not have usable correlation fields. Never invent them. */
@@ -55,7 +56,8 @@ export function parseFoundationRequest(value: unknown): FoundationRequest {
         expectedRevision: revision(row.expectedRevision, 'payload.expectedRevision'), settings: parseSettings(row.settings),
       } };
     }
-    case 'professor.lookup': case 'professor.associate':
+    case 'professor.lookup': return { ...base, type: request.type, payload: parseProfessorLookup(request.payload) };
+    case 'professor.associate':
     case 'enrollment.review': case 'enrollment.activate': case 'enrollment.cancel': case 'enrollment.read':
       throw new ContractFault('FEATURE_UNAVAILABLE', 'This command is not available in this build.');
     default: return invalid('request.type');
@@ -88,5 +90,6 @@ export function parseFoundationResponse(value: unknown, request: FoundationReque
     if (data.id !== expectedId) invalid('response.data.id');
     return { ...base, type: request.type, ok: true, data };
   }
+  if (request.type === 'professor.lookup') return { ...base, type: request.type, ok: true, data: parseUnconfiguredProfessorResult(row.data) };
   return { ...base, type: request.type, ok: true, data: parseSettings(row.data) };
 }

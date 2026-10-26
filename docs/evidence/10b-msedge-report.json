@@ -1,0 +1,13 @@
+{
+  "channel": "msedge",
+  "browserVersion": "Edg/156.0.4314.42",
+  "checks": [
+    "built worker accepts validated dashboard lookup, rejects malformed/popup requests, keeps association/enrollment disabled and leaves storage/network untouched",
+    "existing session-only manual fallback survives shared-validator extraction; explicit keyboard link opens an intercepted canonical target and reload clears the draft"
+  ],
+  "errors": [],
+  "externalRequests": [
+    "https://www.ratemyprofessors.com/professor/12345"
+  ],
+  "ok": true
+}
