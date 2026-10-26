@@ -28,7 +28,7 @@ Updated: 2026-10-25 (America/Chicago)
 
 | Owner | Task | State | Next action |
 | --- | --- | --- | --- |
-| A / Pavitra | 02B (independent slice) | Research complete; publication pending | Source decision and timer evidence ready. Portal-specific review waits for 01B. |
+| A / Pavitra | 02B (independent slice) | Research published | Draft PR #12; source decision and timer evidence ready. Portal-specific review waits for 01B. |
 | B / teammate | 01B | Ready | Inspect the real myUHD flow and build an anonymized portal map. |
 
 ## Decisions to retain
@@ -50,7 +50,7 @@ Updated: 2026-10-25 (America/Chicago)
 
 ## Latest handoff
 
-- Task / owner: **02B independent research / A**. Source decision and generic timing prototype complete; portal-specific review remains pending 01B. Branch research/02b-source-timing is based on [draft PR #11](https://github.com/Pavi21P/uhd-student-extension/pull/11). Publication pending; no merge or release. B's live inspection assignment is unchanged.
+- Task / owner: **02B independent research / A**. Source decision and generic timing prototype complete; portal-specific review remains pending 01B. Branch research/02b-source-timing is based on [draft PR #11](https://github.com/Pavi21P/uhd-student-extension/pull/11). Published in [draft PR #12](https://github.com/Pavi21P/uhd-student-extension/pull/12), targeting docs/01b-portal-inspection; research commit 762dd1b and remote draft PR head verified. No merge or release. B's live inspection assignment is unchanged.
 - Changed: diagnostic timer fixture/runner, raw Chrome/Edge measurements, [source decision](evidence/rmp-source.md), [timer report](evidence/timing-report.md), README/reference links. No production code, permissions, retrieval adapter or enrollment actions changed.
 - Passed: lint, 266 tests, TypeScript, production/MV3 checks. 84 measured timer trials plus two warmups completed in isolated headless pages. Both idle groups: median 5 ms, max 15 ms; induced stalls retained all misses. Six long-stall trials expired; twelve simulated clock-shift trials required review, with zero markers in those groups.
 - Limits/blockers: no permitted live ratings source established; explicit profile links remain the fallback. Timings concern ordinary-page callbacks, not submission or foreground/package behavior. G1/G2/G3/G4 remain pending. No 01B observations or either 09A human sign-off received.
