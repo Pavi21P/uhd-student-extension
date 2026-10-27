@@ -213,6 +213,8 @@ Each cell is a task/issue with its own acceptance check. Estimate 1–3 focused 
 | 17 | **17A**: Run timed fixture trials in Chrome/Edge; record conditions and fix UI findings. Depends 16A/16B. Done: evidence includes misses, not just successful runs. | **17B**: Verify actual portal click compatibility and supported confirmation/result parsing in an appropriate student-authorized session. Depends G1/15B. Done: record real observations; if no suitable enrollment session exists, mark G4 pending. | G3/G4 decision; no unattended or fake live tests. |
 | 18 | **18A**: Enrollment walkthrough, warning copy and accessibility fixes. Depends 17A. Done: both teammates can explain arming, requirements, cancel, outcomes and recovery. | **18B**: Regression matrix and packaged-install timing validation. Depends 17A/17B. Done: duplicate/restart/late/partial/unknown cases pass; unavailable release-route evidence remains flagged. | Enrollment candidate only if G3/G4 pass. |
 
+14A execution split (2026-10-27): under the user-authorized continuation without connected browser access, implement only the pure EnrollmentTiming validation boundary from 02A. The review UI and Now/Schedule activation retain their 01B dependency. No command is enabled, job armed or time-based execution added by this portion; full 14A remains incomplete.
+
 ### Phase 5 — release (days 19–20)
 
 | Day | A | B | Merge checkpoint |
