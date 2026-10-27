@@ -37,9 +37,9 @@ Prefer ordinary merge commits when preserving both contributors' individual comm
 
 ## Merge and release checks
 
-The foundation now provides `npm ci`, `npm run typecheck`, `npm run lint`, `npm test`, and `npm run build`. Run `npm run check` for the combined integration checks; see README.md for pinned toolchain and unpacked installation. Add `npm run test:e2e` in 09B. The 04B CI portion runs the existing combined checks on Ubuntu and Windows; the observed portal fixture portion remains blocked on 01B.
+The foundation now provides `npm ci`, `npm run typecheck`, `npm run lint`, `npm test`, and `npm run build`. Run `npm run check` for the combined integration checks; see README.md for pinned toolchain and unpacked installation. The 09B extension-only portion adds `npm run test:e2e` after building and installing Playwright Chromium (see README). CI runs combined checks plus the isolated Chromium journey on Ubuntu and Windows. Observed portal fixtures/loading remain blocked on 01B/04B.
 
-- Source changes: relevant tests plus typecheck, lint, and production build; the Checks workflow runs these checks on each PR, including PRs targeting another feature branch. Both matrix jobs must pass before merge; branch-protection settings have not been changed.
+- Source changes: relevant tests plus typecheck, lint, production build and the extension smoke test; the Checks workflow runs these checks on each PR, including PRs targeting another feature branch. Both matrix jobs must pass before merge; branch-protection settings have not been changed.
 - User-facing changes: manually verify the changed flow in a loaded extension and record browser/version.
 - Enrollment changes: synthetic portal tests first; no unattended real enrollment tests.
 - Documentation-only changes: check accuracy, links, and diff; no unnecessary application tests.

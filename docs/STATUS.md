@@ -18,6 +18,7 @@ Updated: 2026-10-26 (America/Chicago)
 - **07B complete**: timetable-only JSON downloads, strict file validation, reviewed merge/replace and atomic revision-protected import. [Verification and screenshots](evidence/07b-timetable-backup.md).
 - **08A complete**: readable overlap columns, clearer labels/contrast and a full-detail list shortcut. [Verification and screenshots](evidence/08a-timetable-readability.md).
 - **08B complete**: 15 data-loss regressions for save/import races, uncertain writes/replies, limits and imported recurrence. [Verification](evidence/08b-timetable-regressions.md).
+- **09B extension-only portion implemented**: maintained `test:e2e` journey and Windows/Linux CI wiring; [evidence](evidence/09b-extension-e2e.md). Local isolated Chromium passed; hosted verification pending. Portal loading still depends on 01B/04B, so full 09B remains incomplete.
 - **09A pending human acceptance**: Chrome/Edge end-to-end journey passed; [two-person checklist](evidence/09a-human-qa.md) prepared. [Browser evidence](evidence/09a-browser-qa.md). Neither human sign-off has been received.
 - **10A complete (UI scope)**: validated session-only profile-link drafts and seven explicitly synthetic rating states. [Verification and screenshots](evidence/10a-professor-preview.md). Live ratings and saved associations remain unavailable.
 - **11A complete (fixture scope)**: accessible inline badge, guarded profile navigation and synthetic enrollment-control isolation checks. [Evidence](evidence/11a-professor-badges.md). No live portal injection.
@@ -30,7 +31,7 @@ Updated: 2026-10-26 (America/Chicago)
 
 | Owner | Task | State | Next action |
 | --- | --- | --- | --- |
-| A / Codex | 04B CI portion | Verified and published | PR #14 open; Windows/Linux checks passed. Portal fixture portion still depends on 01B. |
+| A / Codex | 09B extension-only portion | Claimed | Add maintained synthetic timetable E2E and CI execution. Portal loading remains dependent on the unfinished 04B/01B harness. |
 | B / teammate | 01B | Reassigned to Codex by user | No live inspection findings supplied; prior work preserved. |
 
 ## Decisions to retain
@@ -52,10 +53,10 @@ Updated: 2026-10-26 (America/Chicago)
 
 ## Latest handoff
 
-- Task / owner: **04B CI portion / Codex**, selected under the user's instruction to continue without browser access. Plan explicitly separates this portion from the 01B-dependent portal harness; existing 01B notes preserved.
-- Changed: Windows/Linux PR workflow, README and contributor commands, plan split and [CI evidence](evidence/04b-ci.md). No application code, dependencies, manifest or permissions changed.
-- Passed: local lint, 297 tests across 15 files, TypeScript, production/MV3 checks and diff whitespace check. Hosted clean installs and all workflow steps passed on Ubuntu 24.04 and Windows 2025 in [run 40443205744](https://github.com/Pavi21P/uhd-student-extension/actions/runs/40443205744) at implementation commit 649082b; [PR #14](https://github.com/Pavi21P/uhd-student-extension/pull/14) is open against feat/10b-provider-fallback. No merge.
-- Remaining: 04B observed portal harness, 01B DOM/submission evidence, permitted live ratings source and both 09A human QA results. Browser access is still unavailable.
-- Next browser-independent candidate: maintained extension-only E2E portion of 09B, using existing synthetic behavior after CI verification; explicitly preserve the outstanding portal harness dependency. No merge or release.
+- Task / owner: **09B extension-only portion / Codex**, continuing without connected browser access. BUILD_PLAN records the split; the portal-loading dependency is retained.
+- Changed: pinned Playwright test dependency, runner configs, eight-step timetable persistence journey, package commands, CI install/run steps, README/contributor instructions and [evidence](evidence/09b-extension-e2e.md). No production application code, manifest, permissions or UI changed.
+- Passed: local lint, 297 unit tests, TypeScript, production/MV3 checks and isolated Chromium 156.0.8078.4 E2E (one journey, eight steps, full process restart). Final lint clean. Hosted Windows/Linux E2E awaits first PR run.
+- Remaining: 01B DOM/submission evidence, 04B observed portal harness / 09B portal loading, permitted live ratings source and both 09A human QA results. Passing isolated Chromium does not repair the signed-in browser connection or complete human QA.
+- Next ready action: review the PR and run the existing 09A human checklist on the current build. Resume portal loading only when observed facts are available. No merge, alpha tag or release.
 
 Read linked evidence for details; do not replay the full history.

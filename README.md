@@ -31,11 +31,25 @@ Task 11A provides a reusable inline professor badge and a development fixture. R
 
 The foundation requests only `storage`; it has no host permissions or connection to myUHD. A module background worker owns schedule/settings writes and accepts commands only from this extension's dashboard. Fonts and scripts are bundled locally. Validated `professor.lookup` requests return `unavailable / provider-unconfigured` without network or cache access. Association and enrollment commands still return `FEATURE_UNAVAILABLE`.
 
+## Extension regression smoke test
+
+After installing dependencies, install Playwright's Chromium once, build the extension, and run the maintained synthetic journey:
+
+```sh
+npx playwright install chromium
+npm run check
+npm run test:e2e
+```
+
+`test:e2e` loads the existing `dist` build, so rebuild after application edits. It uses its own headless Chromium and a fresh profile under ignored `test-results/`, not your signed-in browser or the Codex browser connection. It verifies blank cards, exact meetings, keyboard Save/Cancel, invalid-time recovery, JSON export, browser restart persistence, cancelled import and a planner link intercepted with synthetic content. HTTP requests from test pages are intercepted or blocked; no live planner availability, RMP or myUHD behavior is claimed. A JSON report is written to `test-results/e2e-results.json`. No personal profile path or credentials are needed.
+
+[09B evidence](docs/evidence/09b-extension-e2e.md) records validation. The portal-loading portion still requires 01B/04B; this test is not either human 09A sign-off.
+
 ## Continuous integration
 
 [Checks](.github/workflows/checks.yml) runs `npm ci` and `npm run check` on Ubuntu and Windows for every pull request (including stacked PRs), pushes to `main`, and manual dispatch when available on the default branch. Node comes from `.node-version`; npm comes from `package.json`'s `packageManager`. Dependency caching stores npm downloads, not `node_modules`; the lockfile still controls installation.
 
-These checks cover lint, unit tests, TypeScript and the MV3 build. They do not run signed-in myUHD actions, live ratings, browser acceptance, or the two human QA passes. See [04B CI evidence](docs/evidence/04b-ci.md) for the verified run and remaining fixture dependency.
+These checks cover lint, unit tests, TypeScript, the MV3 build and the isolated Chromium extension smoke test above. CI installs Chromium with its system dependencies before `test:e2e`. It does not run signed-in myUHD actions, live ratings, real Chrome/Edge acceptance, or the two human QA passes. See [04B CI evidence](docs/evidence/04b-ci.md) for the verified run and remaining fixture dependency.
 
 ## Start here
 
