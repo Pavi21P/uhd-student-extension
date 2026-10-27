@@ -8,7 +8,7 @@ Updated: 2026-10-26 (America/Chicago)
 - **02A complete**: [shared contracts](CONTRACTS.md), TypeScript records/messages and synthetic examples.
 - **03A complete**: loadable MV3 extension, working popup launcher, static dashboard preview, pinned toolchain and reproducible build. [Verification and screenshots](evidence/03a-foundation.md).
 - **03B complete**: schedule/settings runtime validation, serialized revision-protected local storage, authenticated worker messages and typed client. [Verification](evidence/03b-storage-messaging.md). 05A now connects the editor; 06B now refreshes dashboard consumers from storage invalidations.
-- **04B CI portion implemented; hosted validation pending**: [workflow evidence](evidence/04b-ci.md). Local checks pass. Portal fixture harness remains dependent on 01B; full 04B is incomplete.
+- **04B CI portion verified and published**: [PR #14](https://github.com/Pavi21P/uhd-student-extension/pull/14), [workflow evidence](evidence/04b-ci.md). Windows/Linux clean-install CI and local checks passed. Portal fixture harness remains dependent on 01B; full 04B is incomplete.
 - **04A complete**: dashboard destination navigation, keyboard/focus/history behavior, and the live planner link. [Verification and screenshots](evidence/04a-navigation-planner.md). 06A now connects the weekly grid and view settings; 10A now adds the Professors profile preview; live ratings and Enrollment remain unavailable. 10B now returns provider-unconfigured for validated lookup; reserved association/enrollment commands still return FEATURE_UNAVAILABLE without execution.
 - **05A complete**: blank course cards, optional-field editor, delete/cancel and revision-aware local persistence. [Verification and screenshots](evidence/05a-course-editor.md).
 - **05B complete**: exact meeting-time validation and deterministic overlap detection, with 45 new acceptance tests. [Verification](evidence/05b-meeting-validation.md). 06A now consumes these helpers in the meeting form and weekly grid.
@@ -30,7 +30,7 @@ Updated: 2026-10-26 (America/Chicago)
 
 | Owner | Task | State | Next action |
 | --- | --- | --- | --- |
-| A / Codex | 04B CI portion | Claimed | User requested work without browser access; implement CI using completed 03A/03B. Portal fixture portion still depends on 01B. |
+| A / Codex | 04B CI portion | Verified and published | PR #14 open; Windows/Linux checks passed. Portal fixture portion still depends on 01B. |
 | B / teammate | 01B | Reassigned to Codex by user | No live inspection findings supplied; prior work preserved. |
 
 ## Decisions to retain
@@ -54,7 +54,7 @@ Updated: 2026-10-26 (America/Chicago)
 
 - Task / owner: **04B CI portion / Codex**, selected under the user's instruction to continue without browser access. Plan explicitly separates this portion from the 01B-dependent portal harness; existing 01B notes preserved.
 - Changed: Windows/Linux PR workflow, README and contributor commands, plan split and [CI evidence](evidence/04b-ci.md). No application code, dependencies, manifest or permissions changed.
-- Passed: local lint, 297 tests across 15 files, TypeScript, production/MV3 checks and diff whitespace check. Hosted clean installs and workflow execution await first PR run.
+- Passed: local lint, 297 tests across 15 files, TypeScript, production/MV3 checks and diff whitespace check. Hosted clean installs and all workflow steps passed on Ubuntu 24.04 and Windows 2025 in [run 40443205744](https://github.com/Pavi21P/uhd-student-extension/actions/runs/40443205744) at implementation commit 649082b; [PR #14](https://github.com/Pavi21P/uhd-student-extension/pull/14) is open against feat/10b-provider-fallback. No merge.
 - Remaining: 04B observed portal harness, 01B DOM/submission evidence, permitted live ratings source and both 09A human QA results. Browser access is still unavailable.
 - Next browser-independent candidate: maintained extension-only E2E portion of 09B, using existing synthetic behavior after CI verification; explicitly preserve the outstanding portal harness dependency. No merge or release.
 

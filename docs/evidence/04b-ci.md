@@ -12,7 +12,7 @@ Jobs have a 15-minute limit, do not fail-fast across operating systems, and canc
 
 - Local Windows `npm run check`: passed, 297 tests across 15 files, lint, TypeScript and production/MV3 validation.
 - Documentation and workflow diff reviewed; `git diff --check` passed.
-- Hosted Windows/Linux clean installs and workflow execution: pending publication and first PR run. Local checks do not establish a successful GitHub Actions run.
+- Hosted clean installs and workflow execution: **passed on Ubuntu 24.04 and Windows 2025**, including every setup/check/cleanup step. [Run 40443205744](https://github.com/Pavi21P/uhd-student-extension/actions/runs/40443205744) tested implementation commit `649082b822b3e8826a49d5125a4fa46f79b70ec2` through the pull-request event. [PR #14](https://github.com/Pavi21P/uhd-student-extension/pull/14) targets `feat/10b-provider-fallback`; no merge. Subsequent handoff-only edits do not change the verified workflow or application.
 - Existing 01B ownership and sanitized screenshot notes were preserved in this branch; no screenshot, authenticated HTML or course records were added.
 
 ## Sources and remaining work
