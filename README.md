@@ -13,7 +13,7 @@ npm ci
 npm run check
 ```
 
-`check` runs lint, 297 unit tests, strict TypeScript checking, and the production build. The build verifies the MV3 entrypoints and bundled assets. Output goes to `dist/`, which is intentionally ignored by Git.
+`check` runs lint, 373 unit tests, strict TypeScript checking, and the production build. The build verifies the MV3 entrypoints and bundled assets. Output goes to `dist/`, which is intentionally ignored by Git.
 
 1. Open `chrome://extensions` or `edge://extensions`.
 2. Enable **Developer mode**, choose **Load unpacked**, and select this repository's `dist` folder.
@@ -50,6 +50,8 @@ npm run test:e2e
 [Checks](.github/workflows/checks.yml) runs `npm ci` and `npm run check` on Ubuntu and Windows for every pull request (including stacked PRs), pushes to `main`, and manual dispatch when available on the default branch. Node comes from `.node-version`; npm comes from `package.json`'s `packageManager`. Dependency caching stores npm downloads, not `node_modules`; the lockfile still controls installation.
 
 These checks cover lint, unit tests, TypeScript, the MV3 build and the isolated Chromium extension smoke test above. CI installs Chromium with its system dependencies before `test:e2e`. It does not run signed-in myUHD actions, live ratings, real Chrome/Edge acceptance, or the two human QA passes. See [04B CI evidence](docs/evidence/04b-ci.md) for the verified run and remaining fixture dependency.
+
+Task 14A now has a standalone scheduled-time validator covering future times, time zones and daylight-saving transitions. It is not wired to the UI or runtime commands; enrollment remains unavailable. See [timing-validation evidence](docs/evidence/14a-timing-validation.md).
 
 ## Start here
 
