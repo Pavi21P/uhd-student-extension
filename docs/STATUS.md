@@ -27,13 +27,14 @@ Updated: 2026-10-27 (America/Chicago)
 - **10B fallback complete; live provider/cache blocked**: validated authenticated lookup returns provider-unconfigured with no network/storage access. Existing manual profile links remain the fallback. [Evidence](evidence/10b-provider-fallback.md). G2 is not passed.
 - **14A timing-validation portion verified and published**: standalone validator and 76 boundary cases; [evidence](evidence/14a-timing-validation.md). Local and hosted Windows/Linux 373-test/build/E2E checks passed; [PR #16](https://github.com/Pavi21P/uhd-student-extension/pull/16) is open. UI, review and activation remain blocked on 01B; full 14A is incomplete.
 - **14B pure lifecycle portion verified and published**: 63 new cases; [evidence](evidence/14b-job-transitions.md). Local and hosted Windows/Linux checks passed; [PR #17](https://github.com/Pavi21P/uhd-student-extension/pull/17) is open. Durable ownership, persistence and portal execution remain incomplete.
+- **14B stored-record validation verified and published**: strict saved review/job parser and 96 synthetic cases; [evidence](evidence/14b-stored-records.md). Local and hosted Windows/Linux checks passed; [PR #18](https://github.com/Pavi21P/uhd-student-extension/pull/18) is open. Persistence, ownership and portal integration remain incomplete.
 - Public repo: https://github.com/Pavi21P/uhd-student-extension. Foundation tasks 03A (`cffda38`) and 03B (`b4ea551`) are included in the 2026-10-22 main-branch publication, retaining their original author dates and history. Published `feat/05a-course-editor` at `5635520` includes 04A (`871beb4`) and 05A (`823f33f`). 05B (`2517dc1`) is published on `feat/05b-meeting-validation`, based on that branch. [Pull request #1](https://github.com/Pavi21P/uhd-student-extension/pull/1) includes 04A/05A/05B and is open for review. `main` remains at `a29eea5`; no merge is included.
 
 ## Active work
 
 | Owner | Task | State | Next action |
 | --- | --- | --- | --- |
-| A / Codex | 14B pure transition portion | Verified and published | PR #17 open; local and hosted Windows/Linux checks passed. Full 14B remains incomplete. |
+| A / Codex | 14B stored-record validation portion | Verified and published | PR #18 open; local and hosted Windows/Linux checks passed. Durable coordination remains separate. |
 | B / teammate | 01B | Reassigned to Codex by user | No live inspection findings supplied; prior work preserved. |
 
 ## Decisions to retain
@@ -55,10 +56,10 @@ Updated: 2026-10-27 (America/Chicago)
 
 ## Latest handoff
 
-- Task / owner: **14B pure lifecycle portion / Codex**, continuing without connected browser access.
-- Changed: standalone lifecycle helper, 63 synthetic cases, plan split, contracts, README and [evidence](evidence/14b-job-transitions.md). No production entrypoint imports the helper.
-- Passed: local lint, 436 tests across 17 files, TypeScript, production/MV3 build and isolated Chromium timetable E2E (10.9 seconds). Hosted Ubuntu 24.04 and Windows 2025 checks passed, including all 436 unit tests, build and isolated Chromium E2E: [run 40467794681](https://github.com/Pavi21P/uhd-student-extension/actions/runs/40467794681), implementation commit 85fa07d985e687e340757fe06e4aedaed8452635. [PR #17](https://github.com/Pavi21P/uhd-student-extension/pull/17) targets feat/14a-timing-validation. Subsequent handoff-only edits preserve the tested implementation.
-- Remaining: durable ownership/persistence, activation deduplication, outcome aggregation/reconciliation, 14A UI/activation, 01B portal evidence, 04B/09B portal harness/loading, live ratings source and both 09A human sign-offs. Pure revision decisions do not establish duplicate-execution protection.
-- Next independent candidate: **14B strict stored-job/review validation**, using synthetic records before coordinator integration; retain the observed portal dependency. No merge or release.
+- Task / owner: **14B stored-record validation portion / Codex**, continuing without connected browser access.
+- Changed: saved review/job parser, 96 synthetic cases, reusable lifecycle/list validation, plan/contracts/README and [evidence](evidence/14b-stored-records.md). No storage or command wiring added.
+- Passed: local lint, 532 tests across 18 files, TypeScript and production/MV3 build. Isolated Chromium extension E2E passed (32.3 seconds). Hosted Ubuntu 24.04 and Windows 2025 passed all checks, including 532 unit tests, build and isolated Chromium E2E: [run 40554851209](https://github.com/Pavi21P/uhd-student-extension/actions/runs/40554851209), implementation commit dd9f87b1dbaa887448f255572cd8238a6a2f6e9e. [PR #18](https://github.com/Pavi21P/uhd-student-extension/pull/18) targets feat/14b-job-transitions. Subsequent documentation-only handoff edits preserve the tested implementation.
+- Remaining: durable ownership/persistence, activation deduplication, outcome extraction/reconciliation, 14A UI/activation, 01B portal evidence, portal harness/loading, live ratings source and both human sign-offs. Parsed data is not execution authority.
+- Next independent candidate: **14B durable internal job repository**, with serialized revision checks and restart recovery over synthetic storage. Keep activation/execution disabled pending their remaining requirements. No merge or release.
 
 Read linked evidence for details; do not replay the full history.

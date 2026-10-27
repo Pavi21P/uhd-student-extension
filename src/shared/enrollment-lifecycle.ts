@@ -23,7 +23,7 @@ const epoch = (value: unknown, field: string) => integer(value, -maxEpoch, maxEp
 const beforeExecution = (state: JobState) => state === 'armed' || state === 'preflight';
 const terminal = (state: JobState) => !beforeExecution(state) && state !== 'executing';
 
-function parseLifecycle(value: unknown): EnrollmentLifecycle {
+export function parseEnrollmentLifecycle(value: unknown): EnrollmentLifecycle {
   const row = record(value, ['id', 'revision', 'state', 'targetEpochMs', 'expiresAt', 'updatedAt', 'submittedAt'], 'job');
   if (!states.includes(row.state as JobState)) invalid('job.state');
   const job: EnrollmentLifecycle = {
@@ -58,7 +58,7 @@ function parseEvent(value: unknown): LifecycleEvent {
 export function transitionEnrollmentLifecycle(
   value: unknown, eventValue: unknown, expectedRevision: number, nowEpochMs: number,
 ): LifecycleDecision {
-  const job = parseLifecycle(value);
+  const job = parseEnrollmentLifecycle(value);
   const event = parseEvent(eventValue);
   const now = epoch(nowEpochMs, 'nowEpochMs');
   if (revision(expectedRevision, 'expectedRevision') !== job.revision) {
