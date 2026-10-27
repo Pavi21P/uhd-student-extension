@@ -1,6 +1,6 @@
 # 01B: myUHD inspection checklist
 
-Prepared 2026-10-25 at the user's request. **No live portal inspection has occurred.** B owns inspection; A prepared this handoff. Fill [portal-map.md](portal-map.md) with sanitized observations. A checklist is not proof of portal compatibility or completion of 01B/G1.
+Prepared 2026-10-25 at the user's request. **No live portal inspection has occurred.** The user reassigned inspection to Codex on 2026-10-26; the student supplies their own signed-in session. Fill [portal-map.md](portal-map.md) with sanitized observations. A checklist is not proof of portal compatibility or completion of 01B/G1.
 
 ## Before starting
 
@@ -52,3 +52,7 @@ No password, student identifier, full URL, raw HTML or private screenshot is nee
 The [official UHD registration guide](https://www.uhd.edu/documents/registrar/students/registration-services/registration-guide.pdf), dated November 2023, was re-read on 2026-10-25 as orientation. It describes a search-and-enroll sequence and a separate shopping-cart page with course checkboxes. Its age and screenshots cannot establish today's DOM, origins, selectors or event behavior. Confirm the current surface with the student.
 
 The browser connection failed before an inventory was available in the preparation session. No signed-in content was read or saved. Production code and permissions are unchanged. The separate [09A two-person QA checklist](09a-human-qa.md) is still required for timetable/planner acceptance.
+
+## Ownership and access update - 2026-10-26
+
+Codex took over 01B at the user's request. Browser inventory failed before content was available, including after a session reset; diagnostics report a Windows sandbox setup failure. No inspection occurred. Resume this checklist once browser access is restored and the user has signed in; do not infer missing portal facts.

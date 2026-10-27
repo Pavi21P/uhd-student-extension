@@ -180,6 +180,8 @@ Each cell is a task/issue with its own acceptance check. Estimate 1–3 focused 
 | 3 | **03A**: Create build, manifest, dashboard and launcher; pin toolchain/lockfile. Depends 02A. Done: clean install/build yields a loadable MV3 extension. | **03B**: Implement shared validation, storage and typed message contracts after 03A bootstrap. Depends 02A/03A. Done: save/reload and malformed-message rejection demonstrated with small domain tests. | Unpacked Chrome/Edge smoke test; no broad site access. |
 | 4 | **04A**: Add dashboard tabs and working Planner action. Depends 03A. Done: existing live planner opens and navigation is keyboard usable. | **04B**: Add CI, documented development commands and synthetic portal fixture harness. Depends 03A/03B and 01B. Done: CI runs typecheck/lint/test/build on a PR; fixtures contain no private data. | First useful shell; clean-clone instructions verified. |
 
+04B execution split (2026-10-26): at the user's request to continue without browser access, implement the CI/development-command portion using completed 03A/03B. The observed portal fixture harness retains its 01B dependency. CI alone does not complete all of 04B or G1.
+
 ### Phase 2 — timetable MVP (days 5–9)
 
 | Day | A | B | Merge checkpoint |
