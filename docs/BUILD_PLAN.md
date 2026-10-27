@@ -215,6 +215,8 @@ Each cell is a task/issue with its own acceptance check. Estimate 1–3 focused 
 
 14A execution split (2026-10-27): under the user-authorized continuation without connected browser access, implement only the pure EnrollmentTiming validation boundary from 02A. The review UI and Now/Schedule activation retain their 01B dependency. No command is enabled, job armed or time-based execution added by this portion; full 14A remains incomplete.
 
+14B execution split (2026-10-27): implement a pure, revision-checked lifecycle decision function for preflight/execution entry, cancellation, expiry, recovery and uncertain dispatch. It has no persistence or executor side effects. Durable ownership, activation deduplication, result aggregation and observed portal integration remain required before full 14B completion; the 01B dependency is retained.
+
 ### Phase 5 — release (days 19–20)
 
 | Day | A | B | Merge checkpoint |
