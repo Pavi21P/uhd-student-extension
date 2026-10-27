@@ -31,6 +31,12 @@ Task 11A provides a reusable inline professor badge and a development fixture. R
 
 The foundation requests only `storage`; it has no host permissions or connection to myUHD. A module background worker owns schedule/settings writes and accepts commands only from this extension's dashboard. Fonts and scripts are bundled locally. Validated `professor.lookup` requests return `unavailable / provider-unconfigured` without network or cache access. Association and enrollment commands still return `FEATURE_UNAVAILABLE`.
 
+## Continuous integration
+
+[Checks](.github/workflows/checks.yml) runs `npm ci` and `npm run check` on Ubuntu and Windows for every pull request (including stacked PRs), pushes to `main`, and manual dispatch when available on the default branch. Node comes from `.node-version`; npm comes from `package.json`'s `packageManager`. Dependency caching stores npm downloads, not `node_modules`; the lockfile still controls installation.
+
+These checks cover lint, unit tests, TypeScript and the MV3 build. They do not run signed-in myUHD actions, live ratings, browser acceptance, or the two human QA passes. See [04B CI evidence](docs/evidence/04b-ci.md) for the verified run and remaining fixture dependency.
+
 ## Start here
 
 - [Detailed build plan and daily tasks](docs/BUILD_PLAN.md)

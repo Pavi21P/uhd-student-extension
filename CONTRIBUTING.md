@@ -37,9 +37,9 @@ Prefer ordinary merge commits when preserving both contributors' individual comm
 
 ## Merge and release checks
 
-The foundation now provides `npm ci`, `npm run typecheck`, `npm run lint`, `npm test`, and `npm run build`. Run `npm run check` for the combined integration checks; see README.md for pinned toolchain and unpacked installation. Add `npm run test:e2e` in 09B; CI remains task 04B.
+The foundation now provides `npm ci`, `npm run typecheck`, `npm run lint`, `npm test`, and `npm run build`. Run `npm run check` for the combined integration checks; see README.md for pinned toolchain and unpacked installation. Add `npm run test:e2e` in 09B. The 04B CI portion runs the existing combined checks on Ubuntu and Windows; the observed portal fixture portion remains blocked on 01B.
 
-- Source changes: relevant tests plus typecheck, lint, and production build; CI will enforce the agreed checks once task 04B is complete.
+- Source changes: relevant tests plus typecheck, lint, and production build; the Checks workflow runs these checks on each PR, including PRs targeting another feature branch. Both matrix jobs must pass before merge; branch-protection settings have not been changed.
 - User-facing changes: manually verify the changed flow in a loaded extension and record browser/version.
 - Enrollment changes: synthetic portal tests first; no unattended real enrollment tests.
 - Documentation-only changes: check accuracy, links, and diff; no unnecessary application tests.
