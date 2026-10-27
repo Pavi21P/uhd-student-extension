@@ -25,14 +25,14 @@ Updated: 2026-10-27 (America/Chicago)
 - **01B partial screenshot evidence; live inspection pending**: [portal map](evidence/portal-map.md) records the Shopping Cart structure and absent visible Enroll action. Registration-not-open is user-reported; DOM, submission sequence and G1 remain unverified.
 - **02B independent research complete; portal-specific review pending**: [RMP source decision](evidence/rmp-source.md) retains links with live retrieval blocked; [preliminary timers](evidence/timing-report.md) retain all 84 measured trials. No live ratings or enrollment/timing gate passed.
 - **10B fallback complete; live provider/cache blocked**: validated authenticated lookup returns provider-unconfigured with no network/storage access. Existing manual profile links remain the fallback. [Evidence](evidence/10b-provider-fallback.md). G2 is not passed.
-- **14A timing-validation portion implemented**: standalone validator and 76 boundary cases; [evidence](evidence/14a-timing-validation.md). Local 373-test/build checks passed. UI, review and activation remain blocked on 01B; full 14A is incomplete.
+- **14A timing-validation portion verified and published**: standalone validator and 76 boundary cases; [evidence](evidence/14a-timing-validation.md). Local and hosted Windows/Linux 373-test/build/E2E checks passed; [PR #16](https://github.com/Pavi21P/uhd-student-extension/pull/16) is open. UI, review and activation remain blocked on 01B; full 14A is incomplete.
 - Public repo: https://github.com/Pavi21P/uhd-student-extension. Foundation tasks 03A (`cffda38`) and 03B (`b4ea551`) are included in the 2026-10-22 main-branch publication, retaining their original author dates and history. Published `feat/05a-course-editor` at `5635520` includes 04A (`871beb4`) and 05A (`823f33f`). 05B (`2517dc1`) is published on `feat/05b-meeting-validation`, based on that branch. [Pull request #1](https://github.com/Pavi21P/uhd-student-extension/pull/1) includes 04A/05A/05B and is open for review. `main` remains at `a29eea5`; no merge is included.
 
 ## Active work
 
 | Owner | Task | State | Next action |
 | --- | --- | --- | --- |
-| A / Codex | 14A timing-validation portion | Claimed | Validate the existing timing contract without portal access. Review UI, activation and portal-dependent behavior remain blocked. |
+| A / Codex | 14A timing-validation portion | Verified and published | PR #16 open; local and Windows/Linux CI checks passed. Review UI and activation remain blocked on 01B. |
 | B / teammate | 01B | Reassigned to Codex by user | No live inspection findings supplied; prior work preserved. |
 
 ## Decisions to retain
@@ -56,7 +56,7 @@ Updated: 2026-10-27 (America/Chicago)
 
 - Task / owner: **14A timing-validation portion / Codex**, following the user-authorized continuation without connected browser access. The prior edit attempt was not executed because approval review hit a usage limit; access recovered and this work began on 2026-10-27.
 - Changed: standalone timing parser, 76 boundary tests, documented plan split, contracts, README and [evidence](evidence/14a-timing-validation.md). No UI, dependencies, permissions, storage or runtime-command wiring changed.
-- Passed: targeted 76 cases; full local lint, 373 unit tests across 16 files, TypeScript and production/MV3 checks. Local isolated Chromium E2E also passed; hosted verification awaits the first PR run.
+- Passed: targeted 76 cases; full local lint, 373 unit tests across 16 files, TypeScript and production/MV3 checks. Local isolated Chromium E2E also passed; hosted Ubuntu/Windows checks and E2E passed in [run 40465681460](https://github.com/Pavi21P/uhd-student-extension/actions/runs/40465681460) at implementation commit 65cc0a7. [PR #16](https://github.com/Pavi21P/uhd-student-extension/pull/16) is open against test/09b-extension-smoke. No merge.
 - Remaining: 14A review UI/activation, 01B portal evidence, 04B/09B portal harness/loading, permitted ratings source and both 09A human sign-offs. The timing module does not arm jobs or complete G1/G3/G4.
 - Next independent candidate: **14B pure job-state transitions**, using synthetic inputs without a portal executor; retain its observed integration and persistence requirements. No merge or release.
 
