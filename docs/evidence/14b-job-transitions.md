@@ -16,7 +16,7 @@ This is a pure decision helper, not durable duplicate prevention. Two callers ca
 - Explicit regression demonstrates that pure revision checking is not a shared lock.
 - Local integration: lint, 436 unit tests across 17 files, TypeScript and production/MV3 build passed.
 - Isolated Chromium 156.0.8078.4 timetable journey passed all eight existing steps (10.9 seconds total). This guards the existing extension; it does not exercise the new unconnected lifecycle helper in a browser.
-- Hosted Ubuntu/Windows CI: pending publication.
+- Hosted Ubuntu 24.04 and Windows 2025 checks passed, including all 436 unit tests, build and isolated Chromium E2E: [run 40467794681](https://github.com/Pavi21P/uhd-student-extension/actions/runs/40467794681), implementation commit 85fa07d985e687e340757fe06e4aedaed8452635. [PR #17](https://github.com/Pavi21P/uhd-student-extension/pull/17) targets feat/14a-timing-validation. Subsequent handoff-only edits preserve the tested implementation.
 - No connected personal browser, real student data, live enrollment, ratings retrieval or human acceptance sign-off was used.
 
 ## Handoff

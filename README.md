@@ -53,6 +53,8 @@ These checks cover lint, unit tests, TypeScript, the MV3 build and the isolated 
 
 Task 14A now has a standalone scheduled-time validator covering future times, time zones and daylight-saving transitions. It is not wired to the UI or runtime commands; enrollment remains unavailable. See [timing-validation evidence](docs/evidence/14a-timing-validation.md).
 
+Task 14B now has standalone job lifecycle decisions for cancellation, expiry, recovery and uncertain submission. Durable ownership and persistence remain unimplemented; this does not enable enrollment. See [lifecycle evidence](docs/evidence/14b-job-transitions.md).
+
 ## Start here
 
 - [Detailed build plan and daily tasks](docs/BUILD_PLAN.md)
@@ -103,5 +105,3 @@ This is an independent student project, not an official UHD or RateMyProfessors 
 The plan contains 20 paired workdays, with one small, reviewable task per teammate per day. These are estimates and task slots, not a deadline or a reason to create empty commits. Use real author identities and commit actual work at the time it happens.
 
 The contributors have not selected a license for this project's own code. Dependency license notices are retained in `public/licenses/` and included in the build.
-
-Task 14B now has standalone job lifecycle decisions for cancellation, expiry, recovery and uncertain submission. Durable ownership and persistence remain unimplemented; this does not enable enrollment. See [lifecycle evidence](docs/evidence/14b-job-transitions.md).
