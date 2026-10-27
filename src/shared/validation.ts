@@ -55,10 +55,10 @@ export function timezone(value: unknown, field: string): string {
   catch { return invalid(field); }
   return result;
 }
-function list(value: unknown, max: number, field: string): unknown[] {
+export function list(value: unknown, max: number, field: string): unknown[] {
   if (!Array.isArray(value) || Object.getPrototypeOf(value) !== Array.prototype || value.length > max) return invalid(field);
   // Sparse arrays and custom properties are not JSON lists.
-  if (Object.keys(value).length !== value.length) return invalid(field);
+  if (Reflect.ownKeys(value).length !== value.length + 1) return invalid(field);
   for (let i = 0; i < value.length; i++) {
     const descriptor = Object.getOwnPropertyDescriptor(value, String(i));
     if (!descriptor || !('value' in descriptor) || !descriptor.enumerable) return invalid(field);

@@ -13,7 +13,7 @@ npm ci
 npm run check
 ```
 
-`check` runs lint, 436 unit tests, strict TypeScript checking, and the production build. The build verifies the MV3 entrypoints and bundled assets. Output goes to `dist/`, which is intentionally ignored by Git.
+`check` runs lint, 532 unit tests, strict TypeScript checking, and the production build. The build verifies the MV3 entrypoints and bundled assets. Output goes to `dist/`, which is intentionally ignored by Git.
 
 1. Open `chrome://extensions` or `edge://extensions`.
 2. Enable **Developer mode**, choose **Load unpacked**, and select this repository's `dist` folder.
@@ -53,7 +53,7 @@ These checks cover lint, unit tests, TypeScript, the MV3 build and the isolated 
 
 Task 14A now has a standalone scheduled-time validator covering future times, time zones and daylight-saving transitions. It is not wired to the UI or runtime commands; enrollment remains unavailable. See [timing-validation evidence](docs/evidence/14a-timing-validation.md).
 
-Task 14B now has standalone job lifecycle decisions for cancellation, expiry, recovery and uncertain submission. Durable ownership and persistence remain unimplemented; this does not enable enrollment. See [lifecycle evidence](docs/evidence/14b-job-transitions.md).
+Task 14B now has standalone job lifecycle decisions for cancellation, expiry, recovery and uncertain submission. Durable ownership and persistence remain unimplemented; this does not enable enrollment. See [lifecycle evidence](docs/evidence/14b-job-transitions.md). Saved review/job validation now checks historical timing, selections and result consistency; see [stored-record evidence](docs/evidence/14b-stored-records.md).
 
 ## Start here
 

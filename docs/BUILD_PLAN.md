@@ -217,6 +217,8 @@ Each cell is a task/issue with its own acceptance check. Estimate 1–3 focused 
 
 14B execution split (2026-10-27): implement a pure, revision-checked lifecycle decision function for preflight/execution entry, cancellation, expiry, recovery and uncertain dispatch. It has no persistence or executor side effects. Durable ownership, activation deduplication, result aggregation and observed portal integration remain required before full 14B completion; the 01B dependency is retained.
 
+14B stored-record continuation (2026-10-27): validate internal saved reviews/jobs, historical activation timing, selection consistency and claimed result states. Parsing does not authorize, recover, persist or execute a job. Durable coordination and observed portal integration remain separate requirements.
+
 ### Phase 5 — release (days 19–20)
 
 | Day | A | B | Merge checkpoint |
