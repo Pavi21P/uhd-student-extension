@@ -26,7 +26,7 @@ All input is invented. The planner navigation is intercepted, not a live availab
 
 - Local Windows: lint, 297 unit tests across 15 files, TypeScript, Vite and MV3 checks passed. Final lint passed without warnings after using Playwright's explicit fixture parameter.
 - Local E2E: Chromium 156.0.8078.4, Playwright 1.64.1; 1 journey / 8 steps passed in 15.0 seconds total, zero skipped/flaky/unexpected tests and no runner errors. Includes a real browser-process restart; it does not establish a service-worker suspension test.
-- Hosted Ubuntu/Windows: pending the first PR run. Local success does not establish hosted success.
+- Hosted Ubuntu 24.04 and Windows 2025: **all checks passed**, including clean installs, lint, 297 unit tests, TypeScript/MV3 build, Chromium installation, the eight-step E2E journey and unchanged dependency files. [Run 40444104134](https://github.com/Pavi21P/uhd-student-extension/actions/runs/40444104134) tested implementation commit `f0e673c825638ed7be5cd63025ab7a750f6449ff` through the pull-request event. [PR #15](https://github.com/Pavi21P/uhd-student-extension/pull/15) targets `ci/04b-checks`; subsequent handoff-only edits preserve the tested implementation. No merge.
 - Documentation and staged diff reviewed; private captures and generated browser/report files excluded.
 
 ## Sources and handoff
