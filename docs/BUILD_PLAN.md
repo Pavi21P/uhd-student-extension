@@ -192,6 +192,8 @@ Each cell is a task/issue with its own acceptance check. Estimate 1–3 focused 
 | 8 | **08A**: Overlap layout, labels, contrast and responsive dashboard. Depends 07A/05B. Done: colliding cards remain readable; long/blank text works. | **08B**: Regression cases for storage/import/recurrence. Depends 07B. Done: tests address data-loss boundaries and real failures, not CSS snapshots. | Timetable acceptance cases pass. |
 | 9 | **09A**: Browser QA and fixes for timetable/planner. Depends 08A/08B. Done: two people independently complete create/place/edit/export/reload tasks. | **09B**: Extension E2E setup and regression smoke flows. Depends 04B/08B. Done: `test:e2e` covers dashboard persistence and synthetic portal loading. | Tag an honest timetable/planner alpha after checks. |
 
+09B execution split (2026-10-26): continuing the user-authorized work without browser access, implement the extension-only E2E command and regression journey using 04B CI and 08B. Synthetic portal loading retains the unfinished 04B/01B dependency. This portion does not replace 09A human acceptance or complete all of 09B.
+
 ### Phase 3 — professor integration (days 10–13)
 
 | Day | A | B | Merge checkpoint |

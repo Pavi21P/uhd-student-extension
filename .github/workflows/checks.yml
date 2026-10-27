@@ -46,5 +46,9 @@ jobs:
         run: npm ci
       - name: Lint, test, typecheck and verify extension build
         run: npm run check
+      - name: Install isolated Chromium for extension tests
+        run: npx playwright install --with-deps chromium
+      - name: Run extension-only E2E
+        run: npm run test:e2e
       - name: Verify dependency files were not changed
         run: git diff --exit-code -- package.json package-lock.json
