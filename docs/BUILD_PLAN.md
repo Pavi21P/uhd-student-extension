@@ -219,6 +219,8 @@ Each cell is a task/issue with its own acceptance check. Estimate 1–3 focused 
 
 14B stored-record continuation (2026-10-27): validate internal saved reviews/jobs, historical activation timing, selection consistency and claimed result states. Parsing does not authorize, recover, persist or execute a job. Durable coordination and observed portal integration remain separate requirements.
 
+14B repository continuation (2026-10-27): implement an internal single-writer job repository with versioned storage, revision-checked transitions and explicit restart/error recovery. Use synthetic storage; retain activation deduplication, authenticated executor ownership and portal integration as separate requirements.
+
 ### Phase 5 — release (days 19–20)
 
 | Day | A | B | Merge checkpoint |

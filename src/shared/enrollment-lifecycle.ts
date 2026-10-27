@@ -40,7 +40,7 @@ export function parseEnrollmentLifecycle(value: unknown): EnrollmentLifecycle {
   return job;
 }
 
-function parseEvent(value: unknown): LifecycleEvent {
+export function parseEnrollmentLifecycleEvent(value: unknown): LifecycleEvent {
   const row = record(value, ['type', 'submittedAt'], 'event');
   if (row.type === 'submission-observed') {
     return { type: row.type, submittedAt: epoch(row.submittedAt, 'event.submittedAt') };
@@ -59,7 +59,7 @@ export function transitionEnrollmentLifecycle(
   value: unknown, eventValue: unknown, expectedRevision: number, nowEpochMs: number,
 ): LifecycleDecision {
   const job = parseEnrollmentLifecycle(value);
-  const event = parseEvent(eventValue);
+  const event = parseEnrollmentLifecycleEvent(eventValue);
   const now = epoch(nowEpochMs, 'nowEpochMs');
   if (revision(expectedRevision, 'expectedRevision') !== job.revision) {
     throw new ContractFault('REVISION_CONFLICT', 'The job changed. Read its current state before deciding again.');
