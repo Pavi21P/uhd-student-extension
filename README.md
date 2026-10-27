@@ -13,7 +13,7 @@ npm ci
 npm run check
 ```
 
-`check` runs lint, 373 unit tests, strict TypeScript checking, and the production build. The build verifies the MV3 entrypoints and bundled assets. Output goes to `dist/`, which is intentionally ignored by Git.
+`check` runs lint, 436 unit tests, strict TypeScript checking, and the production build. The build verifies the MV3 entrypoints and bundled assets. Output goes to `dist/`, which is intentionally ignored by Git.
 
 1. Open `chrome://extensions` or `edge://extensions`.
 2. Enable **Developer mode**, choose **Load unpacked**, and select this repository's `dist` folder.
@@ -103,3 +103,5 @@ This is an independent student project, not an official UHD or RateMyProfessors 
 The plan contains 20 paired workdays, with one small, reviewable task per teammate per day. These are estimates and task slots, not a deadline or a reason to create empty commits. Use real author identities and commit actual work at the time it happens.
 
 The contributors have not selected a license for this project's own code. Dependency license notices are retained in `public/licenses/` and included in the build.
+
+Task 14B now has standalone job lifecycle decisions for cancellation, expiry, recovery and uncertain submission. Durable ownership and persistence remain unimplemented; this does not enable enrollment. See [lifecycle evidence](docs/evidence/14b-job-transitions.md).
