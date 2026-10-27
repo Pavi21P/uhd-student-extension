@@ -16,7 +16,7 @@ The lifecycle event parser is exported for reuse without behavioral changes. The
 - Coverage: explicit startup, detached input/output, competing creates/transitions, queued reads behind persistence, duplicate callbacks, revision conflicts, submit/cancel boundary, restart before/after possible dispatch, expiry/backwards clocks, all terminal states, invalid/future records, full history, revision exhaustion and stale insertion.
 - Injected failures include rejected writes before persistence and after persistence, lost recovery acknowledgments, queued calls following failure and read failures. Assertions verify no automatic replay, no raw error leakage, preserved records and explicit recovery.
 - Full local lint, 568 tests across 19 files, TypeScript and production/MV3 build passed.
-- Isolated Chromium 156.0.8078.4 extension journey passed all eight existing steps (14.7 seconds total). Hosted Windows/Linux CI: pending publication.
+- Isolated Chromium 156.0.8078.4 extension journey passed all eight existing steps (14.7 seconds total). Hosted Ubuntu 24.04 and Windows 2025 passed all checks, including 568 unit tests, build and isolated Chromium E2E: [run 40557835604](https://github.com/Pavi21P/uhd-student-extension/actions/runs/40557835604), implementation commit b17691af3a83d1d791508b0a7b185dd82a11f7cd. [PR #19](https://github.com/Pavi21P/uhd-student-extension/pull/19) targets feat/14b-stored-job-validation. Subsequent documentation-only edits preserve the tested implementation.
 - Persistence/restart tests use synthetic in-memory storage, not a real worker crash or physical disk durability test. The existing timetable E2E does not exercise this unconnected repository.
 
 ## Handoff
