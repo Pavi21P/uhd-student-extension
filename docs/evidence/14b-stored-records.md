@@ -13,9 +13,9 @@ The lifecycle parser is exported for reuse without changing its decision behavio
 ## Validation
 
 - 96 new synthetic cases cover old records without a live clock read; review activation boundaries; target beyond review expiry; term/selection consistency; exact deselections; malformed origins/metadata; bounds, accessors, hidden/symbol properties and sparse lists; detached nested results; impossible result claims and retained unknown dispatch.
-- Initial targeted review/job, lifecycle and existing validation suites: 196 cases passed. Reviewed result-table arguments before the full run so malformed outcomes reach the intended array validation.
+- Targeted review/job, lifecycle and existing validation suites: 196 cases passed. The full integration run includes all finalized cases.
 - Full local checks: lint, 532 tests across 18 files, TypeScript and production/MV3 build passed.
-- Isolated Chromium 156.0.8078.4 extension journey passed all eight existing steps (32.3 seconds total). This exercises existing timetable behavior, including the shared list helper, not browser integration of the new saved-job parser. Hosted Windows/Linux CI: pending publication.
+- Isolated Chromium 156.0.8078.4 extension journey passed all eight existing steps (32.3 seconds total). This exercises existing timetable behavior, including the shared list helper, not browser integration of the new saved-job parser. Hosted Ubuntu 24.04 and Windows 2025 passed all checks, including 532 unit tests, build and isolated Chromium E2E: [run 40554851209](https://github.com/Pavi21P/uhd-student-extension/actions/runs/40554851209), implementation commit dd9f87b1dbaa887448f255572cd8238a6a2f6e9e. [PR #18](https://github.com/Pavi21P/uhd-student-extension/pull/18) targets feat/14b-job-transitions. Subsequent documentation-only handoff edits preserve the tested implementation.
 - No personal browser profile, live myUHD action, real student record, RMP request or human QA sign-off was used.
 
 ## Limits and handoff
