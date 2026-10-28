@@ -1,9 +1,10 @@
 import type { EnrollmentJob } from '../shared/domain';
 import { parseActivationPayload, payloadForJob, sameActivationPayload, type ActivationPayload } from '../shared/enrollment-activation';
-import { parseEnrollmentLifecycleEvent, transitionEnrollmentLifecycle, type LifecycleDecision } from '../shared/enrollment-lifecycle';
+import { parseEnrollmentLifecycleEvent, transitionEnrollmentLifecycle, type LifecycleDecision, type LifecycleEvent } from '../shared/enrollment-lifecycle';
 import { parseStoredEnrollmentJob } from '../shared/enrollment-records';
 import { ContractFault, id, integer, invalid, list, record, revision } from '../shared/validation';
 import type { KeyValueStorage } from './repository';
+import { assertExecutorOwnership, isExecutorEvent, parseExecutorContext, parseExecutorPolicy, type ExecutorContext, type ExecutorPolicy } from '../shared/enrollment-ownership';
 
 export const enrollmentJobsKey = 'uhd.enrollment.jobs';
 const maxJobs = 100;
@@ -54,7 +55,10 @@ function projection(job: EnrollmentJob) {
 export class EnrollmentJobRepository {
   private tail: Promise<unknown> = Promise.resolve();
   private ready = false;
-  constructor(private readonly storage: KeyValueStorage, private readonly clock: () => number) {}
+  private readonly executorPolicy: ExecutorPolicy | undefined;
+  constructor(private readonly storage: KeyValueStorage, private readonly clock: () => number, executorPolicy?: unknown) {
+    this.executorPolicy = executorPolicy === undefined ? undefined : parseExecutorPolicy(executorPolicy);
+  }
 
   private serial<T>(operation: () => Promise<T>): Promise<T> {
     const next = this.tail.then(operation);
@@ -156,17 +160,38 @@ export class EnrollmentJobRepository {
     });
   }
 
+  /** Trusted background decisions only. Executor acknowledgments use the guarded entrypoint. */
   transition(jobId: string, expectedRevision: number, eventInput: unknown): Promise<StoredJobDecision> {
     const validId = id(jobId);
     revision(expectedRevision, 'expectedRevision');
-    const event = parseEnrollmentLifecycleEvent(eventInput); // Do not retain caller-owned event objects.
+    const event = parseEnrollmentLifecycleEvent(eventInput);
+    if (isExecutorEvent(event)) throw new ContractFault('UNAUTHORIZED_SENDER', 'Executor reports require a verified document and outstanding request.');
+    return this.applyTransition(validId, expectedRevision, event);
+  }
+
+  /** Internal bridge entrypoint; not connected to runtime messages or website postMessage. */
+  transitionFromExecutor(jobId: string, expectedRevision: number, eventInput: unknown, contextInput: unknown): Promise<StoredJobDecision> {
+    const validId = id(jobId);
+    revision(expectedRevision, 'expectedRevision');
+    const event = parseEnrollmentLifecycleEvent(eventInput);
+    if (!isExecutorEvent(event)) invalid('executor.event');
+    const context = parseExecutorContext(contextInput);
+    return this.applyTransition(validId, expectedRevision, event, context);
+  }
+
+  private applyTransition(validId: string, expectedRevision: number, event: LifecycleEvent, context?: ExecutorContext): Promise<StoredJobDecision> {
     return this.serial(async () => {
       this.requireReady();
       const { store } = await this.load();
       const index = store.jobs.findIndex(job => job.id === validId);
       const current = store.jobs[index];
       if (!current) throw new ContractFault('NOT_FOUND', 'The enrollment job was not found.');
-      const decision = transitionEnrollmentLifecycle(projection(current), event, expectedRevision, this.now());
+      const now = this.now();
+      if (context) {
+        if (!isExecutorEvent(event)) invalid('executor.event');
+        assertExecutorOwnership(current, expectedRevision, event, context, this.executorPolicy, now);
+      }
+      const decision = transitionEnrollmentLifecycle(projection(current), event, expectedRevision, now);
       const job = parseStoredEnrollmentJob({ ...current, ...decision.job });
       if (decision.changed) {
         store.jobs[index] = job;
