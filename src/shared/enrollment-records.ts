@@ -20,7 +20,7 @@ function boolean(value: unknown, field: string): boolean {
   if (typeof value !== 'boolean') return invalid(field);
   return value;
 }
-function target(value: unknown): PortalTarget {
+export function parsePortalTarget(value: unknown): PortalTarget {
   const row = record(value, ['tabId', 'frameId', 'documentId', 'origin', 'adapterVersion'], 'review.target');
   const origin = text(row.origin, 300, 'review.target.origin');
   let url: URL;
@@ -67,7 +67,7 @@ export function parseStoredEnrollmentReview(value: unknown): EnrollmentReview {
   const expiresAt = epoch(row.expiresAt, 'review.expiresAt');
   if (expiresAt <= observedAt) invalid('review.expiresAt');
   return {
-    id: id(row.id, 'review.id'), target: target(row.target),
+    id: id(row.id, 'review.id'), target: parsePortalTarget(row.target),
     termId: id(row.termId, 'review.termId'), termLabel: text(row.termLabel, 120, 'review.termLabel'),
     sections, selectedSectionIds, deselectSectionIds,
     // Shape only; digest creation/comparison belongs to the trusted coordinator.

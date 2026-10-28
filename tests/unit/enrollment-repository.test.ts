@@ -3,6 +3,7 @@ import type { EnrollmentJob, JobState } from '../../src/shared/domain';
 import { EnrollmentJobRepository, enrollmentJobsKey } from '../../src/storage/enrollment-repository';
 import type { KeyValueStorage } from '../../src/storage/repository';
 import { sampleReview } from '../fixtures/contracts.examples';
+import { executorContext, executorPolicy } from '../fixtures/enrollment-executor';
 import { payloadForJob } from '../../src/shared/enrollment-activation';
 
 const time = Date.UTC(2025, 0, 1);
@@ -40,7 +41,7 @@ const code = (value: string) => expect.objectContaining({ detail: expect.objectC
 async function setup() {
   const storage = new Storage();
   let now = time;
-  const repo = new EnrollmentJobRepository(storage, () => now);
+  const repo = new EnrollmentJobRepository(storage, () => now, executorPolicy());
   await repo.recover();
   return { storage, repo, clock: (value: number) => { now = value; } };
 }
@@ -129,7 +130,7 @@ describe('internal enrollment job repository', () => {
     expect(storage.values.get(enrollmentJobsKey)).toMatchObject({ jobs: [{ state: 'executing', revision: 2 }] });
     expect(await repo.transition(job().id, 2, { type: 'cancel' })).toMatchObject({ changed: false, cancellation: 'executor-confirmation-required' });
     clock(time + 100);
-    await repo.transition(job().id, 2, { type: 'submission-observed', submittedAt: time + 100 });
+    await repo.transitionFromExecutor(job().id, 2, { type: 'submission-observed', submittedAt: time + 100 }, executorContext(job(), 2));
     await expect(repo.transition(job().id, 3, { type: 'cancel' })).rejects.toEqual(code('TOO_LATE_TO_CANCEL'));
     expect(storage.writes).toBe(4);
   });

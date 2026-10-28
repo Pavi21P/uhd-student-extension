@@ -30,13 +30,14 @@ Updated: 2026-10-28 (America/Chicago)
 - **14B stored-record validation verified and published**: strict saved review/job parser and 96 synthetic cases; [evidence](evidence/14b-stored-records.md). Local and hosted Windows/Linux checks passed; [PR #18](https://github.com/Pavi21P/uhd-student-extension/pull/18) is open. Persistence, ownership and portal integration remain incomplete.
 - **14B internal job repository verified and published**: versioned persistence, serialized revisions and explicit recovery with 36 synthetic cases; [evidence](evidence/14b-job-repository.md). Local and hosted Windows/Linux checks passed; [PR #19](https://github.com/Pavi21P/uhd-student-extension/pull/19) is open. No runtime integration or enrollment execution.
 - **14B activation deduplication verified and published**: atomic request/job records, current-state replay and explicit v1 migration with 42 new cases; [evidence](evidence/14b-activation-deduplication.md). Local and hosted Windows/Linux checks passed; [PR #20](https://github.com/Pavi21P/uhd-student-extension/pull/20) is open. No public activation or dispatch.
+- **14B executor-report ownership checks verified and published**: guarded acknowledgment entrypoint, explicit adapter policy and 59 new synthetic cases; [evidence](evidence/14b-executor-ownership.md). Local and hosted Windows/Linux 669-test/build/E2E checks passed; [PR #21](https://github.com/Pavi21P/uhd-student-extension/pull/21) is open. No live enrollment enabled.
 - Public repo: https://github.com/Pavi21P/uhd-student-extension. Foundation tasks 03A (`cffda38`) and 03B (`b4ea551`) are included in the 2026-10-22 main-branch publication, retaining their original author dates and history. Published `feat/05a-course-editor` at `5635520` includes 04A (`871beb4`) and 05A (`823f33f`). 05B (`2517dc1`) is published on `feat/05b-meeting-validation`, based on that branch. [Pull request #1](https://github.com/Pavi21P/uhd-student-extension/pull/1) includes 04A/05A/05B and is open for review. `main` remains at `a29eea5`; no merge is included.
 
 ## Active work
 
 | Owner | Task | State | Next action |
 | --- | --- | --- | --- |
-| A / Codex | 14B activation deduplication portion | Verified and published | PR #20 open; local and hosted Windows/Linux checks passed. Public activation and ownership remain separate. |
+| A / Codex | 14B executor-ownership checks | Verified and published | PR #21 open; local and hosted Windows/Linux checks passed. Request registry and production bridge remain separate. |
 | B / teammate | 01B | Reassigned to Codex by user | No live inspection findings supplied; prior work preserved. |
 
 ## Decisions to retain
@@ -58,10 +59,10 @@ Updated: 2026-10-28 (America/Chicago)
 
 ## Latest handoff
 
-- Task / owner: **14B activation deduplication portion / Codex**, continuing without connected browser access. The usage-limit interruption blocked documentation/publication only; access recovered on 2026-10-28.
-- Changed: normalized payload parser, request-backed repository creation, v2 associations/legacy migration, timing consistency split, 42 new cases and [evidence](evidence/14b-activation-deduplication.md). No public command wiring.
-- Passed: local lint, 610 tests across 20 files, TypeScript, production/MV3 build and isolated Chromium extension E2E (9.5 seconds). Hosted Ubuntu 24.04 and Windows 2025 passed all checks, including 610 unit tests, build and isolated Chromium E2E: [run 40766468213](https://github.com/Pavi21P/uhd-student-extension/actions/runs/40766468213), implementation commit 5ca43e1b01e302f178928828b2b6e86f9b30f483. [PR #20](https://github.com/Pavi21P/uhd-student-extension/pull/20) targets feat/14b-job-repository. Subsequent documentation-only edits preserve the tested implementation.
-- Remaining: authenticated executor ownership, production storage/recovery/RPC wiring, result extraction/reconciliation, review UI, portal evidence/harness, live ratings and two human QA passes. Synthetic storage tests do not prove real worker crash behavior.
-- Next independent candidate: **14B internal executor-ownership checks**, using synthetic browser identities while retaining the observed portal/adapter requirement. Keep activation/dispatch disabled. No merge or release.
+- Task / owner: **14B executor-report ownership portion / Codex**, continuing without connected browser access.
+- Changed: guarded executor acknowledgments, exact identity/adapter/request checks inside the repository queue, detached trusted configuration/context, 59 new cases and [evidence](evidence/14b-executor-ownership.md). Storage remains v2; no public command wiring.
+- Passed: local lint, 669 tests across 21 files, TypeScript, production/MV3 build and isolated Chromium extension E2E (10.9 seconds). Hosted Ubuntu 24.04 and Windows 2025 passed all checks, including 669 unit tests, build and isolated Chromium E2E: [run 40768976900](https://github.com/Pavi21P/uhd-student-extension/actions/runs/40768976900), implementation commit 1e3886a302a3b318d9831994d186a640c4f90809. [PR #21](https://github.com/Pavi21P/uhd-student-extension/pull/21) targets feat/14b-activation-deduplication. Subsequent documentation-only edits preserve the tested implementation.
+- Remaining: trusted browser metadata and outstanding-request registry, single-use reply consumption, full reply/event validation, durable execution intent, production storage/recovery/RPC wiring, result extraction, review UI, portal evidence/harness, live ratings and two human QA passes. Synthetic projections do not prove live authentication or worker crash behavior.
+- Next independent candidate: **14B internal outstanding executor request registry and single-use reply handling**, using synthetic metadata while retaining the observed portal/adapter requirement. Keep activation/dispatch disabled. No merge or release.
 
 Read linked evidence for details; do not replay the full history.
