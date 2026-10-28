@@ -31,14 +31,9 @@ function wallTimeAt(targetEpochMs: number, zone: string): string {
   return `${part('year').padStart(4, '0')}-${part('month')}-${part('day')}T${part('hour')}:${part('minute')}:${part('second')}`;
 }
 
-/**
- * Validate a proposed activation time against a caller-supplied current clock reading.
- * This is not a stored-job parser, a local-time resolver, or authority to execute.
- * A repeated wall time must carry the explicit offset for the intended occurrence.
- */
-export function parseEnrollmentTiming(value: unknown, nowEpochMs: number): EnrollmentTiming {
+/** Validate timing structure/zone consistency without rejecting historical replay payloads. */
+export function parseEnrollmentTimingValue(value: unknown): EnrollmentTiming {
   const row = record(value, timingKeys, 'timing');
-  integer(nowEpochMs, -maxDateEpochMs, maxDateEpochMs, 'nowEpochMs');
   if (row.mode === 'now') {
     record(row, ['mode'], 'timing');
     return { mode: 'now' };
@@ -51,7 +46,6 @@ export function parseEnrollmentTiming(value: unknown, nowEpochMs: number): Enrol
   const utcOffsetMinutes = integer(row.utcOffsetMinutes, -1439, 1439, 'timing.utcOffsetMinutes');
   const localEpochMs = localAsUtc(localDateTime);
 
-  if (targetEpochMs <= nowEpochMs) invalidTime('targetEpochMs', 'Choose a scheduled time in the future.');
   if (targetEpochMs % 1000 !== 0 || localEpochMs - utcOffsetMinutes * 60_000 !== targetEpochMs) {
     invalidTime('targetEpochMs', 'The timestamp, local time and UTC offset must describe the same second.');
   }
@@ -59,4 +53,14 @@ export function parseEnrollmentTiming(value: unknown, nowEpochMs: number): Enrol
     invalidTime('timezone', 'This local time and offset do not match the selected time zone. Review daylight-saving changes.');
   }
   return { mode: 'scheduled', targetEpochMs, timezone: zone, localDateTime, utcOffsetMinutes };
+}
+
+/** A new activation additionally requires a future scheduled target against a trusted clock. */
+export function parseEnrollmentTiming(value: unknown, nowEpochMs: number): EnrollmentTiming {
+  integer(nowEpochMs, -maxDateEpochMs, maxDateEpochMs, 'nowEpochMs');
+  const timing = parseEnrollmentTimingValue(value);
+  if (timing.mode === 'scheduled' && timing.targetEpochMs <= nowEpochMs) {
+    invalidTime('targetEpochMs', 'Choose a scheduled time in the future.');
+  }
+  return timing;
 }

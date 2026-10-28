@@ -221,6 +221,8 @@ Each cell is a task/issue with its own acceptance check. Estimate 1–3 focused 
 
 14B repository continuation (2026-10-27): implement an internal single-writer job repository with versioned storage, revision-checked transitions and explicit restart/error recovery. Use synthetic storage; retain activation deduplication, authenticated executor ownership and portal integration as separate requirements.
 
+14B deduplication continuation (2026-10-28): atomically retain normalized activation requests with jobs, reject conflicting replays, and migrate legacy internal storage during explicit recovery. Deduplication does not authenticate an executor or enable the public activation/submit path.
+
 ### Phase 5 — release (days 19–20)
 
 | Day | A | B | Merge checkpoint |

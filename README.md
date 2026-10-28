@@ -13,7 +13,7 @@ npm ci
 npm run check
 ```
 
-`check` runs lint, 568 unit tests, strict TypeScript checking, and the production build. The build verifies the MV3 entrypoints and bundled assets. Output goes to `dist/`, which is intentionally ignored by Git.
+`check` runs lint, 610 unit tests, strict TypeScript checking, and the production build. The build verifies the MV3 entrypoints and bundled assets. Output goes to `dist/`, which is intentionally ignored by Git.
 
 1. Open `chrome://extensions` or `edge://extensions`.
 2. Enable **Developer mode**, choose **Load unpacked**, and select this repository's `dist` folder.
@@ -53,7 +53,7 @@ These checks cover lint, unit tests, TypeScript, the MV3 build and the isolated 
 
 Task 14A now has a standalone scheduled-time validator covering future times, time zones and daylight-saving transitions. It is not wired to the UI or runtime commands; enrollment remains unavailable. See [timing-validation evidence](docs/evidence/14a-timing-validation.md).
 
-Task 14B now has standalone job lifecycle decisions for cancellation, expiry, recovery and uncertain submission. These helpers do not enable enrollment. Internal job storage and explicit restart recovery are implemented separately; production wiring and executor ownership remain unfinished. See [lifecycle evidence](docs/evidence/14b-job-transitions.md). Saved review/job validation now checks historical timing, selections and result consistency; see [stored-record evidence](docs/evidence/14b-stored-records.md) and [repository evidence](docs/evidence/14b-job-repository.md).
+Task 14B now has standalone job lifecycle decisions for cancellation, expiry, recovery and uncertain submission. These helpers do not enable enrollment. Internal job storage and explicit restart recovery are implemented separately; production wiring and executor ownership remain unfinished. See [lifecycle evidence](docs/evidence/14b-job-transitions.md). Saved review/job validation now checks historical timing, selections and result consistency; see [stored-record evidence](docs/evidence/14b-stored-records.md) and [repository evidence](docs/evidence/14b-job-repository.md). Durable request deduplication now retains replay protection through recovery; see [deduplication evidence](docs/evidence/14b-activation-deduplication.md).
 
 ## Start here
 
