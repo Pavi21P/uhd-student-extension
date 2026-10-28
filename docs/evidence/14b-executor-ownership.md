@@ -24,8 +24,8 @@ No production browser metadata projection, Chrome storage/recovery wiring, porta
 - Targeted ownership/repository/deduplication run: 137 cases passed.
 - Full local checks: lint, 669 tests across 21 files, TypeScript and production/MV3 build passed.
 - Coverage includes mismatched identities/targets/tokens/requests, unsupported adapters, inactive documents, deadline boundaries, detached inputs/configuration, queued rechecks, callback/cancellation races, lost write acknowledgments and strict malformed-input rejection.
-- Isolated Chromium 156.0.8078.4 extension E2E passed (10.9 seconds total). This timetable regression does not exercise the unconnected enrollment modules or replace either human acceptance pass.
-- Hosted Windows/Linux CI and publication: pending.
+- Isolated Chromium 156.0.8078.4 extension E2E passed (10.9 seconds total), with one expected result and zero failures, skips or flaky results. This timetable regression does not exercise the unconnected enrollment modules or replace either human acceptance pass.
+- Hosted Ubuntu 24.04 and Windows 2025 passed all checks, including 669 unit tests, build and isolated Chromium E2E: [run 40768976900](https://github.com/Pavi21P/uhd-student-extension/actions/runs/40768976900), implementation commit 1e3886a302a3b318d9831994d186a640c4f90809. [PR #21](https://github.com/Pavi21P/uhd-student-extension/pull/21) targets feat/14b-activation-deduplication. Subsequent documentation-only edits preserve the tested implementation.
 
 ## Resume
 

@@ -223,6 +223,8 @@ Each cell is a task/issue with its own acceptance check. Estimate 1–3 focused 
 
 14B deduplication continuation (2026-10-28): atomically retain normalized activation requests with jobs, reject conflicting replays, and migrate legacy internal storage during explicit recovery. Deduplication does not authenticate an executor or enable the public activation/submit path.
 
+14B ownership continuation (2026-10-28): validate executor-report identity, configured adapter and pending-request correlation at the internal repository boundary using synthetic metadata. Keep trusted browser/request-registry projections, full reply validation, durable execution ownership and live portal integration as explicit remaining requirements; no public command or dispatch is enabled.
+
 ### Phase 5 — release (days 19–20)
 
 | Day | A | B | Merge checkpoint |
@@ -265,5 +267,3 @@ Run targeted checks during tasks and the agreed integration suite before merge/r
 6. End the session with the next task ID. Do not re-plan the entire extension every day.
 
 Use the reusable prompt in CONTRIBUTING.md. The checkpoint is the source of current progress; this plan is the source of scope and acceptance criteria.
-
-14B ownership continuation (2026-10-28): validate executor-report identity, configured adapter and pending-request correlation at the internal repository boundary using synthetic metadata. Keep trusted browser/request-registry projections, full reply validation, durable execution ownership and live portal integration as explicit remaining requirements; no public command or dispatch is enabled.
