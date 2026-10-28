@@ -3,6 +3,7 @@ import type { EnrollmentJob, JobState } from '../../src/shared/domain';
 import { EnrollmentJobRepository, enrollmentJobsKey } from '../../src/storage/enrollment-repository';
 import type { KeyValueStorage } from '../../src/storage/repository';
 import { sampleReview } from '../fixtures/contracts.examples';
+import { payloadForJob } from '../../src/shared/enrollment-activation';
 
 const time = Date.UTC(2025, 0, 1);
 function job(id = 'synthetic-job'): EnrollmentJob {
@@ -29,7 +30,11 @@ class Storage implements KeyValueStorage {
     this.values.set(key, structuredClone(value));
     if (this.failWrite === 'after') throw new Error('Private lost acknowledgment details');
   }
-  seed(...jobs: EnrollmentJob[]) { this.values.set(enrollmentJobsKey, { schemaVersion: 1, jobs: structuredClone(jobs) }); }
+  seed(...jobs: EnrollmentJob[]) { this.values.set(enrollmentJobsKey, { schemaVersion: 2, activations: [], legacyJobIds: jobs.map(job => job.id), jobs: structuredClone(jobs) }); }
+}
+function create(repo: EnrollmentJobRepository, input: unknown) {
+  const value = input as EnrollmentJob; // Test fixture helper; production receives unknown at its boundary.
+  return repo.createForActivation('request-' + value.id, payloadForJob(value), input).then(result => result.job);
 }
 const code = (value: string) => expect.objectContaining({ detail: expect.objectContaining({ code: value }) });
 async function setup() {
@@ -45,7 +50,7 @@ describe('internal enrollment job repository', () => {
     const storage = new Storage();
     const repo = new EnrollmentJobRepository(storage, () => time);
     await expect(repo.readAll()).rejects.toEqual(code('STORAGE_ERROR'));
-    await expect(repo.create(job())).rejects.toEqual(code('STORAGE_ERROR'));
+    await expect(create(repo, job())).rejects.toEqual(code('STORAGE_ERROR'));
     await expect(repo.transition('missing', 0, { type: 'cancel' })).rejects.toEqual(code('STORAGE_ERROR'));
     expect(await repo.recover()).toEqual([]);
     expect(await repo.readAll()).toEqual([]);
@@ -55,7 +60,7 @@ describe('internal enrollment job repository', () => {
     const { storage, repo } = await setup();
     storage.values.set('uhd.schedule.synthetic', { untouched: true });
     const input = job();
-    const pending = repo.create(input);
+    const pending = create(repo, input);
     input.review.sections[0]!.title = 'changed after call';
     const saved = await pending;
     expect(saved).toEqual(job());
@@ -63,23 +68,23 @@ describe('internal enrollment job repository', () => {
     saved.selectedSectionIds.push('unrelated');
     expect(await repo.readAll()).toEqual([job()]);
     expect(storage.values.get('uhd.schedule.synthetic')).toEqual({ untouched: true });
-    expect(storage.values.get(enrollmentJobsKey)).toEqual({ schemaVersion: 1, jobs: [job()] });
+    expect(storage.values.get(enrollmentJobsKey)).toEqual({ schemaVersion: 2, jobs: [job()], legacyJobIds: [], activations: [{ requestId: 'request-synthetic-job', jobId: job().id, payload: payloadForJob(job()) }] });
     expect(storage.writes).toBe(1);
   });
   it('allows only one concurrent create and never replaces a reused ID', async () => {
     const { storage, repo } = await setup();
-    const results = await Promise.allSettled([repo.create(job('first')), repo.create(job('second'))]);
+    const results = await Promise.allSettled([create(repo, job('first')), create(repo, job('second'))]);
     expect(results[0].status).toBe('fulfilled');
     expect(results[1]).toMatchObject({ status: 'rejected', reason: { detail: { code: 'JOB_ALREADY_ACTIVE' } } });
     await repo.transition('first', 0, { type: 'cancel' });
-    await expect(repo.create(job('first'))).rejects.toEqual(code('REVISION_CONFLICT'));
-    await repo.create(job('second'));
+    await expect(repo.createForActivation('different-request', payloadForJob(job('first')), job('first'))).rejects.toEqual(code('REVISION_CONFLICT'));
+    await create(repo, job('second'));
     expect((await repo.readAll()).map(value => value.state)).toEqual(['cancelled', 'armed']);
     expect(storage.writes).toBe(3);
   });
   it('serializes racing transitions and treats repeated callbacks as no additional write', async () => {
     const { storage, repo } = await setup();
-    await repo.create(job());
+    await create(repo, job());
     const results = await Promise.allSettled([
       repo.transition(job().id, 0, { type: 'begin-preflight' }),
       repo.transition(job().id, 0, { type: 'cancel' }),
@@ -91,7 +96,7 @@ describe('internal enrollment job repository', () => {
   });
   it('does not resolve a transition or let a queued read overtake its write', async () => {
     const { storage, repo } = await setup();
-    await repo.create(job());
+    await create(repo, job());
     let release!: () => void;
     storage.beforeWrite = () => new Promise<void>(resolve => { release = resolve; });
     let resolved = false;
@@ -106,7 +111,7 @@ describe('internal enrollment job repository', () => {
   });
   it('snapshots an event before a queued operation and never invokes accessor payloads', async () => {
     const { repo } = await setup();
-    await repo.create(job());
+    await create(repo, job());
     const event = { type: 'begin-preflight' };
     const pending = repo.transition(job().id, 0, event);
     event.type = 'cancel';
@@ -117,7 +122,7 @@ describe('internal enrollment job repository', () => {
   });
   it('persists execution before returning and enforces the submission/cancellation boundary', async () => {
     const { storage, repo, clock } = await setup();
-    await repo.create(job());
+    await create(repo, job());
     await repo.transition(job().id, 0, { type: 'begin-preflight' });
     const executing = await repo.transition(job().id, 1, { type: 'begin-execution' });
     expect(executing.job.state).toBe('executing');
@@ -182,13 +187,13 @@ describe('internal enrollment job repository', () => {
     const storage = new Storage(); storage.values.set(enrollmentJobsKey, value);
     const repo = new EnrollmentJobRepository(storage, () => time);
     await expect(repo.recover()).rejects.toEqual(code('STORAGE_ERROR'));
-    await expect(repo.create(job())).rejects.toEqual(code('STORAGE_ERROR'));
+    await expect(create(repo, job())).rejects.toEqual(code('STORAGE_ERROR'));
     expect(storage.values.get(enrollmentJobsKey)).toEqual(value);
     expect(storage.writes).toBe(0);
   });
   it('preserves unsupported versions and blocks later operations', async () => {
     const storage = new Storage();
-    const value = { schemaVersion: 2, jobs: [job()] };
+    const value = { schemaVersion: 3, jobs: [job()] };
     storage.values.set(enrollmentJobsKey, value);
     const repo = new EnrollmentJobRepository(storage, () => time);
     await expect(repo.recover()).rejects.toEqual(code('UNSUPPORTED_VERSION'));
@@ -198,7 +203,7 @@ describe('internal enrollment job repository', () => {
   });
   it.each(['before', 'after'] as const)('blocks after a write fails %s persistence; explicit recovery never retries execution', async failure => {
     const { storage, repo } = await setup();
-    await repo.create(job());
+    await create(repo, job());
     await repo.transition(job().id, 0, { type: 'begin-preflight' });
     storage.failWrite = failure;
     await expect(repo.transition(job().id, 1, { type: 'begin-execution' })).rejects.toMatchObject({
@@ -217,7 +222,7 @@ describe('internal enrollment job repository', () => {
   it('blocks queued creates following a lost write acknowledgment and retains the saved job', async () => {
     const { storage, repo } = await setup();
     storage.failWrite = 'after';
-    const results = await Promise.allSettled([repo.create(job('first')), repo.create(job('second'))]);
+    const results = await Promise.allSettled([create(repo, job('first')), create(repo, job('second'))]);
     expect(results.every(value => value.status === 'rejected')).toBe(true);
     expect(storage.writes).toBe(1);
     storage.failWrite = null;
@@ -235,7 +240,7 @@ describe('internal enrollment job repository', () => {
   });
   it('sanitizes read failures, requires recovery, and revalidates storage on every operation', async () => {
     const { storage, repo } = await setup();
-    await repo.create(job());
+    await create(repo, job());
     storage.failRead = true;
     await expect(repo.readAll()).rejects.toMatchObject({ message: expect.not.stringContaining('Private'), detail: { code: 'STORAGE_ERROR' } });
     storage.failRead = false;
@@ -251,7 +256,7 @@ describe('internal enrollment job repository', () => {
     storage.seed(...history);
     const repo = new EnrollmentJobRepository(storage, () => time);
     await repo.recover();
-    await expect(repo.create(job())).rejects.toEqual(code('STORAGE_ERROR'));
+    await expect(create(repo, job())).rejects.toEqual(code('STORAGE_ERROR'));
     expect(storage.writes).toBe(0);
     storage.seed({ ...job(), revision: Number.MAX_SAFE_INTEGER });
     await expect(repo.recover()).rejects.toEqual(code('REVISION_CONFLICT'));
@@ -260,11 +265,11 @@ describe('internal enrollment job repository', () => {
   it('checks insert-time freshness and expiry after queued work', async () => {
     const { storage, repo, clock } = await setup();
     clock(time - 1);
-    await expect(repo.create(job())).rejects.toEqual(code('STALE_REVIEW'));
+    await expect(create(repo, job())).rejects.toEqual(code('STALE_REVIEW'));
     clock(time + 2_000);
-    await expect(repo.create(job())).rejects.toEqual(code('INVALID_TIME'));
+    await expect(create(repo, job())).rejects.toEqual(code('INVALID_TIME'));
     clock(time + 119_000);
-    await expect(repo.create(job())).rejects.toEqual(code('STALE_REVIEW'));
+    await expect(create(repo, job())).rejects.toEqual(code('STALE_REVIEW'));
     expect(storage.writes).toBe(0);
   });
   it('rejects inserting a past scheduled target even if the late cutoff has not elapsed', async () => {
@@ -272,12 +277,12 @@ describe('internal enrollment job repository', () => {
     const value: EnrollmentJob = { ...job(), targetEpochMs: time + 60_000, expiresAt: time + 62_000,
       timing: { mode: 'scheduled', targetEpochMs: time + 60_000, timezone: 'UTC', localDateTime: '2025-01-01T00:01:00', utcOffsetMinutes: 0 } };
     clock(time + 60_000);
-    await expect(repo.create(value)).rejects.toEqual(code('INVALID_TIME'));
+    await expect(create(repo, value)).rejects.toEqual(code('INVALID_TIME'));
   });
   it('rejects non-new insertion, missing jobs and invalid clocks without writes', async () => {
     const { storage, repo, clock } = await setup();
     for (const patch of [{ revision: 1 }, { state: 'cancelled' }, { updatedAt: time + 1 }]) {
-      expect(() => repo.create({ ...job(), ...patch })).toThrow();
+      await expect(create(repo, { ...job(), ...patch })).rejects.toEqual(code('INVALID_INPUT'));
     }
     await expect(repo.transition('absent', 0, { type: 'cancel' })).rejects.toEqual(code('NOT_FOUND'));
     clock(NaN);
