@@ -16,7 +16,7 @@ The timing parser now separates value consistency from proposal freshness. Exist
 - Targeted repository/timing/deduplication run: 149 cases passed before the final five legacy-integrity cases were added.
 - Final local checks: lint, 610 tests across 20 files, TypeScript and production/MV3 build passed.
 - New coverage includes concurrent matching/conflicting requests, normalized property order, stopped/unknown replay, lost acknowledgments, held writes, capacity, detached inputs/results, corrupt or missing links, legacy migration and uncertain migration writes.
-- Isolated Chromium 156.0.8078.4 extension E2E passed (9.5 seconds total); its saved report has one expected result, zero failures, skips or flaky results. Hosted Windows/Linux CI: pending publication.
+- Isolated Chromium 156.0.8078.4 extension E2E passed (9.5 seconds total); its saved report has one expected result, zero failures, skips or flaky results. Hosted Ubuntu 24.04 and Windows 2025 passed all checks, including 610 unit tests, build and isolated Chromium E2E: [run 40766468213](https://github.com/Pavi21P/uhd-student-extension/actions/runs/40766468213), implementation commit 5ca43e1b01e302f178928828b2b6e86f9b30f483. [PR #20](https://github.com/Pavi21P/uhd-student-extension/pull/20) targets feat/14b-job-repository. Subsequent documentation-only edits preserve the tested implementation.
 - The existing timetable E2E guards extension behavior; it does not exercise these unconnected internal modules. No live portal, personal browser profile, real student data or human sign-off was used.
 
 ## Resume
