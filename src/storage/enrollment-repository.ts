@@ -3,23 +3,25 @@ import { parseActivationPayload, payloadForJob, sameActivationPayload, type Acti
 import { parseEnrollmentLifecycleEvent, transitionEnrollmentLifecycle, type LifecycleDecision, type LifecycleEvent } from '../shared/enrollment-lifecycle';
 import { parseStoredEnrollmentJob } from '../shared/enrollment-records';
 import { ContractFault, id, integer, invalid, list, record, revision } from '../shared/validation';
+import { parseExecutorRegistration, parseExecutorRequests, type ExecutorRequestRecord } from '../shared/enrollment-requests';
 import type { KeyValueStorage } from './repository';
-import { assertExecutorOwnership, isExecutorEvent, parseExecutorContext, parseExecutorPolicy, type ExecutorContext, type ExecutorPolicy } from '../shared/enrollment-ownership';
+import { assertExecutorAdapter, assertExecutorOwnership, parseExecutorPending, isExecutorEvent, parseExecutorContext, parseExecutorPolicy, type ExecutorContext, type ExecutorPolicy } from '../shared/enrollment-ownership';
 
 export const enrollmentJobsKey = 'uhd.enrollment.jobs';
 const maxJobs = 100;
 const active = (job: EnrollmentJob) => ['armed', 'preflight', 'executing'].includes(job.state);
 interface ActivationRecord { requestId: string; jobId: string; payload: ActivationPayload }
-interface StoredJobs { schemaVersion: 2; jobs: EnrollmentJob[]; activations: ActivationRecord[]; legacyJobIds: string[] }
+interface StoredJobs { schemaVersion: 3; jobs: EnrollmentJob[]; activations: ActivationRecord[]; legacyJobIds: string[]; executorRequests: ExecutorRequestRecord[] }
 interface LoadedJobs { store: StoredJobs; needsMigration: boolean }
 export interface StoredJobDecision extends Omit<LifecycleDecision, 'job'> { job: EnrollmentJob }
 export interface ActivationDecision { job: EnrollmentJob; created: boolean }
 
 function parseStoredJobs(value: unknown): LoadedJobs {
-  const row = record(value, ['schemaVersion', 'jobs', 'activations', 'legacyJobIds'], 'enrollmentStore');
+  const row = record(value, ['schemaVersion', 'jobs', 'activations', 'legacyJobIds', 'executorRequests'], 'enrollmentStore');
   const schemaVersion = integer(row.schemaVersion, 1, Number.MAX_SAFE_INTEGER, 'enrollmentStore.schemaVersion');
-  if (schemaVersion !== 1 && schemaVersion !== 2) throw new ContractFault('UNSUPPORTED_VERSION', 'This saved job version is not supported. Data was left intact.');
+  if (schemaVersion !== 1 && schemaVersion !== 2 && schemaVersion !== 3) throw new ContractFault('UNSUPPORTED_VERSION', 'This saved job version is not supported. Data was left intact.');
   if (schemaVersion === 1) record(row, ['schemaVersion', 'jobs'], 'enrollmentStore');
+  if (schemaVersion === 2) record(row, ['schemaVersion', 'jobs', 'activations', 'legacyJobIds'], 'enrollmentStore');
   const jobs = list(row.jobs, maxJobs, 'enrollmentStore.jobs').map(parseStoredEnrollmentJob);
   const byId = new Map(jobs.map(job => [job.id, job]));
   if (byId.size !== jobs.length || jobs.filter(active).length > 1) invalid('enrollmentStore.jobs');
@@ -40,7 +42,8 @@ function parseStoredJobs(value: unknown): LoadedJobs {
   const legacy = new Set(legacyJobIds);
   if (legacy.size !== legacyJobIds.length || legacyJobIds.some(jobId => !byId.has(jobId) || associated.has(jobId))
       || jobs.some(job => !associated.has(job.id) && !legacy.has(job.id))) invalid('enrollmentStore.legacyJobIds');
-  return { store: { schemaVersion: 2, jobs, activations, legacyJobIds }, needsMigration: schemaVersion === 1 };
+  const executorRequests = schemaVersion === 3 ? parseExecutorRequests(row.executorRequests, jobs) : [];
+  return { store: { schemaVersion: 3, jobs, activations, legacyJobIds, executorRequests }, needsMigration: schemaVersion !== 3 };
 }
 function projection(job: EnrollmentJob) {
   const { id, revision, state, targetEpochMs, expiresAt, updatedAt, submittedAt } = job;
@@ -78,7 +81,7 @@ export class EnrollmentJobRepository {
       this.ready = false;
       throw new ContractFault('STORAGE_ERROR', 'Saved jobs could not be read. Recovery is required; nothing was changed.');
     }
-    if (value === undefined) return { store: { schemaVersion: 2, jobs: [], activations: [], legacyJobIds: [] }, needsMigration: false };
+    if (value === undefined) return { store: { schemaVersion: 3, jobs: [], activations: [], legacyJobIds: [], executorRequests: [] }, needsMigration: false };
     try {
       const loaded = parseStoredJobs(value);
       if (loaded.needsMigration && this.ready) throw new ContractFault('STORAGE_ERROR', 'Explicit recovery is required for older job data.');
@@ -110,6 +113,9 @@ export class EnrollmentJobRepository {
         changed ||= decision.changed;
         return parseStoredEnrollmentJob({ ...job, ...decision.job });
       });
+      for (const request of store.executorRequests) {
+        if (request.state === 'pending') { request.state = 'abandoned'; changed = true; }
+      }
       if (changed || needsMigration) await this.persist({ ...store, jobs });
       this.ready = true;
       return jobs;
@@ -160,6 +166,44 @@ export class EnrollmentJobRepository {
     });
   }
 
+  /**
+   * Internal coordinator only: persist correlation before sending a command.
+   * Registration is never a dispatch grant; every ID and job/command pair is single-use.
+   */
+  registerExecutorRequest(jobId: string, expectedRevision: number, input: unknown): Promise<ExecutorContext['pending']> {
+    const validId = id(jobId);
+    revision(expectedRevision, 'expectedRevision');
+    const registration = parseExecutorRegistration(input);
+    return this.serial(async () => {
+      this.requireReady();
+      const { store } = await this.load();
+      if (store.executorRequests.some(entry => entry.pending.requestId === registration.requestId
+          || (entry.pending.jobId === validId && entry.pending.command === registration.command))) {
+        throw new ContractFault('REQUEST_ID_REUSED', 'This executor request or job command was already registered. It cannot be reissued.');
+      }
+      const job = store.jobs.find(job => job.id === validId);
+      if (!job) throw new ContractFault('NOT_FOUND', 'The enrollment job was not found.');
+      if (job.revision !== expectedRevision) throw new ContractFault('REVISION_CONFLICT', 'The job changed before request registration.');
+      assertExecutorAdapter(job.review.target, this.executorPolicy);
+      if (job.state !== 'executing' || job.submittedAt !== null) invalid('executorRegistration.job');
+      const now = this.now();
+      if (now < job.updatedAt || store.executorRequests.some(entry => entry.pending.jobId === job.id && now < entry.createdAt)
+          || now >= registration.expiresAt
+          || (registration.command === 'portal.execute' && (now < job.targetEpochMs || now >= job.expiresAt))) {
+        throw new ContractFault('INVALID_TIME', 'The executor request cannot be registered at this time.');
+      }
+      if (registration.command === 'portal.cancel' && !store.executorRequests.some(entry =>
+        entry.pending.jobId === validId && entry.pending.command === 'portal.execute' && entry.state === 'pending')) {
+        invalid('executorRegistration.command');
+      }
+      const pending = parseExecutorPending({ ...registration, jobId: job.id,
+        executionToken: job.executionToken, target: { ...job.review.target }, expectedRevision });
+      store.executorRequests.push({ pending, createdAt: now, state: 'pending' });
+      await this.persist(store);
+      return pending;
+    });
+  }
+
   /** Trusted background decisions only. Executor acknowledgments use the guarded entrypoint. */
   transition(jobId: string, expectedRevision: number, eventInput: unknown): Promise<StoredJobDecision> {
     const validId = id(jobId);
@@ -187,14 +231,27 @@ export class EnrollmentJobRepository {
       const current = store.jobs[index];
       if (!current) throw new ContractFault('NOT_FOUND', 'The enrollment job was not found.');
       const now = this.now();
+      let request: ExecutorRequestRecord | undefined;
       if (context) {
         if (!isExecutorEvent(event)) invalid('executor.event');
-        assertExecutorOwnership(current, expectedRevision, event, context, this.executorPolicy, now);
+        request = store.executorRequests.find(entry => entry.pending.requestId === context.reply.requestId);
+        if (!request || request.state !== 'pending') {
+          throw new ContractFault('REQUEST_ID_REUSED', 'No outstanding executor request is available for this reply.');
+        }
+        // The supplied pending projection is only a consistency assertion. Storage is authoritative.
+        if (JSON.stringify(context.pending) !== JSON.stringify(request.pending)) {
+          throw new ContractFault('UNAUTHORIZED_SENDER', 'The executor report does not match the saved outstanding request.');
+        }
+        assertExecutorOwnership(current, expectedRevision, event, { ...context, pending: request.pending }, this.executorPolicy, now);
       }
       const decision = transitionEnrollmentLifecycle(projection(current), event, expectedRevision, now);
       const job = parseStoredEnrollmentJob({ ...current, ...decision.job });
-      if (decision.changed) {
+      if (request) request.state = 'consumed';
+      if (decision.changed || request) {
         store.jobs[index] = job;
+        for (const other of store.executorRequests) {
+          if (other.state === 'pending' && other.pending.jobId === job.id) other.state = 'abandoned';
+        }
         await this.persist(store);
       }
       return { ...decision, job };

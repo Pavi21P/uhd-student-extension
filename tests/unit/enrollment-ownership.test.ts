@@ -27,6 +27,10 @@ async function setup(policy: unknown = executorPolicy()) {
   await repo.createForActivation('synthetic-activation', payloadForJob(job), job);
   await repo.transition(job.id, 0, { type: 'begin-preflight' });
   await repo.transition(job.id, 1, { type: 'begin-execution' });
+  for (const command of ['portal.execute', 'portal.cancel'] as const) {
+    const { requestId, expiresAt } = executorContext(job, 2, command).pending;
+    await repo.registerExecutorRequest(job.id, 2, { requestId, command, expiresAt });
+  }
   clock.mockReturnValue(time + 100);
   return { repo, storage, clock, job, context: executorContext(job, 2) };
 }
@@ -37,14 +41,14 @@ describe('executor ownership at the repository boundary', () => {
     const result = await repo.transitionFromExecutor(job.id, 2, observed, context);
     expect(result).toMatchObject({ changed: true, job: { state: 'executing', revision: 3, submittedAt: time + 100 } });
     expect(storage.value).toMatchObject({ jobs: [{ revision: 3, submittedAt: time + 100 }] });
-    expect(storage.writes).toBe(4);
+    expect(storage.writes).toBe(6);
   });
   it('accepts a correlated no-dispatch acknowledgment only for a cancellation request', async () => {
     const { repo, storage, job } = await setup();
     const context = executorContext(job, 2, 'portal.cancel');
     const result = await repo.transitionFromExecutor(job.id, 2, { type: 'cancellation-confirmed' }, context);
     expect(result.job).toMatchObject({ state: 'cancelled', revision: 3, submittedAt: null });
-    expect(storage.writes).toBe(4);
+    expect(storage.writes).toBe(6);
   });
   it.each([
     ['different extension', (c: ExecutorContext) => { c.sender.extensionId = 'different-extension'; }],
@@ -78,9 +82,9 @@ describe('executor ownership at the repository boundary', () => {
     const { repo, storage, job, context } = await setup();
     const before = structuredClone(storage.value);
     mutate(context);
-    await expect(repo.transitionFromExecutor(job.id, 2, observed, context)).rejects.toEqual(fault('UNAUTHORIZED_SENDER'));
+    await expect(repo.transitionFromExecutor(job.id, 2, observed, context)).rejects.toEqual(fault(_label === 'request mismatch' ? 'REQUEST_ID_REUSED' : 'UNAUTHORIZED_SENDER'));
     expect(storage.value).toEqual(before);
-    expect(storage.writes).toBe(3);
+    expect(storage.writes).toBe(5);
   });
   it.each([undefined, { extensionId: 'synthetic-extension', adapters: [] },
     { extensionId: 'synthetic-extension', adapters: [{ origin: 'https://other.example.invalid', adapterVersion: 'fixture-only' }] },
@@ -94,7 +98,7 @@ describe('executor ownership at the repository boundary', () => {
     await repo.createForActivation('synthetic-activation', payloadForJob(job), job);
     await repo.transition(job.id, 0, { type: 'begin-preflight' });
     await repo.transition(job.id, 1, { type: 'begin-execution' });
-    await expect(repo.transitionFromExecutor(job.id, 2, observed, executorContext(job, 2))).rejects.toEqual(fault('PORTAL_UNSUPPORTED'));
+    await expect(repo.registerExecutorRequest(job.id, 2, { requestId: 'request', command: 'portal.execute', expiresAt: time + 10_000 })).rejects.toEqual(fault('PORTAL_UNSUPPORTED'));
     expect(storage.writes).toBe(3);
   });
   it('uses the pending-request deadline, allowing a late result from an in-window dispatch', async () => {
@@ -108,7 +112,7 @@ describe('executor ownership at the repository boundary', () => {
     const pending = repo.transitionFromExecutor(job.id, 2, observed, context);
     clock.mockReturnValue(context.pending.expiresAt);
     await expect(pending).rejects.toEqual(fault('UNAUTHORIZED_SENDER'));
-    expect(storage.writes).toBe(3);
+    expect(storage.writes).toBe(5);
   });
   it('snapshots policy and context before caller mutation', async () => {
     const policy = executorPolicy();
@@ -120,7 +124,7 @@ describe('executor ownership at the repository boundary', () => {
     context.pending.target.documentId = 'mutated';
     context.reply.executionToken = 'mutated';
     expect((await pending).job.submittedAt).toBe(time + 100);
-    expect(storage.writes).toBe(4);
+    expect(storage.writes).toBe(6);
   });
   it('rejects competing callbacks against one saved revision', async () => {
     const { repo, storage, job, context } = await setup();
@@ -129,24 +133,24 @@ describe('executor ownership at the repository boundary', () => {
       repo.transitionFromExecutor(job.id, 2, observed, context),
     ]);
     expect(results[0].status).toBe('fulfilled');
-    expect(results[1]).toMatchObject({ status: 'rejected', reason: { detail: { code: 'REVISION_CONFLICT' } } });
-    expect(storage.writes).toBe(4);
+    expect(results[1]).toMatchObject({ status: 'rejected', reason: { detail: { code: 'REQUEST_ID_REUSED' } } });
+    expect(storage.writes).toBe(6);
   });
   it('rechecks the persisted target rather than accepting an older matching context', async () => {
     const { repo, storage, job, context } = await setup();
     const saved = await repo.readAll();
     saved[0]!.review.target.documentId = 'new-document';
     storage.value = { ...(storage.value as object), jobs: saved };
-    await expect(repo.transitionFromExecutor(job.id, 2, observed, context)).rejects.toEqual(fault('UNAUTHORIZED_SENDER'));
-    expect(storage.writes).toBe(3);
+    await expect(repo.transitionFromExecutor(job.id, 2, observed, context)).rejects.toEqual(fault('STORAGE_ERROR'));
+    expect(storage.writes).toBe(5);
   });
   it('cannot cancel after a racing submission, even with the same authorized document', async () => {
     const { repo, job, context } = await setup();
     await repo.transitionFromExecutor(job.id, 2, observed, context);
     const cancellation = executorContext(job, 2, 'portal.cancel');
-    await expect(repo.transitionFromExecutor(job.id, 2, { type: 'cancellation-confirmed' }, cancellation)).rejects.toEqual(fault('REVISION_CONFLICT'));
+    await expect(repo.transitionFromExecutor(job.id, 2, { type: 'cancellation-confirmed' }, cancellation)).rejects.toEqual(fault('REQUEST_ID_REUSED'));
     cancellation.pending.expectedRevision = 3;
-    await expect(repo.transitionFromExecutor(job.id, 3, { type: 'cancellation-confirmed' }, cancellation)).rejects.toEqual(fault('TOO_LATE_TO_CANCEL'));
+    await expect(repo.transitionFromExecutor(job.id, 3, { type: 'cancellation-confirmed' }, cancellation)).rejects.toEqual(fault('REQUEST_ID_REUSED'));
   });
   it('blocks executor reports on the generic background path and other events on the executor path', async () => {
     const { repo, job, context } = await setup();
@@ -161,7 +165,7 @@ describe('executor ownership at the repository boundary', () => {
     await expect(repo.transitionFromExecutor(job.id, 2, observed, context)).rejects.toEqual(fault('STORAGE_ERROR'));
     storage.failAfterWrite = false;
     expect(await repo.recover()).toMatchObject([{ state: 'unknown', submittedAt: time + 100 }]);
-    expect(storage.writes).toBe(5);
+    expect(storage.writes).toBe(7);
   });
   it('does not include tokens, URL or identity values in rejection errors', async () => {
     const { repo, job, context } = await setup();

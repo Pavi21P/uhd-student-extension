@@ -47,9 +47,8 @@ export function parseExecutorPolicy(value: unknown): ExecutorPolicy {
 export function parseExecutorContext(value: unknown): ExecutorContext {
   const row = record(value, ['sender', 'pending', 'reply'], 'executorContext');
   const sender = record(row.sender, ['extensionId', 'tabId', 'frameId', 'documentId', 'origin', 'url', 'documentLifecycle'], 'executor.sender');
-  const pending = record(row.pending, ['requestId', 'command', 'jobId', 'executionToken', 'target', 'expectedRevision', 'expiresAt'], 'executor.pending');
+  const pending = parseExecutorPending(row.pending);
   const reply = record(row.reply, ['protocolVersion', 'requestId', 'type', 'jobId', 'executionToken'], 'executor.reply');
-  if (pending.command !== 'portal.execute' && pending.command !== 'portal.cancel') invalid('executor.pending.command');
   if (reply.type !== 'portal.completed' && reply.type !== 'portal.cancelled') invalid('executor.reply.type');
   return {
     sender: { extensionId: id(sender.extensionId, 'executor.sender.extensionId'),
@@ -58,19 +57,31 @@ export function parseExecutorContext(value: unknown): ExecutorContext {
       documentId: id(sender.documentId, 'executor.sender.documentId'), origin: origin(sender.origin),
       url: text(sender.url, 8_192, 'executor.sender.url'),
       documentLifecycle: text(sender.documentLifecycle, 40, 'executor.sender.documentLifecycle') },
-    pending: { requestId: id(pending.requestId, 'executor.pending.requestId'), command: pending.command,
-      jobId: id(pending.jobId, 'executor.pending.jobId'), executionToken: id(pending.executionToken, 'executor.pending.executionToken'),
-      target: parsePortalTarget(pending.target), expectedRevision: revision(pending.expectedRevision, 'executor.pending.expectedRevision'),
-      expiresAt: integer(pending.expiresAt, -8_640_000_000_000_000, 8_640_000_000_000_000, 'executor.pending.expiresAt') },
+    pending,
     reply: { protocolVersion: version(reply.protocolVersion, 'executor.reply.protocolVersion'),
       requestId: id(reply.requestId, 'executor.reply.requestId'), type: reply.type,
       jobId: id(reply.jobId, 'executor.reply.jobId'), executionToken: id(reply.executionToken, 'executor.reply.executionToken') },
   };
 }
+export type ExecutorPending = ExecutorContext['pending'];
+export function parseExecutorPending(value: unknown): ExecutorPending {
+  const pending = record(value, ['requestId', 'command', 'jobId', 'executionToken', 'target', 'expectedRevision', 'expiresAt'], 'executor.pending');
+  if (pending.command !== 'portal.execute' && pending.command !== 'portal.cancel') invalid('executor.pending.command');
+  return { requestId: id(pending.requestId, 'executor.pending.requestId'), command: pending.command,
+    jobId: id(pending.jobId, 'executor.pending.jobId'), executionToken: id(pending.executionToken, 'executor.pending.executionToken'),
+    target: parsePortalTarget(pending.target), expectedRevision: revision(pending.expectedRevision, 'executor.pending.expectedRevision'),
+    expiresAt: integer(pending.expiresAt, -8_640_000_000_000_000, 8_640_000_000_000_000, 'executor.pending.expiresAt') };
+}
+export function assertExecutorAdapter(target: PortalTarget, policy: ExecutorPolicy | undefined): void {
+  if (!policy || !policy.adapters.some(entry => entry.origin === target.origin && entry.adapterVersion === target.adapterVersion)) {
+    throw new ContractFault('PORTAL_UNSUPPORTED', 'No supported executor adapter is configured for this job.');
+  }
+}
+
 function deny(): never {
   throw new ContractFault('UNAUTHORIZED_SENDER', 'This executor report does not match the authorized document and outstanding request.');
 }
-function sameTarget(first: PortalTarget, second: PortalTarget): boolean {
+export function sameTarget(first: PortalTarget, second: PortalTarget): boolean {
   return first.tabId === second.tabId && first.frameId === second.frameId && first.documentId === second.documentId
     && first.origin === second.origin && first.adapterVersion === second.adapterVersion;
 }
@@ -79,15 +90,12 @@ export function assertExecutorOwnership(
   job: EnrollmentJob, expectedRevision: number, event: ExecutorEvent,
   context: ExecutorContext, policy: ExecutorPolicy | undefined, nowEpochMs: number,
 ): void {
-  if (!policy || !policy.adapters.some(entry => entry.origin === job.review.target.origin
-      && entry.adapterVersion === job.review.target.adapterVersion)) {
-    throw new ContractFault('PORTAL_UNSUPPORTED', 'No supported executor adapter is configured for this job.');
-  }
+  assertExecutorAdapter(job.review.target, policy);
   const { sender, pending, reply } = context;
   const target = job.review.target;
   let url: URL;
   try { url = new URL(sender.url); } catch { return deny(); }
-  if (sender.extensionId !== policy.extensionId || sender.documentLifecycle !== 'active'
+  if (sender.extensionId !== policy?.extensionId || sender.documentLifecycle !== 'active'
       || sender.tabId !== target.tabId || sender.frameId !== target.frameId || sender.documentId !== target.documentId
       || sender.origin !== target.origin || url.protocol !== 'https:' || url.origin !== target.origin
       || url.username || url.password || !sameTarget(pending.target, target)
