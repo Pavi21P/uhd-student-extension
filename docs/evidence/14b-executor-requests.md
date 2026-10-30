@@ -24,7 +24,7 @@ The browser bridge must still supply actual browser metadata, validate the full 
 - Targeted registry/ownership/repository/deduplication run: 181 cases passed.
 - Coverage: persistence before acknowledgment, atomic consumption, concurrent replies/registration, changed-revision replay, request-ID/command reuse, cancellation races, unregistered or forged pending metadata, clocks/deadlines, lost writes, recovery, v2 migration and corrupt request links.
 - Local lint, 713 tests across 22 files, TypeScript and production/MV3 build passed. After two type-only inference fixes, lint, all 44 registry tests and the build passed again. Isolated Chromium 156.0.8078.4 extension E2E passed (13.2 seconds total), with one expected result and zero failures, skips or flaky results.
-- Hosted Windows/Linux CI and publication: pending.
+- Hosted Ubuntu 24.04 and Windows 2025 passed all checks, including 713 unit tests, build and isolated Chromium E2E: [run 40992899520](https://github.com/Pavi21P/uhd-student-extension/actions/runs/40992899520), implementation commit f30bd317f1d652222405a56dc5db7e0d90eb6b19. [PR #22](https://github.com/Pavi21P/uhd-student-extension/pull/22) targets feat/14b-executor-ownership. Subsequent documentation-only edits preserve the tested implementation.
 - Synthetic fixtures only. The existing timetable E2E is a regression check, not proof of live enrollment or either human QA pass.
 
 ## Resume
