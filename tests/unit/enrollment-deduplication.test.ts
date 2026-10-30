@@ -42,7 +42,7 @@ async function setup() {
   return { storage, clock, repo };
 }
 function envelope(value = job()) {
-  return { schemaVersion: 2, jobs: [value], legacyJobIds: [],
+  return { schemaVersion: 3, executorRequests: [], jobs: [value], legacyJobIds: [],
     activations: [{ requestId: 'request-one', jobId: value.id, payload: payloadForJob(value) }] };
 }
 
@@ -188,7 +188,7 @@ describe('durable activation deduplication', () => {
     const storage = new Storage();
     const jobs = Array.from({ length: 100 }, (_, index) => ({ ...job('job-' + index), state: 'cancelled' as const }));
     const activations = jobs.map(value => ({ requestId: 'request-' + value.id, jobId: value.id, payload: payloadForJob(value) }));
-    const original = { schemaVersion: 2, jobs, activations, legacyJobIds: [] };
+    const original = { schemaVersion: 3, executorRequests: [], jobs, activations, legacyJobIds: [] };
     storage.value = structuredClone(original);
     const repo = new EnrollmentJobRepository(storage, () => time);
     await repo.recover();
@@ -206,7 +206,7 @@ describe('deduplication storage migration and validation', () => {
     storage.value = { schemaVersion: 1, jobs: [legacy] };
     const repo = new EnrollmentJobRepository(storage, () => time);
     const recovered = await repo.recover();
-    expect(storage.value).toEqual({ schemaVersion: 2, jobs: recovered, activations: [], legacyJobIds: [legacy.id] });
+    expect(storage.value).toEqual({ schemaVersion: 3, executorRequests: [], jobs: recovered, activations: [], legacyJobIds: [legacy.id] });
     expect(recovered[0]).toMatchObject({ id: legacy.id, executionToken: legacy.executionToken, state: state === 'armed' ? 'needs-review' : state });
     await expect(repo.createForActivation('unknown-legacy-request', payloadForJob(legacy))).rejects.toEqual(fault('NOT_FOUND'));
     await repo.recover();
@@ -215,7 +215,7 @@ describe('deduplication storage migration and validation', () => {
   it('migrates a stored empty v1 envelope but never writes for absent storage', async () => {
     const storage = new Storage(); storage.value = { schemaVersion: 1, jobs: [] };
     await new EnrollmentJobRepository(storage, () => time).recover();
-    expect(storage.value).toEqual({ schemaVersion: 2, jobs: [], activations: [], legacyJobIds: [] });
+    expect(storage.value).toEqual({ schemaVersion: 3, executorRequests: [], jobs: [], activations: [], legacyJobIds: [] });
     expect(storage.writes).toBe(1);
   });
   it.each(['before', 'after'] as const)('requires explicit recovery after migration write fails %s persistence', async fail => {
@@ -254,7 +254,7 @@ describe('deduplication storage migration and validation', () => {
   it('rejects duplicate request IDs linked to different valid jobs', async () => {
     const storage = new Storage();
     const jobs = [job(), job('another')].map(value => ({ ...value, state: 'cancelled' as const }));
-    storage.value = { schemaVersion: 2, jobs, legacyJobIds: [], activations: jobs.map(value => ({ requestId: 'same-request', jobId: value.id, payload: payloadForJob(value) })) };
+    storage.value = { schemaVersion: 3, executorRequests: [], jobs, legacyJobIds: [], activations: jobs.map(value => ({ requestId: 'same-request', jobId: value.id, payload: payloadForJob(value) })) };
     await expect(new EnrollmentJobRepository(storage, () => time).recover()).rejects.toEqual(fault('STORAGE_ERROR'));
     expect(storage.writes).toBe(0);
   });
@@ -264,7 +264,7 @@ describe('deduplication storage migration and validation', () => {
     await expect(repo.readAll()).rejects.toEqual(fault('STORAGE_ERROR'));
     expect(storage.writes).toBe(0);
     await repo.recover();
-    expect(storage.value).toEqual({ schemaVersion: 2, jobs: [], activations: [], legacyJobIds: [] });
+    expect(storage.value).toEqual({ schemaVersion: 3, executorRequests: [], jobs: [], activations: [], legacyJobIds: [] });
   });
   it.each([
     null, {}, { ...payloadForJob(job()), extra: true }, { ...payloadForJob(job()), reviewId: '' },

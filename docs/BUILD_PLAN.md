@@ -225,6 +225,8 @@ Each cell is a task/issue with its own acceptance check. Estimate 1–3 focused 
 
 14B ownership continuation (2026-10-28): validate executor-report identity, configured adapter and pending-request correlation at the internal repository boundary using synthetic metadata. Keep trusted browser/request-registry projections, full reply validation, durable execution ownership and live portal integration as explicit remaining requirements; no public command or dispatch is enabled.
 
+14B request-registry continuation (2026-10-29): persist outstanding request registration, atomic single-use reply consumption and recovery abandonment with internal jobs. Retain request tombstones through migration/recovery and reject reissuance. Use synthetic metadata; full reply/event validation, production browser wiring and dispatch coordination remain separate. No public command or live execution is enabled.
+
 ### Phase 5 — release (days 19–20)
 
 | Day | A | B | Merge checkpoint |
