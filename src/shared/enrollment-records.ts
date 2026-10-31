@@ -92,6 +92,13 @@ export function parseSectionOutcome(value: unknown): SectionOutcome {
   return result;
 }
 
+/** Classification only; callers must validate selection coverage and dispatch provenance. */
+export function classifyOutcomeState(outcomes: readonly SectionOutcome[]): 'succeeded' | 'partial' | 'failed' | 'unknown' {
+  return !outcomes.length || outcomes.some(item => item.status === 'unknown') ? 'unknown'
+    : outcomes.every(item => item.status === 'enrolled') ? 'succeeded'
+      : outcomes.some(item => item.status === 'enrolled' || item.status === 'waitlisted') ? 'partial' : 'failed';
+}
+
 /** Validate an internal saved job without arming, expiring, persisting or executing it. */
 export function parseStoredEnrollmentJob(value: unknown): EnrollmentJob {
   const row = record(value, ['id', 'revision', 'state', 'termId', 'termLabel', 'selectedSectionIds', 'timing',
@@ -123,9 +130,7 @@ export function parseStoredEnrollmentJob(value: unknown): EnrollmentJob {
   // A claimed final result must contain exactly one normalized outcome per selected section.
   if (state === 'succeeded' || state === 'partial' || (state === 'failed' && submittedAt !== null)) {
     if (!outcomes.length) invalid('job.outcomes');
-    const derived = outcomes.some(item => item.status === 'unknown') ? 'unknown'
-      : outcomes.every(item => item.status === 'enrolled') ? 'succeeded'
-        : outcomes.some(item => item.status === 'enrolled' || item.status === 'waitlisted') ? 'partial' : 'failed';
+    const derived = classifyOutcomeState(outcomes);
     if (state !== derived) invalid('job.state');
   }
   return { ...lifecycle, termId, termLabel, selectedSectionIds, timing, createdAt, outcomes,

@@ -38,7 +38,7 @@ describe('executor ownership at the repository boundary', () => {
   it('accepts a matching active document including a nonzero frame and persists observed dispatch', async () => {
     const { repo, storage, context } = await setup();
     const result = await repo.acceptExecutorReply(context.sender, executorReply(context));
-    expect(result).toMatchObject({ changed: true, job: { state: 'executing', revision: 3, submittedAt: time + 100 } });
+    expect(result).toMatchObject({ changed: true, job: { state: 'unknown', revision: 3, submittedAt: time + 100 } });
     expect(storage.value).toMatchObject({ jobs: [{ revision: 3, submittedAt: time + 100 }] });
     expect(storage.writes).toBe(6);
   });
@@ -95,7 +95,7 @@ describe('executor ownership at the repository boundary', () => {
     const { repo, context, clock } = await setup();
     clock.mockReturnValue(time + 9_999);
     const result = await repo.acceptExecutorReply(context.sender, executorReply(context));
-    expect(result.job).toMatchObject({ state: 'executing', submittedAt: time + 100 });
+    expect(result.job).toMatchObject({ state: 'unknown', submittedAt: time + 100 });
   });
   it('rejects a report exactly at its pending-request deadline using the clock inside the queue', async () => {
     const { repo, storage, context, clock } = await setup();
@@ -155,7 +155,7 @@ describe('executor ownership at the repository boundary', () => {
     await expect(repo.acceptExecutorReply(context.sender, executorReply(context))).rejects.toEqual(fault('STORAGE_ERROR'));
     storage.failAfterWrite = false;
     expect(await repo.recover()).toMatchObject([{ state: 'unknown', submittedAt: time + 100 }]);
-    expect(storage.writes).toBe(7);
+    expect(storage.writes).toBe(6);
   });
   it('does not include tokens, URL or identity values in rejection errors', async () => {
     const { repo, job, context } = await setup();

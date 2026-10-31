@@ -229,6 +229,8 @@ Each cell is a task/issue with its own acceptance check. Estimate 1–3 focused 
 
 14B full-reply continuation (2026-10-30): strictly validate completed/cancelled/error replies, bind them to saved requests and derive lifecycle events from the same parsed messages. Retain normalized evidence without raw portal text. Final outcome reconciliation and production integration remain separate; no live execution enabled. Solo development now commits/pushes without new PRs.
 
+14B final-result continuation (2026-10-31): finalize accepted complete outcomes in the existing atomic write; reconcile prior saved evidence only with matching consumed execution provenance. Preserve unknown states, reject stale revisions, retain request tombstones and never resubmit. Use synthetic outcomes; live adapter/browser integration remains blocked on observed evidence.
+
 ### Phase 5 — release (days 19–20)
 
 | Day | A | B | Merge checkpoint |

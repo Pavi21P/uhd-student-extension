@@ -33,13 +33,14 @@ Updated: 2026-10-31 (America/Chicago)
 - **14B executor-report ownership checks verified and published**: guarded acknowledgment entrypoint, explicit adapter policy and 59 new synthetic cases; [evidence](evidence/14b-executor-ownership.md). Local and hosted Windows/Linux 669-test/build/E2E checks passed; [PR #21](https://github.com/Pavi21P/uhd-student-extension/pull/21) is open. No live enrollment enabled.
 - **14B outstanding executor registry verified and published**: persistent registration, single-use consumption, recovery abandonment and v3 migration with 44 new synthetic cases; [evidence](evidence/14b-executor-requests.md). Local and hosted Windows/Linux 713-test/build/E2E checks passed; [PR #22](https://github.com/Pavi21P/uhd-student-extension/pull/22) is open. No live enrollment enabled.
 - **14B complete executor replies verified and published**: strict full-message parsing, saved-request-derived events, safe error/unknown handling and normalized evidence; [evidence](evidence/14b-executor-replies.md). Local and hosted Windows/Linux 741-test/build/E2E checks passed. Pushed directly to work/solo-development; no new PR. No live enrollment enabled.
+- **14B final outcome reconciliation locally verified**: atomic final states, missing-result unknowns and guarded saved-evidence recovery with 41 new cases; [evidence](evidence/14b-final-results.md). Local 782-test/build/E2E checks passed; hosted CI pending. No live enrollment enabled.
 - Public repo: https://github.com/Pavi21P/uhd-student-extension. Foundation tasks 03A (`cffda38`) and 03B (`b4ea551`) are included in the 2026-10-22 main-branch publication, retaining their original author dates and history. Published `feat/05a-course-editor` at `5635520` includes 04A (`871beb4`) and 05A (`823f33f`). 05B (`2517dc1`) is published on `feat/05b-meeting-validation`, based on that branch. [Pull request #1](https://github.com/Pavi21P/uhd-student-extension/pull/1) includes 04A/05A/05B and is open for review. `main` remains at `a29eea5`; no merge is included.
 
 ## Active work
 
 | Owner | Task | State | Next action |
 | --- | --- | --- | --- |
-| A / Codex | 14B full executor replies | Verified and published | Direct push to work/solo-development; local and hosted Windows/Linux checks passed. No new PR. |
+| A / Codex | 14B final outcome reconciliation | Locally verified; publishing | Push work/solo-development and verify CI without a PR. |
 | B / former teammate | 01B | No longer participating (user, 2026-10-30) | Prior work preserved; Codex owns implementation. Live inspection evidence remains unavailable. |
 
 ## Decisions to retain
@@ -63,10 +64,10 @@ Updated: 2026-10-31 (America/Chicago)
 
 ## Latest handoff
 
-- Task / owner: **14B complete executor replies / Codex**, solo development without connected browser access.
-- Changed: full completed/cancelled/error parser, acceptExecutorReply entrypoint, saved-request-derived events and normalized evidence, 42 new cases, migrated ownership/registry tests, direct-push CI and [evidence](evidence/14b-executor-replies.md). No new PR or runtime dispatch.
-- Passed: targeted 167 reply/ownership/registry/repository cases; 741 unit tests across 23 files; final lint, TypeScript and production/MV3 build. Affected 89 tests passed after fixing stale test bindings. Isolated Chromium 156.0.8078.4 extension E2E passed (10.7 seconds total), with one expected result and zero failures, skips or flaky results. Hosted Ubuntu 24.04 and Windows 2025 passed all checks, including 741 unit tests, build and isolated Chromium E2E: [run 41170637339](https://github.com/Pavi21P/uhd-student-extension/actions/runs/41170637339), implementation commit [897e4b78bc1f84f5bd4e659892dcf70b6bd45fae](https://github.com/Pavi21P/uhd-student-extension/commit/897e4b78bc1f84f5bd4e659892dcf70b6bd45fae), dated 2026-10-30 23:57:28 -05:00. Published directly to work/solo-development; no PR created. Subsequent documentation-only edits preserve the tested implementation.
-- Remaining: final outcome reconciliation, trusted browser metadata, durable dispatch coordination, production storage/recovery/RPC wiring, review UI, portal evidence/harness, live ratings and human acceptance. Synthetic metadata does not prove browser provenance or live enrollment.
-- Next independent candidate: **14B final outcome reconciliation from validated stored evidence**. Keep activation/dispatch disabled and retain the observed portal/adapter requirement. Continue direct commits/pushes on work/solo-development without new PRs. No merge or release.
+- Task / owner: **14B final outcome reconciliation / Codex**, solo development without connected browser access.
+- Changed: shared result classification, atomic reply finalization, guarded explicit/startup reconciliation, uncertainty/provenance checks, 41 new cases and [evidence](evidence/14b-final-results.md). No new PR or live dispatch.
+- Passed: targeted 208 result/reply/ownership/registry/repository cases; final lint, 782 tests across 24 files, TypeScript and production/MV3 build. Isolated Chromium 156.0.8078.4 extension E2E passed (9.9 seconds total), with one expected result and zero failures, skips or flaky results. Hosted Windows/Linux CI pending.
+- Remaining: safe dashboard response projection, trusted browser metadata, durable dispatch coordination, production storage/recovery/RPC wiring, review UI, portal evidence/harness, live ratings and human acceptance. Synthetic results do not prove live enrollment.
+- Next independent candidate: **14B safe EnrollmentJobView projection and response validation**, excluding execution tokens, internal reviews and request metadata. Keep activation/dispatch disabled and retain the observed portal/adapter requirement. Continue direct commits/pushes on work/solo-development without new PRs. No merge or release.
 
 Read linked evidence for details; do not replay the full history.

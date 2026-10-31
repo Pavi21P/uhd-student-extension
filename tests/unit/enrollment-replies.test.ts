@@ -93,13 +93,13 @@ describe('complete executor reply schema', () => {
 });
 
 describe('reply-derived persisted job updates', () => {
-  it('records submittedAt and normalized evidence from the same message without claiming final success', async () => {
+  it('records submittedAt and finalizes complete normalized evidence from the same message', async () => {
     const { repo, context, reply, storage } = await setup();
     const message = { ...reply, payload: { ...reply.payload, outcomes: [
       { sectionId: 'sample-section-a', status: 'enrolled', message: 'Synthetic private text' },
     ] } };
     const result = await repo.acceptExecutorReply(context.sender, message);
-    expect(result.job).toMatchObject({ state: 'executing', revision: 3, submittedAt: time + 100,
+    expect(result.job).toMatchObject({ state: 'succeeded', revision: 3, submittedAt: time + 100,
       outcomes: [{ sectionId: 'sample-section-a', status: 'enrolled' }] });
     expect(JSON.stringify(storage.value)).not.toContain('Synthetic private text');
     expect(storage.value).toMatchObject({ executorRequests: [{ state: 'consumed' }] });
@@ -191,7 +191,7 @@ describe('reply-derived persisted job updates', () => {
     await expect(repo.acceptExecutorReply(context.sender, completed)).rejects.toEqual(fault('STORAGE_ERROR'));
     await expect(repo.acceptExecutorReply(context.sender, completed)).rejects.toEqual(fault('STORAGE_ERROR'));
     storage.fail = false;
-    expect(await repo.recover()).toMatchObject([{ state: 'unknown', submittedAt: time + 100,
+    expect(await repo.recover()).toMatchObject([{ state: 'partial', submittedAt: time + 100,
       outcomes: [{ sectionId: 'sample-section-a', status: 'waitlisted', reason: 'full' }] }]);
     await expect(repo.acceptExecutorReply(context.sender, completed)).rejects.toEqual(fault('REQUEST_ID_REUSED'));
   });

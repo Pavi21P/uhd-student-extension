@@ -5,6 +5,7 @@ import { parseStoredEnrollmentJob } from '../shared/enrollment-records';
 import { ContractFault, id, integer, invalid, list, record, revision } from '../shared/validation';
 import { parseExecutorRegistration, parseExecutorRequests, type ExecutorRequestRecord } from '../shared/enrollment-requests';
 import { deriveExecutorReport, parseExecutorReply, type ExecutorReply } from '../shared/enrollment-replies';
+import { finalizeExecutorResult } from '../shared/enrollment-results';
 import type { KeyValueStorage } from './repository';
 import { assertExecutorAdapter, assertExecutorSource, parseExecutorPending, isExecutorEvent, parseExecutorSender, parseExecutorPolicy, type ExecutorContext, type ExecutorPolicy } from '../shared/enrollment-ownership';
 
@@ -49,6 +50,18 @@ function parseStoredJobs(value: unknown): LoadedJobs {
 function projection(job: EnrollmentJob) {
   const { id, revision, state, targetEpochMs, expiresAt, updatedAt, submittedAt } = job;
   return { id, revision, state, targetEpochMs, expiresAt, updatedAt, submittedAt };
+}
+
+function consumedExecution(store: StoredJobs, job: EnrollmentJob): ExecutorRequestRecord | undefined {
+  return store.executorRequests.find(entry => entry.state === 'consumed' && entry.pending.command === 'portal.execute'
+    && entry.pending.jobId === job.id && entry.pending.expectedRevision === job.revision - 1);
+}
+function reconcileSavedResult(job: EnrollmentJob, request: ExecutorRequestRecord, now: number): EnrollmentJob {
+  if (job.revision === Number.MAX_SAFE_INTEGER) throw new ContractFault('REVISION_CONFLICT', 'The job revision cannot advance safely.');
+  const uncertain = now < job.updatedAt || job.submittedAt === null || job.submittedAt < request.createdAt
+    || job.updatedAt >= request.pending.expiresAt;
+  return finalizeExecutorResult({ ...job, revision: job.revision + 1,
+    updatedAt: Math.max(now, job.updatedAt), state: uncertain ? 'unknown' : job.state });
 }
 
 /**
@@ -110,6 +123,11 @@ export class EnrollmentJobRepository {
       const now = this.now();
       let changed = false;
       const jobs = store.jobs.map(job => {
+        const evidence = consumedExecution(store, job);
+        if (job.state === 'executing' && job.submittedAt !== null && evidence) {
+          changed = true;
+          return reconcileSavedResult(job, evidence, now);
+        }
         const decision = transitionEnrollmentLifecycle(projection(job), { type: 'recover' }, job.revision, now);
         changed ||= decision.changed;
         return parseStoredEnrollmentJob({ ...job, ...decision.job });
@@ -214,6 +232,35 @@ export class EnrollmentJobRepository {
     return this.applyTransition(validId, expectedRevision, event);
   }
 
+  /**
+   * Reconcile evidence saved by an older worker without resubmitting. Terminal jobs
+   * stay terminal. A consumed execute request must prove where the evidence came from.
+   */
+  reconcileExecutorResult(jobId: string, expectedRevision: number): Promise<StoredJobDecision> {
+    const validId = id(jobId);
+    revision(expectedRevision, 'expectedRevision');
+    return this.serial(async () => {
+      this.requireReady();
+      const { store } = await this.load();
+      const index = store.jobs.findIndex(job => job.id === validId);
+      const current = store.jobs[index];
+      if (!current) throw new ContractFault('NOT_FOUND', 'The enrollment job was not found.');
+      if (current.revision !== expectedRevision) throw new ContractFault('REVISION_CONFLICT', 'The job changed before result reconciliation.');
+      if (current.state !== 'executing') return { job: current, changed: false, cancellation: 'none' };
+      const evidence = consumedExecution(store, current);
+      if (current.submittedAt === null || !evidence) {
+        throw new ContractFault('UNAUTHORIZED_SENDER', 'No consumed execution reply supports reconciling this job.');
+      }
+      const job = reconcileSavedResult(current, evidence, this.now());
+      store.jobs[index] = job;
+      for (const request of store.executorRequests) {
+        if (request.pending.jobId === job.id && request.state === 'pending') request.state = 'abandoned';
+      }
+      await this.persist(store);
+      return { job, changed: true, cancellation: 'none' };
+    });
+  }
+
   /** Full reply only. Browser sender metadata remains a trusted bridge input. */
   acceptExecutorReply(senderInput: unknown, replyInput: unknown): Promise<StoredJobDecision> {
     const sender = parseExecutorSender(senderInput);
@@ -245,8 +292,12 @@ export class EnrollmentJobRepository {
       if (!event || expectedRevision === undefined) invalid('transition');
       const decision = transitionEnrollmentLifecycle(projection(current), event, expectedRevision, now);
       // A backwards clock stops the job before recording new dispatch evidence.
-      const job = parseStoredEnrollmentJob({ ...current, ...decision.job,
+      let job = parseStoredEnrollmentJob({ ...current, ...decision.job,
         ...(outcomes !== undefined && decision.job.submittedAt !== null ? { outcomes } : {}) });
+      if (report?.reply.type === 'portal.completed') {
+        if (request && job.submittedAt !== null && job.submittedAt < request.createdAt) job = { ...job, state: 'unknown' };
+        job = finalizeExecutorResult(job);
+      }
       if (request) request.state = 'consumed';
       if (decision.changed || request) {
         store.jobs[index] = job;
