@@ -1,6 +1,6 @@
 # 14B: complete executor replies and derived events
 
-Implemented 2026-10-30 (America/Chicago). Owner: Codex. Solo workflow: commit and push work/solo-development without a new PR. Full 14B and live enrollment remain incomplete.
+Implemented 2026-10-30; hosted verification completed 2026-10-31 (America/Chicago). Owner: Codex. Solo workflow: commit and push work/solo-development without a new PR. Full 14B and live enrollment remain incomplete.
 
 ## Result
 
@@ -19,7 +19,7 @@ Job updates, request consumption and abandonment of competing requests remain on
 - 42 new complete-reply schema and repository cases; existing ownership/registry tests migrated to the new API. Obsolete caller-pending projections are now rejected as extra input instead of treated as authority.
 - Targeted reply/ownership/registry/repository run: 167 passed. Full unit suite: 741 passed across 23 files.
 - Final lint, TypeScript and production/MV3 build passed after removing stale test bindings; affected 89 ownership/registry cases passed after the test API migration fixes.
-- Isolated Chromium 156.0.8078.4 extension E2E passed (10.7 seconds total), with one expected result and zero failures, skips or flaky results. Hosted Windows/Linux CI pending.
+- Isolated Chromium 156.0.8078.4 extension E2E passed (10.7 seconds total), with one expected result and zero failures, skips or flaky results. Hosted Ubuntu 24.04 and Windows 2025 passed all checks, including 741 unit tests, build and isolated Chromium E2E: [run 41170637339](https://github.com/Pavi21P/uhd-student-extension/actions/runs/41170637339), implementation commit [897e4b78bc1f84f5bd4e659892dcf70b6bd45fae](https://github.com/Pavi21P/uhd-student-extension/commit/897e4b78bc1f84f5bd4e659892dcf70b6bd45fae), dated 2026-10-30 23:57:28 -05:00. Published directly to work/solo-development; no PR created. Subsequent documentation-only edits preserve the tested implementation.
 - CI now runs on direct pushes to work/solo-development, retaining the existing PR and main triggers. No new PR, merge or release.
 - Synthetic fixtures only. Browser metadata is still a trusted bridge input; its actual browser provenance, live results, real worker crash boundaries and select-and-submit behavior remain unverified. The timetable smoke test does not exercise these internal modules or replace human acceptance.
 
