@@ -29,3 +29,10 @@ export function executorContext(job: EnrollmentJob, expectedRevision: number, co
       jobId: job.id, executionToken: job.executionToken },
   };
 }
+
+/** Complete synthetic wire reply from fixture correlation fields. */
+export function executorReply(context: ExecutorContext) {
+  const { protocolVersion, requestId, type, jobId, executionToken } = context.reply;
+  return { protocolVersion, requestId, type, payload: { jobId, executionToken,
+    ...(type === 'portal.completed' ? { submittedAt: executorTime + 100, outcomes: [] } : {}) } };
+}

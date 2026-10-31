@@ -3,7 +3,7 @@ name: Checks
 on:
   pull_request:
   push:
-    branches: [main]
+    branches: [main, work/solo-development]
   workflow_dispatch:
 
 permissions:

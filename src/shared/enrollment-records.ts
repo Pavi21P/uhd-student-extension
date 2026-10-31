@@ -74,7 +74,7 @@ export function parseStoredEnrollmentReview(value: unknown): EnrollmentReview {
     fingerprint: id(row.fingerprint, 'review.fingerprint'), observedAt, expiresAt,
   };
 }
-function outcome(value: unknown): SectionOutcome {
+export function parseSectionOutcome(value: unknown): SectionOutcome {
   const row = record(value, ['sectionId', 'status', 'reason', 'message'], 'job.outcome');
   if (!['enrolled', 'waitlisted', 'rejected', 'unknown'].includes(row.status as string)) invalid('job.outcome.status');
   const result: SectionOutcome = { sectionId: id(row.sectionId, 'job.outcome.sectionId'), status: row.status as SectionOutcome['status'] };
@@ -111,7 +111,7 @@ export function parseStoredEnrollmentJob(value: unknown): EnrollmentJob {
   const termLabel = text(row.termLabel, 120, 'job.termLabel');
   if (termId !== review.termId || termLabel !== review.termLabel
       || !sameSet(selectedSectionIds, review.selectedSectionIds)) invalid('job.review');
-  const outcomes = list(row.outcomes, maxSections, 'job.outcomes').map(outcome);
+  const outcomes = list(row.outcomes, maxSections, 'job.outcomes').map(parseSectionOutcome);
   const resultIds = outcomes.map(item => item.sectionId);
   if (new Set(resultIds).size !== resultIds.length
       || (outcomes.length && !sameSet(resultIds, selectedSectionIds))) invalid('job.outcomes');

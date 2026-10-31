@@ -3,7 +3,7 @@ import type { EnrollmentJob, JobState } from '../../src/shared/domain';
 import { EnrollmentJobRepository, enrollmentJobsKey } from '../../src/storage/enrollment-repository';
 import type { KeyValueStorage } from '../../src/storage/repository';
 import { sampleReview } from '../fixtures/contracts.examples';
-import { executorContext, executorPolicy } from '../fixtures/enrollment-executor';
+import { executorReply, executorContext, executorPolicy } from '../fixtures/enrollment-executor';
 import { payloadForJob } from '../../src/shared/enrollment-activation';
 
 const time = Date.UTC(2025, 0, 1);
@@ -132,7 +132,7 @@ describe('internal enrollment job repository', () => {
     clock(time + 100);
     const context = executorContext(job(), 2);
     await repo.registerExecutorRequest(job().id, 2, { requestId: context.pending.requestId, command: context.pending.command, expiresAt: context.pending.expiresAt });
-    await repo.transitionFromExecutor(job().id, 2, { type: 'submission-observed', submittedAt: time + 100 }, executorContext(job(), 2));
+    await repo.acceptExecutorReply(context.sender, executorReply(context));
     await expect(repo.transition(job().id, 3, { type: 'cancel' })).rejects.toEqual(code('TOO_LATE_TO_CANCEL'));
     expect(storage.writes).toBe(5);
   });

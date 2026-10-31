@@ -4,8 +4,9 @@ import { parseEnrollmentLifecycleEvent, transitionEnrollmentLifecycle, type Life
 import { parseStoredEnrollmentJob } from '../shared/enrollment-records';
 import { ContractFault, id, integer, invalid, list, record, revision } from '../shared/validation';
 import { parseExecutorRegistration, parseExecutorRequests, type ExecutorRequestRecord } from '../shared/enrollment-requests';
+import { deriveExecutorReport, parseExecutorReply, type ExecutorReply } from '../shared/enrollment-replies';
 import type { KeyValueStorage } from './repository';
-import { assertExecutorAdapter, assertExecutorOwnership, parseExecutorPending, isExecutorEvent, parseExecutorContext, parseExecutorPolicy, type ExecutorContext, type ExecutorPolicy } from '../shared/enrollment-ownership';
+import { assertExecutorAdapter, assertExecutorSource, parseExecutorPending, isExecutorEvent, parseExecutorSender, parseExecutorPolicy, type ExecutorContext, type ExecutorPolicy } from '../shared/enrollment-ownership';
 
 export const enrollmentJobsKey = 'uhd.enrollment.jobs';
 const maxJobs = 100;
@@ -213,39 +214,39 @@ export class EnrollmentJobRepository {
     return this.applyTransition(validId, expectedRevision, event);
   }
 
-  /** Internal bridge entrypoint; not connected to runtime messages or website postMessage. */
-  transitionFromExecutor(jobId: string, expectedRevision: number, eventInput: unknown, contextInput: unknown): Promise<StoredJobDecision> {
-    const validId = id(jobId);
-    revision(expectedRevision, 'expectedRevision');
-    const event = parseEnrollmentLifecycleEvent(eventInput);
-    if (!isExecutorEvent(event)) invalid('executor.event');
-    const context = parseExecutorContext(contextInput);
-    return this.applyTransition(validId, expectedRevision, event, context);
+  /** Full reply only. Browser sender metadata remains a trusted bridge input. */
+  acceptExecutorReply(senderInput: unknown, replyInput: unknown): Promise<StoredJobDecision> {
+    const sender = parseExecutorSender(senderInput);
+    const reply = parseExecutorReply(replyInput);
+    return this.applyTransition(undefined, undefined, undefined, { sender, reply });
   }
 
-  private applyTransition(validId: string, expectedRevision: number, event: LifecycleEvent, context?: ExecutorContext): Promise<StoredJobDecision> {
+  private applyTransition(validId: string | undefined, expectedRevision: number | undefined, event: LifecycleEvent | undefined,
+    report?: { sender: ExecutorContext['sender']; reply: ExecutorReply }): Promise<StoredJobDecision> {
     return this.serial(async () => {
       this.requireReady();
       const { store } = await this.load();
-      const index = store.jobs.findIndex(job => job.id === validId);
+      const request = report ? store.executorRequests.find(entry => entry.pending.requestId === report.reply.requestId) : undefined;
+      if (report && (!request || request.state !== 'pending')) {
+        throw new ContractFault('REQUEST_ID_REUSED', 'No outstanding executor request is available for this reply.');
+      }
+      const index = store.jobs.findIndex(job => job.id === (request?.pending.jobId ?? validId));
       const current = store.jobs[index];
       if (!current) throw new ContractFault('NOT_FOUND', 'The enrollment job was not found.');
       const now = this.now();
-      let request: ExecutorRequestRecord | undefined;
-      if (context) {
-        if (!isExecutorEvent(event)) invalid('executor.event');
-        request = store.executorRequests.find(entry => entry.pending.requestId === context.reply.requestId);
-        if (!request || request.state !== 'pending') {
-          throw new ContractFault('REQUEST_ID_REUSED', 'No outstanding executor request is available for this reply.');
-        }
-        // The supplied pending projection is only a consistency assertion. Storage is authoritative.
-        if (JSON.stringify(context.pending) !== JSON.stringify(request.pending)) {
-          throw new ContractFault('UNAUTHORIZED_SENDER', 'The executor report does not match the saved outstanding request.');
-        }
-        assertExecutorOwnership(current, expectedRevision, event, { ...context, pending: request.pending }, this.executorPolicy, now);
+      let outcomes: EnrollmentJob['outcomes'] | undefined;
+      if (report && request) {
+        assertExecutorSource(current, request.pending, report.sender, this.executorPolicy, now);
+        const derived = deriveExecutorReport(current, request.pending, report.reply);
+        event = derived.event;
+        outcomes = derived.outcomes;
+        expectedRevision = request.pending.expectedRevision;
       }
+      if (!event || expectedRevision === undefined) invalid('transition');
       const decision = transitionEnrollmentLifecycle(projection(current), event, expectedRevision, now);
-      const job = parseStoredEnrollmentJob({ ...current, ...decision.job });
+      // A backwards clock stops the job before recording new dispatch evidence.
+      const job = parseStoredEnrollmentJob({ ...current, ...decision.job,
+        ...(outcomes !== undefined && decision.job.submittedAt !== null ? { outcomes } : {}) });
       if (request) request.state = 'consumed';
       if (decision.changed || request) {
         store.jobs[index] = job;

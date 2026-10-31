@@ -4,7 +4,7 @@ import { parseExecutorRequests, type ExecutorRequestRecord } from '../../src/sha
 import { payloadForJob } from '../../src/shared/enrollment-activation';
 import type { EnrollmentJob } from '../../src/shared/domain';
 import type { KeyValueStorage } from '../../src/storage/repository';
-import { executorContext, executorJob, executorPolicy, executorTime as time } from '../fixtures/enrollment-executor';
+import { executorReply, executorContext, executorJob, executorPolicy, executorTime as time } from '../fixtures/enrollment-executor';
 
 class Storage implements KeyValueStorage {
   value: unknown;
@@ -21,7 +21,6 @@ class Storage implements KeyValueStorage {
   }
 }
 const fault = (code: string) => expect.objectContaining({ detail: expect.objectContaining({ code }) });
-const observed = { type: 'submission-observed', submittedAt: time + 100 };
 async function setup() {
   const storage = new Storage();
   const clock = vi.fn(() => time);
@@ -38,7 +37,7 @@ async function setup() {
   };
   const register = (command: 'portal.execute' | 'portal.cancel' = 'portal.execute') =>
     repo.registerExecutorRequest(job.id, 2, registration(command));
-  const report = () => repo.transitionFromExecutor(job.id, 2, observed, context);
+  const report = () => repo.acceptExecutorReply(context.sender, executorReply(context));
   return { storage, clock, repo, job, context, registration, register, report };
 }
 function snapshot(storage: Storage) {
@@ -88,14 +87,14 @@ describe('durable outstanding executor requests', () => {
       executorRequests: [{ state: 'consumed' }] });
     expect(storage.writes).toBe(5);
   });
-  it('accepts only one of concurrent replies and cannot revive a consumed request with a new revision', async () => {
-    const { register, report, storage, repo, context, job, clock } = await setup();
+  it('accepts only one of concurrent replies and rejects caller-authored revisions', async () => {
+    const { register, report, storage, repo, context, clock } = await setup();
     await register(); clock.mockReturnValue(time + 100);
     const replies = await Promise.allSettled([report(), report()]);
     expect(replies[0].status).toBe('fulfilled');
     expect(replies[1]).toMatchObject({ status: 'rejected', reason: { detail: { code: 'REQUEST_ID_REUSED' } } });
-    context.pending.expectedRevision = 3;
-    await expect(repo.transitionFromExecutor(job.id, 3, observed, context)).rejects.toEqual(fault('REQUEST_ID_REUSED'));
+    expect(() => repo.acceptExecutorReply(context.sender, { ...executorReply(context), expectedRevision: 3 })).toThrow();
+    await expect(repo.acceptExecutorReply(context.sender, executorReply(context))).rejects.toEqual(fault('REQUEST_ID_REUSED'));
     expect(storage.writes).toBe(5);
   });
   it.each(['same ID', 'different ID'] as const)('rejects reissuing the execute command with %s', async mode => {
@@ -128,7 +127,7 @@ describe('durable outstanding executor requests', () => {
     const { register, repo, job, storage, report, clock } = await setup();
     await register(); await register('portal.cancel');
     const context = executorContext(job, 2, 'portal.cancel');
-    await repo.transitionFromExecutor(job.id, 2, { type: 'cancellation-confirmed' }, context);
+    await repo.acceptExecutorReply(context.sender, executorReply(context));
     expect(snapshot(storage)).toMatchObject({ jobs: [{ state: 'cancelled' }],
       executorRequests: [{ state: 'abandoned' }, { state: 'consumed' }] });
     clock.mockReturnValue(time + 100);
@@ -197,9 +196,10 @@ describe('durable outstanding executor requests', () => {
     await expect(register('portal.cancel')).rejects.toEqual(fault('INVALID_TIME'));
   });
   it('does not extend an expired pending request using caller-supplied metadata', async () => {
-    const { register, report, context, storage, clock } = await setup();
+    const { repo, register, report, context, storage, clock } = await setup();
     await register(); clock.mockReturnValue(context.pending.expiresAt);
-    context.pending.expiresAt += 10_000;
+    expect(() => repo.acceptExecutorReply(context.sender, { ...executorReply(context),
+      pending: { ...context.pending, expiresAt: context.pending.expiresAt + 10_000 } })).toThrow();
     await expect(report()).rejects.toEqual(fault('UNAUTHORIZED_SENDER'));
     expect(storage.writes).toBe(4);
   });

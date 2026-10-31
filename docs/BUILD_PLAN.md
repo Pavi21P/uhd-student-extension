@@ -227,6 +227,8 @@ Each cell is a task/issue with its own acceptance check. Estimate 1–3 focused 
 
 14B request-registry continuation (2026-10-29): persist outstanding request registration, atomic single-use reply consumption and recovery abandonment with internal jobs. Retain request tombstones through migration/recovery and reject reissuance. Use synthetic metadata; full reply/event validation, production browser wiring and dispatch coordination remain separate. No public command or live execution is enabled.
 
+14B full-reply continuation (2026-10-30): strictly validate completed/cancelled/error replies, bind them to saved requests and derive lifecycle events from the same parsed messages. Retain normalized evidence without raw portal text. Final outcome reconciliation and production integration remain separate; no live execution enabled. Solo development now commits/pushes without new PRs.
+
 ### Phase 5 — release (days 19–20)
 
 | Day | A | B | Merge checkpoint |
