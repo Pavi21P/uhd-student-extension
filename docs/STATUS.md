@@ -36,13 +36,14 @@ Updated: 2026-11-01 (America/Chicago)
 - **14B final outcome reconciliation verified and published**: atomic final states, missing-result unknowns and guarded saved-evidence recovery with 41 new cases; [evidence](evidence/14b-final-results.md). Local and hosted Windows/Linux 782-test/build/E2E checks passed. Pushed directly to work/solo-development; no new PR. No live enrollment enabled.
 - **14B safe job views verified and published**: shared public/stored invariants, explicit privacy projection and correlated response validation with 63 new cases; [evidence](evidence/14b-job-views.md). Local and hosted Windows/Linux 845-test/build/E2E checks passed; pushed directly to work/solo-development. Production enrollment remains disabled.
 - **14B durable dispatch intent verified and published**: schema v4, persisted single-use sender invocation and restart/uncertain-delivery protection with 36 new cases; [evidence](evidence/14b-dispatch-intent.md). Local and hosted Windows/Linux 881-test/build/E2E checks passed; direct solo-branch publication. Production browser/portal dispatch remains disabled.
+- **14B trusted browser transport locally verified**: strict dispatch parsing, browser-derived identity, exact-document sends and bounded no-retry waits with 55 new cases; [evidence](evidence/14b-browser-transport.md). Adapter remains disconnected and production enrollment disabled.
 - Public repo: https://github.com/Pavi21P/uhd-student-extension. Foundation tasks 03A (`cffda38`) and 03B (`b4ea551`) are included in the 2026-10-22 main-branch publication, retaining their original author dates and history. Published `feat/05a-course-editor` at `5635520` includes 04A (`871beb4`) and 05A (`823f33f`). 05B (`2517dc1`) is published on `feat/05b-meeting-validation`, based on that branch. [Pull request #1](https://github.com/Pavi21P/uhd-student-extension/pull/1) includes 04A/05A/05B and is open for review. `main` was fast-forwarded to verified development tip `2670263` on 2026-11-01 at the user's request, preserving all 51 existing commits including October 30 commit `897e4b7`.
 
 ## Active work
 
 | Owner | Task | State | Next action |
 | --- | --- | --- | --- |
-| A / Codex | 14B durable dispatch intent | Verified and published | Local and hosted Windows/Linux 881-test/build/E2E checks passed; direct solo-branch push, no new PR. |
+| A / Codex | 14B trusted browser transport boundary | Locally verified; publication pending | 936 tests/build and isolated Chromium passed; direct solo-branch publication next. |
 | B / former teammate | 01B | No longer participating (user, 2026-10-30) | Prior work preserved; Codex owns implementation. Live inspection evidence remains unavailable. |
 
 ## Decisions to retain
@@ -66,10 +67,10 @@ Updated: 2026-11-01 (America/Chicago)
 
 ## Latest handoff
 
-- Task / owner: **14B durable dispatch intent / Codex**.
-- Changed: new `src/shared/enrollment-dispatch.ts`, guarded sender invocation/schema v4 in `src/storage/enrollment-repository.ts`, 36 new cases, migrated fixtures and [evidence](evidence/14b-dispatch-intent.md). One-use intents survive restart; uncertain writes/delivery never trigger a retry. No production browser sender or DOM adapter added.
-- Passed: final lint, 881 tests across 26 files, TypeScript, production/MV3 build and isolated Chromium 156.0.8078.4 E2E. Hosted Windows 2025 and Ubuntu 24.04 passed all checks in [run 41375427410](https://github.com/Pavi21P/uhd-student-extension/actions/runs/41375427410), implementation commit `a1701319b6fc2459fffe631d1525f5454d625e15`. Remote solo branch matched local HEAD; subsequent handoff edits are documentation only.
-- Remaining: trusted browser transport/metadata, executor deduplication and live preflight, production storage/recovery/RPC/event wiring, observed portal evidence, live ratings and human acceptance. Sender invocation is not evidence of submission or enrollment.
-- Next independent candidate: **14B trusted browser transport boundary**, for exact-document sends and browser-derived metadata using synthetic transport tests. Continue direct commits/pushes on work/solo-development without new PRs; retain disabled production activation/dispatch and the observed portal requirement.
+- Task / owner: **14B trusted browser transport boundary / Codex**.
+- Changed: new `src/background/enrollment-transport.ts`, dispatch parser, 55 tests, targeted official API references and [evidence](evidence/14b-browser-transport.md). Exact tab/frame/document sends recheck time and identity; timeout/rejection never retries. Ordinary message return bodies are not enrollment-result evidence.
+- Passed: 91 targeted tests; final lint, 936 tests across 27 files, TypeScript, production/MV3 build and isolated Chromium 156.0.8078.4 E2E. Publication/hosted CI pending.
+- Remaining: authenticated reply bridge and production wiring/permissions, executor deduplication/live preflight, observed portal evidence, live ratings and human acceptance. Synthetic browser APIs and isolated timetable E2E do not verify live portal transport.
+- Next independent candidate: **14B authenticated executor reply bridge**, projecting actual runtime sender metadata separately from untrusted message payloads into the repository, with synthetic tests and no production listener activation. Continue direct commits/pushes on work/solo-development without new PRs.
 
 Read linked evidence for details; do not replay the full history.

@@ -67,3 +67,7 @@ Re-read the existing official registration guide for the unresolved distinction 
 ## Task 02B independent feasibility check (2026-10-25)
 
 Rechecked the existing official RMP terms, Chrome alarms and worker-lifecycle sources; targeted official-domain API searches did not establish a permitted live ratings source. The [source decision](evidence/rmp-source.md) retains explicit profile links and records the missing evidence. The [timer report](evidence/timing-report.md) records ordinary-page Chrome/Edge measurements and links timeout guidance. It separates diagnostic callbacks from enrollment dispatch and leaves all live/release gates pending.
+
+## Task 14B targeted browser transport API check (2026-11-01)
+
+Official [webNavigation.getFrame](https://developer.chrome.com/docs/extensions/reference/api/webNavigation#method-getFrame), [tabs.sendMessage](https://developer.chrome.com/docs/extensions/reference/api/tabs#method-sendMessage), and [runtime.MessageSender](https://developer.chrome.com/docs/extensions/reference/api/runtime#type-MessageSender) were rechecked for exact document targeting and browser-provided metadata. getFrame accepts documentId with matching tab/frame IDs; sendMessage can target a specific document; sender origin may differ from URL or be opaque. webNavigation requires an explicit permission, which this checkpoint does not add. Installed Chrome types verify API compatibility; synthetic tests are not live browser/portal verification. See [transport evidence](evidence/14b-browser-transport.md).

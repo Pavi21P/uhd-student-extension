@@ -235,6 +235,8 @@ Each cell is a task/issue with its own acceptance check. Estimate 1–3 focused 
 
 14B dispatch-intent continuation (2026-11-01): persist a single-use command-dispatch record before invoking an injected trusted sender; reject duplicate, stale, delayed or uncertain attempts, migrate historical stores without invented claims, and retain unknown results on restart. Scope remains the internal single-writer coordinator with synthetic transport; production browser transport and observed DOM execution are separate.
 
+14B transport continuation (2026-11-01): implement a disconnected Chrome-compatible transport with browser-derived document metadata, exact-document sends, strict dispatch parsing and bounded no-retry waits. Test using synthetic APIs and repository integration; retain the production permission, reply wiring and observed portal gates.
+
 ### Phase 5 — release (days 19–20)
 
 | Day | A | B | Merge checkpoint |

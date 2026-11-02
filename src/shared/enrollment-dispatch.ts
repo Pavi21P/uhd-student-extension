@@ -1,7 +1,8 @@
 import type { EnrollmentJob, PortalTarget } from './domain';
 import type { ExecutorRequestRecord } from './enrollment-requests';
 import type { PortalCommand } from './messages';
-import { id, integer, invalid, list, record } from './validation';
+import { id, integer, invalid, list, record, version } from './validation';
+import { parsePortalTarget } from './enrollment-records';
 
 export interface DispatchIntent { requestId: string; claimedAt: number }
 export interface ExecutorDispatch {
@@ -39,4 +40,33 @@ export function executorDispatch(job: EnrollmentJob, request: ExecutorRequestRec
       : { ...base, type: 'portal.execute', payload: { ...payload, reviewFingerprint: job.review.fingerprint,
         termId: job.termId, selectedSectionIds: [...job.selectedSectionIds], deselectSectionIds: [...job.review.deselectSectionIds],
         targetEpochMs: job.targetEpochMs, expiresAt } } };
+}
+
+/** Strict, detached boundary for the trusted browser sender; no arbitrary commands. */
+export function parseExecutorDispatch(value: unknown): ExecutorDispatch {
+  const row = record(value, ['target', 'command', 'expiresAt'], 'dispatch');
+  const target = parsePortalTarget(row.target);
+  const expiresAt = integer(row.expiresAt, -8_640_000_000_000_000, 8_640_000_000_000_000, 'dispatch.expiresAt');
+  const command = record(row.command, ['protocolVersion', 'requestId', 'type', 'payload'], 'dispatch.command');
+  const base = { protocolVersion: version(command.protocolVersion, 'dispatch.protocolVersion'),
+    requestId: id(command.requestId, 'dispatch.requestId') };
+  const fields = ['jobId', 'executionToken'];
+  if (command.type === 'portal.execute') fields.push('reviewFingerprint', 'termId', 'selectedSectionIds', 'deselectSectionIds', 'targetEpochMs', 'expiresAt');
+  else if (command.type !== 'portal.cancel') invalid('dispatch.command.type');
+  const payload = record(command.payload, fields, 'dispatch.payload');
+  const identity = { jobId: id(payload.jobId, 'dispatch.jobId'), executionToken: id(payload.executionToken, 'dispatch.executionToken') };
+  if (command.type === 'portal.cancel') return { target, expiresAt, command: { ...base, type: 'portal.cancel', payload: identity } };
+  const ids = (value: unknown, field: string) => {
+    const result = list(value, 250, field).map(value => id(value, field));
+    if (new Set(result).size !== result.length) invalid(field);
+    return result;
+  };
+  const selectedSectionIds = ids(payload.selectedSectionIds, 'dispatch.selectedSectionIds');
+  const deselectSectionIds = ids(payload.deselectSectionIds, 'dispatch.deselectSectionIds');
+  if (!selectedSectionIds.length || deselectSectionIds.some(value => selectedSectionIds.includes(value))) invalid('dispatch.selection');
+  const targetEpochMs = integer(payload.targetEpochMs, -8_640_000_000_000_000, 8_640_000_000_000_000, 'dispatch.targetEpochMs');
+  if (payload.expiresAt !== expiresAt || expiresAt <= targetEpochMs) invalid('dispatch.expiresAt');
+  return { target, expiresAt, command: { ...base, type: 'portal.execute', payload: { ...identity,
+    reviewFingerprint: id(payload.reviewFingerprint, 'dispatch.reviewFingerprint'), termId: id(payload.termId, 'dispatch.termId'),
+    selectedSectionIds, deselectSectionIds, targetEpochMs, expiresAt } } };
 }
