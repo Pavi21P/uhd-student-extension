@@ -35,13 +35,14 @@ Updated: 2026-11-01 (America/Chicago)
 - **14B complete executor replies verified and published**: strict full-message parsing, saved-request-derived events, safe error/unknown handling and normalized evidence; [evidence](evidence/14b-executor-replies.md). Local and hosted Windows/Linux 741-test/build/E2E checks passed. Pushed directly to work/solo-development; no new PR. No live enrollment enabled.
 - **14B final outcome reconciliation verified and published**: atomic final states, missing-result unknowns and guarded saved-evidence recovery with 41 new cases; [evidence](evidence/14b-final-results.md). Local and hosted Windows/Linux 782-test/build/E2E checks passed. Pushed directly to work/solo-development; no new PR. No live enrollment enabled.
 - **14B safe job views verified and published**: shared public/stored invariants, explicit privacy projection and correlated response validation with 63 new cases; [evidence](evidence/14b-job-views.md). Local and hosted Windows/Linux 845-test/build/E2E checks passed; pushed directly to work/solo-development. Production enrollment remains disabled.
+- **14B durable dispatch intent locally verified**: schema v4, persisted single-use sender invocation and restart/uncertain-delivery protection with 36 new cases; [evidence](evidence/14b-dispatch-intent.md). Production browser/portal dispatch remains disabled.
 - Public repo: https://github.com/Pavi21P/uhd-student-extension. Foundation tasks 03A (`cffda38`) and 03B (`b4ea551`) are included in the 2026-10-22 main-branch publication, retaining their original author dates and history. Published `feat/05a-course-editor` at `5635520` includes 04A (`871beb4`) and 05A (`823f33f`). 05B (`2517dc1`) is published on `feat/05b-meeting-validation`, based on that branch. [Pull request #1](https://github.com/Pavi21P/uhd-student-extension/pull/1) includes 04A/05A/05B and is open for review. `main` was fast-forwarded to verified development tip `2670263` on 2026-11-01 at the user's request, preserving all 51 existing commits including October 30 commit `897e4b7`.
 
 ## Active work
 
 | Owner | Task | State | Next action |
 | --- | --- | --- | --- |
-| A / Codex | 14B safe job views and response validation | Verified and published | Local and hosted Windows/Linux 845-test/build/E2E checks passed; direct solo-branch push, no new PR. |
+| A / Codex | 14B durable dispatch intent | Locally verified; publication pending | 881 tests/build and isolated Chromium passed; direct solo-branch publication next. |
 | B / former teammate | 01B | No longer participating (user, 2026-10-30) | Prior work preserved; Codex owns implementation. Live inspection evidence remains unavailable. |
 
 ## Decisions to retain
@@ -65,10 +66,10 @@ Updated: 2026-11-01 (America/Chicago)
 
 ## Latest handoff
 
-- Task / owner: **14B safe job views and response validation / Codex**.
-- Changed: `src/shared/enrollment-records.ts`, new `src/shared/enrollment-view.ts`, 63 new tests, contracts/plan and [evidence](evidence/14b-job-views.md). Explicit public-field selection omits execution tokens, reviews, targets/request metadata and raw portal messages. No runtime command enabled.
-- Passed: 200 targeted tests; lint, 845 tests across 25 files, TypeScript, production/MV3 build and isolated Chromium 156.0.8078.4 E2E. Hosted Windows 2025 and Ubuntu 24.04 passed all checks in [run 41374335555](https://github.com/Pavi21P/uhd-student-extension/actions/runs/41374335555), implementation commit `dc9d289632956b77a12cdfcdc64cd0a64b86151c`. Remote branch matched local HEAD; this subsequent handoff changes documentation only.
-- Remaining: trusted browser metadata, durable dispatch intent, production storage/recovery/RPC/event wiring, portal evidence, live ratings and human acceptance. A validated view is not authority to submit.
-- Next independent candidate: **14B durable dispatch-intent coordination**, using synthetic restart/duplicate protection. Continue direct commits/pushes on work/solo-development without new PRs; retain disabled activation/dispatch and the observed portal requirement.
+- Task / owner: **14B durable dispatch intent / Codex**.
+- Changed: new `src/shared/enrollment-dispatch.ts`, guarded sender invocation/schema v4 in `src/storage/enrollment-repository.ts`, 36 new cases, migrated fixtures and [evidence](evidence/14b-dispatch-intent.md). One-use intents survive restart; uncertain writes/delivery never trigger a retry. No production browser sender or DOM adapter added.
+- Passed: final lint, 881 tests across 26 files, TypeScript, production/MV3 build and isolated Chromium 156.0.8078.4 E2E. Publication/hosted CI pending.
+- Remaining: trusted browser transport/metadata, executor deduplication and live preflight, production storage/recovery/RPC/event wiring, observed portal evidence, live ratings and human acceptance. Sender invocation is not evidence of submission or enrollment.
+- Next independent candidate: **14B trusted browser transport boundary**, for exact-document sends and browser-derived metadata using synthetic transport tests. Continue direct commits/pushes on work/solo-development without new PRs; retain disabled production activation/dispatch and the observed portal requirement.
 
 Read linked evidence for details; do not replay the full history.

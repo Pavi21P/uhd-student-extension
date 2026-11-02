@@ -233,6 +233,8 @@ Each cell is a task/issue with its own acceptance check. Estimate 1–3 focused 
 
 14B view continuation (2026-11-01): validate detached public job snapshots and correlated activate/cancel/read responses; explicitly project safe fields from validated stored records. Reject internal metadata and raw outcome messages. Keep production RPC/dispatch disabled; durable dispatch intent and live integration remain separate.
 
+14B dispatch-intent continuation (2026-11-01): persist a single-use command-dispatch record before invoking an injected trusted sender; reject duplicate, stale, delayed or uncertain attempts, migrate historical stores without invented claims, and retain unknown results on restart. Scope remains the internal single-writer coordinator with synthetic transport; production browser transport and observed DOM execution are separate.
+
 ### Phase 5 — release (days 19–20)
 
 | Day | A | B | Merge checkpoint |

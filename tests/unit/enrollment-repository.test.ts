@@ -31,7 +31,7 @@ class Storage implements KeyValueStorage {
     this.values.set(key, structuredClone(value));
     if (this.failWrite === 'after') throw new Error('Private lost acknowledgment details');
   }
-  seed(...jobs: EnrollmentJob[]) { this.values.set(enrollmentJobsKey, { schemaVersion: 3, executorRequests: [], activations: [], legacyJobIds: jobs.map(job => job.id), jobs: structuredClone(jobs) }); }
+  seed(...jobs: EnrollmentJob[]) { this.values.set(enrollmentJobsKey, { schemaVersion: 4, dispatchIntents: [], executorRequests: [], activations: [], legacyJobIds: jobs.map(job => job.id), jobs: structuredClone(jobs) }); }
 }
 function create(repo: EnrollmentJobRepository, input: unknown) {
   const value = input as EnrollmentJob; // Test fixture helper; production receives unknown at its boundary.
@@ -69,7 +69,7 @@ describe('internal enrollment job repository', () => {
     saved.selectedSectionIds.push('unrelated');
     expect(await repo.readAll()).toEqual([job()]);
     expect(storage.values.get('uhd.schedule.synthetic')).toEqual({ untouched: true });
-    expect(storage.values.get(enrollmentJobsKey)).toEqual({ schemaVersion: 3, executorRequests: [], jobs: [job()], legacyJobIds: [], activations: [{ requestId: 'request-synthetic-job', jobId: job().id, payload: payloadForJob(job()) }] });
+    expect(storage.values.get(enrollmentJobsKey)).toEqual({ schemaVersion: 4, dispatchIntents: [], executorRequests: [], jobs: [job()], legacyJobIds: [], activations: [{ requestId: 'request-synthetic-job', jobId: job().id, payload: payloadForJob(job()) }] });
     expect(storage.writes).toBe(1);
   });
   it('allows only one concurrent create and never replaces a reused ID', async () => {
@@ -196,7 +196,7 @@ describe('internal enrollment job repository', () => {
   });
   it('preserves unsupported versions and blocks later operations', async () => {
     const storage = new Storage();
-    const value = { schemaVersion: 4, jobs: [job()] };
+    const value = { schemaVersion: 5, jobs: [job()] };
     storage.values.set(enrollmentJobsKey, value);
     const repo = new EnrollmentJobRepository(storage, () => time);
     await expect(repo.recover()).rejects.toEqual(code('UNSUPPORTED_VERSION'));

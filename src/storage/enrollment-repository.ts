@@ -6,6 +6,7 @@ import { ContractFault, id, integer, invalid, list, record, revision } from '../
 import { parseExecutorRegistration, parseExecutorRequests, type ExecutorRequestRecord } from '../shared/enrollment-requests';
 import { deriveExecutorReport, parseExecutorReply, type ExecutorReply } from '../shared/enrollment-replies';
 import { finalizeExecutorResult } from '../shared/enrollment-results';
+import { executorDispatch, parseDispatchIntents, type DispatchIntent, type ExecutorDispatch } from '../shared/enrollment-dispatch';
 import type { KeyValueStorage } from './repository';
 import { assertExecutorAdapter, assertExecutorSource, parseExecutorPending, isExecutorEvent, parseExecutorSender, parseExecutorPolicy, type ExecutorContext, type ExecutorPolicy } from '../shared/enrollment-ownership';
 
@@ -13,17 +14,18 @@ export const enrollmentJobsKey = 'uhd.enrollment.jobs';
 const maxJobs = 100;
 const active = (job: EnrollmentJob) => ['armed', 'preflight', 'executing'].includes(job.state);
 interface ActivationRecord { requestId: string; jobId: string; payload: ActivationPayload }
-interface StoredJobs { schemaVersion: 3; jobs: EnrollmentJob[]; activations: ActivationRecord[]; legacyJobIds: string[]; executorRequests: ExecutorRequestRecord[] }
+interface StoredJobs { schemaVersion: 4; jobs: EnrollmentJob[]; activations: ActivationRecord[]; legacyJobIds: string[]; executorRequests: ExecutorRequestRecord[]; dispatchIntents: DispatchIntent[] }
 interface LoadedJobs { store: StoredJobs; needsMigration: boolean }
 export interface StoredJobDecision extends Omit<LifecycleDecision, 'job'> { job: EnrollmentJob }
 export interface ActivationDecision { job: EnrollmentJob; created: boolean }
 
 function parseStoredJobs(value: unknown): LoadedJobs {
-  const row = record(value, ['schemaVersion', 'jobs', 'activations', 'legacyJobIds', 'executorRequests'], 'enrollmentStore');
+  const row = record(value, ['schemaVersion', 'jobs', 'activations', 'legacyJobIds', 'executorRequests', 'dispatchIntents'], 'enrollmentStore');
   const schemaVersion = integer(row.schemaVersion, 1, Number.MAX_SAFE_INTEGER, 'enrollmentStore.schemaVersion');
-  if (schemaVersion !== 1 && schemaVersion !== 2 && schemaVersion !== 3) throw new ContractFault('UNSUPPORTED_VERSION', 'This saved job version is not supported. Data was left intact.');
+  if (schemaVersion !== 1 && schemaVersion !== 2 && schemaVersion !== 3 && schemaVersion !== 4) throw new ContractFault('UNSUPPORTED_VERSION', 'This saved job version is not supported. Data was left intact.');
   if (schemaVersion === 1) record(row, ['schemaVersion', 'jobs'], 'enrollmentStore');
   if (schemaVersion === 2) record(row, ['schemaVersion', 'jobs', 'activations', 'legacyJobIds'], 'enrollmentStore');
+  if (schemaVersion === 3) record(row, ['schemaVersion', 'jobs', 'activations', 'legacyJobIds', 'executorRequests'], 'enrollmentStore');
   const jobs = list(row.jobs, maxJobs, 'enrollmentStore.jobs').map(parseStoredEnrollmentJob);
   const byId = new Map(jobs.map(job => [job.id, job]));
   if (byId.size !== jobs.length || jobs.filter(active).length > 1) invalid('enrollmentStore.jobs');
@@ -44,8 +46,9 @@ function parseStoredJobs(value: unknown): LoadedJobs {
   const legacy = new Set(legacyJobIds);
   if (legacy.size !== legacyJobIds.length || legacyJobIds.some(jobId => !byId.has(jobId) || associated.has(jobId))
       || jobs.some(job => !associated.has(job.id) && !legacy.has(job.id))) invalid('enrollmentStore.legacyJobIds');
-  const executorRequests = schemaVersion === 3 ? parseExecutorRequests(row.executorRequests, jobs) : [];
-  return { store: { schemaVersion: 3, jobs, activations, legacyJobIds, executorRequests }, needsMigration: schemaVersion !== 3 };
+  const executorRequests = schemaVersion >= 3 ? parseExecutorRequests(row.executorRequests, jobs) : [];
+  const dispatchIntents = schemaVersion === 4 ? parseDispatchIntents(row.dispatchIntents, jobs, executorRequests) : [];
+  return { store: { schemaVersion: 4, jobs, activations, legacyJobIds, executorRequests, dispatchIntents }, needsMigration: schemaVersion !== 4 };
 }
 function projection(job: EnrollmentJob) {
   const { id, revision, state, targetEpochMs, expiresAt, updatedAt, submittedAt } = job;
@@ -56,9 +59,12 @@ function consumedExecution(store: StoredJobs, job: EnrollmentJob): ExecutorReque
   return store.executorRequests.find(entry => entry.state === 'consumed' && entry.pending.command === 'portal.execute'
     && entry.pending.jobId === job.id && entry.pending.expectedRevision === job.revision - 1);
 }
-function reconcileSavedResult(job: EnrollmentJob, request: ExecutorRequestRecord, now: number): EnrollmentJob {
+function dispatchFloor(store: StoredJobs, request: ExecutorRequestRecord): number {
+  return Math.max(request.createdAt, store.dispatchIntents.find(intent => intent.requestId === request.pending.requestId)?.claimedAt ?? request.createdAt);
+}
+function reconcileSavedResult(job: EnrollmentJob, request: ExecutorRequestRecord, now: number, earliestDispatch: number): EnrollmentJob {
   if (job.revision === Number.MAX_SAFE_INTEGER) throw new ContractFault('REVISION_CONFLICT', 'The job revision cannot advance safely.');
-  const uncertain = now < job.updatedAt || job.submittedAt === null || job.submittedAt < request.createdAt
+  const uncertain = now < job.updatedAt || job.submittedAt === null || job.submittedAt < earliestDispatch
     || job.updatedAt >= request.pending.expiresAt;
   return finalizeExecutorResult({ ...job, revision: job.revision + 1,
     updatedAt: Math.max(now, job.updatedAt), state: uncertain ? 'unknown' : job.state });
@@ -95,7 +101,7 @@ export class EnrollmentJobRepository {
       this.ready = false;
       throw new ContractFault('STORAGE_ERROR', 'Saved jobs could not be read. Recovery is required; nothing was changed.');
     }
-    if (value === undefined) return { store: { schemaVersion: 3, jobs: [], activations: [], legacyJobIds: [], executorRequests: [] }, needsMigration: false };
+    if (value === undefined) return { store: { schemaVersion: 4, jobs: [], activations: [], legacyJobIds: [], executorRequests: [], dispatchIntents: [] }, needsMigration: false };
     try {
       const loaded = parseStoredJobs(value);
       if (loaded.needsMigration && this.ready) throw new ContractFault('STORAGE_ERROR', 'Explicit recovery is required for older job data.');
@@ -126,7 +132,7 @@ export class EnrollmentJobRepository {
         const evidence = consumedExecution(store, job);
         if (job.state === 'executing' && job.submittedAt !== null && evidence) {
           changed = true;
-          return reconcileSavedResult(job, evidence, now);
+          return reconcileSavedResult(job, evidence, now, dispatchFloor(store, evidence));
         }
         const decision = transitionEnrollmentLifecycle(projection(job), { type: 'recover' }, job.revision, now);
         changed ||= decision.changed;
@@ -223,6 +229,60 @@ export class EnrollmentJobRepository {
     });
   }
 
+  /**
+   * Trusted coordinator only. Persist a one-use intent before invoking the injected sender.
+   * Sender completion is delivery bookkeeping, never proof of submission or enrollment.
+   */
+  dispatchExecutorRequest(requestId: string, expectedRevision: number, senderInput: unknown,
+    send: (dispatch: ExecutorDispatch) => Promise<void>): Promise<void> {
+    const validId = id(requestId, 'dispatch.requestId');
+    revision(expectedRevision, 'expectedRevision');
+    const sender = parseExecutorSender(senderInput);
+    if (typeof send !== 'function') invalid('dispatch.sender');
+    return this.serial(async () => {
+      this.requireReady();
+      const { store } = await this.load();
+      const request = store.executorRequests.find(entry => entry.pending.requestId === validId);
+      if (!request || request.state !== 'pending' || store.dispatchIntents.some(intent => intent.requestId === validId)) {
+        throw new ContractFault('REQUEST_ID_REUSED', 'No unused dispatch is available. Do not resend this request.');
+      }
+      const job = store.jobs.find(job => job.id === request.pending.jobId)!;
+      if (job.revision !== expectedRevision) throw new ContractFault('REVISION_CONFLICT', 'The job changed before dispatch.');
+      const checkTime = (now: number) => {
+        if (now < job.updatedAt || now < request.createdAt || now >= request.pending.expiresAt
+            || store.dispatchIntents.some(intent => now < intent.claimedAt && store.executorRequests.some(entry =>
+              entry.pending.requestId === intent.requestId && entry.pending.jobId === job.id))
+            || (request.pending.command === 'portal.execute' && (now < job.targetEpochMs || now >= job.expiresAt))) {
+          throw new ContractFault('INVALID_TIME', 'The command dispatch window is no longer valid. Do not resend.');
+        }
+        assertExecutorSource(job, request.pending, sender, this.executorPolicy, now);
+      };
+      const claimedAt = this.now();
+      checkTime(claimedAt);
+      if (request.pending.command === 'portal.execute' && store.executorRequests.some(entry =>
+        entry.pending.jobId === job.id && entry.pending.command === 'portal.cancel')) invalid('dispatch.cancel');
+      const dispatch = executorDispatch(job, request);
+      store.dispatchIntents.push({ requestId: validId, claimedAt });
+      await this.persist(store);
+      // A delayed write can miss the window. Keep the tombstone even when no send happens.
+      try {
+        const now = this.now();
+        if (now < claimedAt) throw new ContractFault('INVALID_TIME', 'The clock moved backwards before dispatch.');
+        checkTime(now);
+      } catch (error) { this.ready = false; throw error; }
+      const uncertain = () => {
+        this.ready = false;
+        throw new ContractFault('TRANSPORT_ERROR', 'Command delivery is unconfirmed. Do not resend; recovery is required.');
+      };
+      let completion: Promise<void>;
+      try { completion = Promise.resolve(send(dispatch)).catch(uncertain); }
+      catch { return uncertain(); }
+      // Release the repository queue while the sender waits: replies may reenter it.
+      // Observe rejection immediately so a fast failing sender cannot become unhandled.
+      void completion.catch(() => undefined);
+      return { completion };
+    }).then(result => result.completion);
+  }
   /** Trusted background decisions only. Executor acknowledgments use the guarded entrypoint. */
   transition(jobId: string, expectedRevision: number, eventInput: unknown): Promise<StoredJobDecision> {
     const validId = id(jobId);
@@ -251,7 +311,7 @@ export class EnrollmentJobRepository {
       if (current.submittedAt === null || !evidence) {
         throw new ContractFault('UNAUTHORIZED_SENDER', 'No consumed execution reply supports reconciling this job.');
       }
-      const job = reconcileSavedResult(current, evidence, this.now());
+      const job = reconcileSavedResult(current, evidence, this.now(), dispatchFloor(store, evidence));
       store.jobs[index] = job;
       for (const request of store.executorRequests) {
         if (request.pending.jobId === job.id && request.state === 'pending') request.state = 'abandoned';
@@ -295,7 +355,7 @@ export class EnrollmentJobRepository {
       let job = parseStoredEnrollmentJob({ ...current, ...decision.job,
         ...(outcomes !== undefined && decision.job.submittedAt !== null ? { outcomes } : {}) });
       if (report?.reply.type === 'portal.completed') {
-        if (request && job.submittedAt !== null && job.submittedAt < request.createdAt) job = { ...job, state: 'unknown' };
+        if (request && job.submittedAt !== null && job.submittedAt < dispatchFloor(store, request)) job = { ...job, state: 'unknown' };
         job = finalizeExecutorResult(job);
       }
       if (request) request.state = 'consumed';

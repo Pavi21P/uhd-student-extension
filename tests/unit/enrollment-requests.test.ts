@@ -41,7 +41,7 @@ async function setup() {
   return { storage, clock, repo, job, context, registration, register, report };
 }
 function snapshot(storage: Storage) {
-  return storage.value as { schemaVersion: 3; jobs: EnrollmentJob[]; executorRequests: ExecutorRequestRecord[] };
+  return storage.value as { schemaVersion: 4; dispatchIntents: unknown[]; jobs: EnrollmentJob[]; executorRequests: ExecutorRequestRecord[] };
 }
 
 describe('durable outstanding executor requests', () => {
@@ -226,21 +226,21 @@ describe('executor registry migration and record integrity', () => {
       await repo.transition(job.id, 2, { type: 'invalidate' });
       const stored = snapshot(storage); stored.jobs[0]!.state = 'cancelled';
     }
-    const { executorRequests: _requests, ...old } = snapshot(storage);
+    const { executorRequests: _requests, dispatchIntents: _intents, ...old } = snapshot(storage);
     storage.value = { ...old, schemaVersion: 2 };
     const before = structuredClone(storage.value);
     const fresh = new EnrollmentJobRepository(storage, () => time);
     const writes = storage.writes;
     const jobs = await fresh.recover();
     expect(jobs[0]!.state).toBe(state === 'executing' ? 'unknown' : 'cancelled');
-    expect(storage.value).toMatchObject({ schemaVersion: 3, executorRequests: [],
+    expect(storage.value).toMatchObject({ schemaVersion: 4, dispatchIntents: [], executorRequests: [],
       activations: (before as { activations: unknown }).activations });
     expect(storage.writes).toBe(writes + 1);
     await fresh.recover(); expect(storage.writes).toBe(writes + 1);
   });
   it('requires explicit recovery if v2 data appears while initialized', async () => {
     const { storage, repo } = await setup();
-    const { executorRequests: _requests, ...old } = snapshot(storage);
+    const { executorRequests: _requests, dispatchIntents: _intents, ...old } = snapshot(storage);
     storage.value = { ...old, schemaVersion: 2 };
     await expect(repo.readAll()).rejects.toEqual(fault('STORAGE_ERROR'));
     expect(storage.value).toEqual({ ...old, schemaVersion: 2 });
