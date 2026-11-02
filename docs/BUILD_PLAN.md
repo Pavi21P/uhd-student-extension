@@ -231,6 +231,8 @@ Each cell is a task/issue with its own acceptance check. Estimate 1–3 focused 
 
 14B final-result continuation (2026-10-31): finalize accepted complete outcomes in the existing atomic write; reconcile prior saved evidence only with matching consumed execution provenance. Preserve unknown states, reject stale revisions, retain request tombstones and never resubmit. Use synthetic outcomes; live adapter/browser integration remains blocked on observed evidence.
 
+14B view continuation (2026-11-01): validate detached public job snapshots and correlated activate/cancel/read responses; explicitly project safe fields from validated stored records. Reject internal metadata and raw outcome messages. Keep production RPC/dispatch disabled; durable dispatch intent and live integration remain separate.
+
 ### Phase 5 — release (days 19–20)
 
 | Day | A | B | Merge checkpoint |

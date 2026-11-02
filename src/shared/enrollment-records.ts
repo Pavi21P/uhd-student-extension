@@ -1,4 +1,4 @@
-import type { EnrollmentJob, EnrollmentReview, PortalSection, PortalTarget, SectionOutcome } from './domain';
+import type { EnrollmentJob, EnrollmentJobView, EnrollmentReview, PortalSection, PortalTarget, SectionOutcome } from './domain';
 import { parseEnrollmentLifecycle } from './enrollment-lifecycle';
 import { parseEnrollmentTiming } from './enrollment-timing';
 import { id, integer, invalid, list, record, text } from './validation';
@@ -99,10 +99,7 @@ export function classifyOutcomeState(outcomes: readonly SectionOutcome[]): 'succ
       : outcomes.some(item => item.status === 'enrolled' || item.status === 'waitlisted') ? 'partial' : 'failed';
 }
 
-/** Validate an internal saved job without arming, expiring, persisting or executing it. */
-export function parseStoredEnrollmentJob(value: unknown): EnrollmentJob {
-  const row = record(value, ['id', 'revision', 'state', 'termId', 'termLabel', 'selectedSectionIds', 'timing',
-    'targetEpochMs', 'expiresAt', 'createdAt', 'updatedAt', 'submittedAt', 'outcomes', 'executionToken', 'review'], 'job');
+function parseJobFields(row: Record<string, unknown>): EnrollmentJobView {
   const lifecycle = parseEnrollmentLifecycle({
     id: row.id, revision: row.revision, state: row.state, targetEpochMs: row.targetEpochMs,
     expiresAt: row.expiresAt, updatedAt: row.updatedAt, submittedAt: row.submittedAt,
@@ -111,13 +108,9 @@ export function parseStoredEnrollmentJob(value: unknown): EnrollmentJob {
   if (lifecycle.updatedAt < createdAt || lifecycle.targetEpochMs < createdAt) invalid('job.createdAt');
   const timing = parseEnrollmentTiming(row.timing, createdAt);
   if (lifecycle.targetEpochMs !== (timing.mode === 'now' ? createdAt : timing.targetEpochMs)) invalid('job.targetEpochMs');
-  const review = parseStoredEnrollmentReview(row.review);
-  if (createdAt < review.observedAt || createdAt >= review.expiresAt) invalid('job.review');
   const selectedSectionIds = ids(row.selectedSectionIds, 'job.selectedSectionIds', true);
   const termId = id(row.termId, 'job.termId');
   const termLabel = text(row.termLabel, 120, 'job.termLabel');
-  if (termId !== review.termId || termLabel !== review.termLabel
-      || !sameSet(selectedSectionIds, review.selectedSectionIds)) invalid('job.review');
   const outcomes = list(row.outcomes, maxSections, 'job.outcomes').map(parseSectionOutcome);
   const resultIds = outcomes.map(item => item.sectionId);
   if (new Set(resultIds).size !== resultIds.length
@@ -133,6 +126,28 @@ export function parseStoredEnrollmentJob(value: unknown): EnrollmentJob {
     const derived = classifyOutcomeState(outcomes);
     if (state !== derived) invalid('job.state');
   }
-  return { ...lifecycle, termId, termLabel, selectedSectionIds, timing, createdAt, outcomes,
-    executionToken: id(row.executionToken, 'job.executionToken'), review };
+  return { ...lifecycle, termId, termLabel, selectedSectionIds, timing, createdAt, outcomes };
+}
+
+const viewKeys = ['id', 'revision', 'state', 'termId', 'termLabel', 'selectedSectionIds', 'timing',
+  'targetEpochMs', 'expiresAt', 'createdAt', 'updatedAt', 'submittedAt', 'outcomes'] as const;
+
+/** Detached public snapshot. Reject private fields rather than silently accepting leakage. */
+export function parseEnrollmentJobView(value: unknown): EnrollmentJobView {
+  const row = record(value, viewKeys, 'job');
+  for (const outcome of list(row.outcomes, maxSections, 'job.outcomes')) {
+    record(outcome, ['sectionId', 'status', 'reason'], 'job.outcome');
+  }
+  return parseJobFields(row);
+}
+
+/** Validate an internal saved job without arming, expiring, persisting or executing it. */
+export function parseStoredEnrollmentJob(value: unknown): EnrollmentJob {
+  const row = record(value, [...viewKeys, 'executionToken', 'review'], 'job');
+  const job = parseJobFields(row);
+  const review = parseStoredEnrollmentReview(row.review);
+  if (job.createdAt < review.observedAt || job.createdAt >= review.expiresAt
+      || job.termId !== review.termId || job.termLabel !== review.termLabel
+      || !sameSet(job.selectedSectionIds, review.selectedSectionIds)) invalid('job.review');
+  return { ...job, executionToken: id(row.executionToken, 'job.executionToken'), review };
 }

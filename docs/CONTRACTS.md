@@ -236,3 +236,13 @@ reconcileExecutorResult(jobId, expectedRevision) operates on validated saved sta
 recover() uses the same reconciliation for older executing records with matching consumed evidence; other interrupted active jobs retain the existing conservative stop behavior. A prior reply recorded at/after its pending deadline, pre-registration dispatch or backwards clock stays unknown. Terminal states are preserved, pending requests are abandoned, and no network/portal action is issued. Lost persistence acknowledgment requires recovery; retained final evidence is not discarded or resubmitted.
 
 This remains an internal storage boundary. Actual browser provenance, portal extraction and durable dispatch coordination are unfinished; no public enrollment command is enabled. See [final-result evidence](evidence/14b-final-results.md).
+
+## Task 14B safe job views and response validation
+
+`parseEnrollmentJobView()` validates an exact public snapshot using the same lifecycle, historical timing, selection coverage and final-result rules as stored jobs. It rejects tokens, reviews, document/target identifiers, request metadata, unknown fields and outcome messages. Stored jobs still accept bounded internal outcome messages for compatibility; public snapshots do not.
+
+`projectEnrollmentJob()` first validates the complete internal record, then explicitly copies only the agreed public fields. Outcomes retain section ID, status and optional reason; raw portal messages are omitted. All nested values are detached. Projection preserves saved state, revision, historical timing and unknown outcomes without finalizing, recovering, persisting, arming or submitting anything.
+
+`parseEnrollmentJobResponse()` is a standalone future-client boundary for activate/cancel/read replies to an already validated outstanding request. It checks protocol version, request ID, method, exclusive success/error shape and public data; read/cancel success must also match the requested job ID. Activation obtains its job ID from the trusted coordinator rather than the caller. Typed errors are bounded plain text with known codes; this is not a private-data sanitizer, so future producers must supply safe application messages rather than raw portal errors.
+
+No production handler/client is wired to these helpers yet. Enrollment RPC remains FEATURE_UNAVAILABLE. A valid view is informational, not proof of live portal provenance or permission to dispatch. Event wiring, durable dispatch intent, production storage/RPC integration and observed portal evidence remain separate work. See [verification](evidence/14b-job-views.md).
