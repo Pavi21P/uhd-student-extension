@@ -1,6 +1,6 @@
 # 14B: final outcome reconciliation
 
-Implemented 2026-10-31 (America/Chicago). Owner: Codex. Direct commits/pushes on work/solo-development; no new PR. Full 14B and live enrollment remain incomplete.
+Implemented 2026-10-31; final verification recorded 2026-11-01 after an automatic approval-review usage-limit interruption (America/Chicago). Owner: Codex. Direct commits/pushes on work/solo-development; no new PR. Full 14B and live enrollment remain incomplete.
 
 ## Result
 
@@ -17,7 +17,7 @@ Accepted replies advance one revision total; explicit/recovery reconciliation of
 - 41 new result cases, including status combinations, missing/unreadable evidence, result ordering/privacy, timing/provenance, held writes, uncertain writes, replay, explicit reconciliation races and startup recovery.
 - Targeted result/reply/ownership/registry/repository run: 208 passed.
 - Final local checks: lint, 782 tests across 24 files, TypeScript and production/MV3 build passed.
-- Isolated Chromium 156.0.8078.4 extension E2E passed (9.9 seconds total), with one expected result and zero failures, skips or flaky results. Hosted Windows/Linux CI pending.
+- Isolated Chromium 156.0.8078.4 extension E2E passed (9.9 seconds total), with one expected result and zero failures, skips or flaky results. Hosted Ubuntu 24.04 and Windows 2025 passed all checks, including 782 unit tests, build and isolated Chromium E2E: [run 41171586331](https://github.com/Pavi21P/uhd-student-extension/actions/runs/41171586331), implementation commit [f69636f4b593205511c58602b582fb35c3944ad0](https://github.com/Pavi21P/uhd-student-extension/commit/f69636f4b593205511c58602b582fb35c3944ad0). Published directly to work/solo-development; no PR created. Subsequent documentation-only edits preserve the tested implementation.
 - Tests use synthetic storage, identities and results. Final state classification is only as trustworthy as the future portal adapter and browser-message source. It does not prove live enrollment, actual disk/crash durability or human acceptance.
 
 ## Resume
